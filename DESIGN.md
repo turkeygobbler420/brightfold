@@ -1,49 +1,46 @@
-# Brightfold redesign brief
+# Brightfold redesign v3: "NYT Games" direction
 
-The previous design was called AI slop: dark blue, a repeated bordered card on every section, centred
-heading-then-grid rhythm, tracked uppercase labels, chips, glow, a logo marquee. This redesign replaces it
-using two rule sets the user attached: **taste-skill** (leonxlnx) and **unslop** (heydamir, CC BY 4.0).
+The user rejected the previous editorial paper/ember design as ugly and asked for a redesign based on
+NYT Games (Wordle, Connections, Spelling Bee, Strands, the Games hub and splash screens). This brief REPLACES the
+older "paper and ember" brief. Keep the earlier anti-slop spirit (unslop, CC BY 4.0, heydamir; taste-skill, leonxlnx):
+no gradients, no glows, no violet-blue neon, no emoji, no fake-hype copy, nothing revealing on scroll, honour
+reduced motion, no horizontal overflow at 320/375, 44px touch targets.
 
-## Direction
-Printed-matter feel, not SaaS. Warm paper ground (`--bg`), warm near-black ink, ONE ember accent
-(`--accent`, under 3% of the screen: primary button, focus, one key figure, state). Display type is
-Instrument Serif at weight 400, text is Geist 400/500. `base.css` already holds tokens, type scale, nav,
-buttons, `.label`, `.link`, footer. Use its tokens; do not invent new colours, fonts or radii.
-No dark mode (dark is for tech pages only). One dark band (`--dark`) is allowed on the landing page at most.
+## The NYT Games look (what to reproduce)
+- White page, near-black ink (`--ink`), thin grey hairlines. Playful but plain, content first.
+- Chunky rounded **game tiles** in the Connections palette: `--tile` (#efefe6 neutral), `--yellow`, `--green`,
+  `--blue`, `--purple` (+ `--orange`). Tiles are 6-12px radius, bold 600-700 uppercase-free sentence/Title text, centred,
+  no borders (flat fill), a subtle press (scale .97). Colour carries meaning: each of the six domains owns a colour.
+  Wordle-style feedback: correct `--good` green, present `--warn`, wrong/absent grey.
+- **Splash / hub screens** like the Wordle and Connections launch screens: a large simple glyph (built from the real puzzle SVGs),
+  a serif headline (Source Serif 4, weight 700), one-line subhead, then stacked pill buttons: black filled "Play" (or "Start the test"),
+  outlined "How it works". Date line under (use "Free · 16 minutes · 20 questions"), small muted footer links.
+- Buttons are **pills** (radius 999, height 48, 28px padding): black filled primary, white outlined secondary. Small 36px variant in header.
+- Header: white, 56/64px, hairline under, wordmark in bold serif, small bold sans links, one small black pill "Start test".
+- Game boards: centred column (max 560px on test screens), progress as a row of small rounded squares or a thin bar, a rounded
+  "Submit/Next" pill under the board, a toast-style message above the board (black bg white text, 6px radius) for encouragement.
+- Results like the Wordle/Connections end-card: big serif score, a coloured share-style tile row summarising domains
+  (one coloured tile per domain, filled by performance), stats row (like Wordle's statistics: big numbers with small captions), and a
+  black pill "Share" / "Download certificate" with an outlined secondary.
+- Landing sections to include (structure may vary, avoid identical repeated card grids except where tiles are the game motif):
+  1 hero splash (headline + pills + a live mini puzzle board), 2 "Six kinds of questions" as the colourful tile set (a Connections-style 3x2 or 2x3 board of
+  coloured tiles, each opening into a short description; static, no accordion required), 3 how it works (three numbered steps, plain), 4 score curve with the
+  bell, 5 stats row Wordle-style (placeholder tagged), 6 sample certificate, 7 FAQ with all answers visible (plain list), 8 closing CTA, footer.
+- Fonts: Source Serif 4 (display, 600/700) and Libre Franklin (UI, 400/500/600/700). Loaded in index.html head from Google Fonts.
+- Motion: transform/opacity/colour only; one load animation on the hero tiles (tiles flip/pop in sequence 60ms stagger, 200-240ms each) is welcome;
+  tile press and correct/incorrect feedback (small shake 300ms for incorrect, pop for correct) are in the spirit. Nothing on scroll.
+  Honour `prefers-reduced-motion` and `html[data-motion="off"]`.
+- Copy: plain, short, no exclamation overload, no hype words. Placeholder facts keep `<span class="ph-tag">Placeholder</span>`.
+- Radii 6/12/16 and pill 999 only. Weights 400-700 allowed now. Shadows: none except a single 1px hairline.
 
-## Hard rules (both rule sets)
-- NO cards-in-a-grid repeated. Never 3+ same-shape bordered rounded boxes in a row. Prefer ruled lists,
-  tables, editorial columns, big numerals, running text with hairlines (`1px var(--line)`), one wide plate next to one narrow note.
-  Vary section structure: no two adjacent sections share a layout.
-- Layout asymmetry: text left / visual right, top-aligned, never mirrored or alternating. Left-align headlines.
-  12-col grid, gutters 24. Spacing from 4,8,12,16,24,32,48,64,96,128 only. Section padding 96-128 desktop, 64 mobile.
-- Colour: never violet/blue-purple, no gradients (the only `linear-gradient` allowed is the 1px link underline),
-  no glows, no coloured shadows, no blurred blobs, no dot-grid or noise backgrounds. Depth = surface step + hairline.
-- Type: weights 400 and 500 only. Never 600/700/800. Labels are sentence case 13px/500, NO uppercase, NO letter-spacing on small text.
-  Display tracking -2% to -3% from 40px. Italic only for quotes. Lines <= 62ch. Curly quotes. No exclamation marks, no trailing periods on headings/buttons/labels.
-- Icons: no emoji, no sparkle, no icon on every heading. If used, one line-icon set, 1.5 stroke.
-- Buttons: 44px, 24px side padding, solid primary + tonal/text link. One filled button per view. No ghost, gradient, shadowed buttons. No pills (radius 6px).
-- Radius: 6 / 10 / 16 only.
-- Motion: transform/opacity/colour only. Tokens: hover in 150ms, out 120ms, press 90ms, panels 200ms, slide 240ms, image 600ms.
-  Easing `--ease` (UI) or `--ease-in` (entrance settle). No bounce, no overshoot, no `transition: all`.
-  NOTHING reveals, fades, rises or staggers on scroll (remove the old IntersectionObserver reveal).
-  No parallax, no tilt, no glow/shine hover, no pulsing dots, no marquee/carousel/auto-advancing anything on the landing page,
-  no accordions (FAQ answers are all visible). One hero entrance on load only (<=1.1s, lines rise out of masks 700ms/80ms stagger,
-  then fade-up 12px). Hero text must be readable without JS. Honour prefers-reduced-motion and `html[data-motion="off"]`.
-  Hover only inside `@media (hover:hover)`.
-- Copy: plain statements, product nouns, no hype words (unlock, supercharge, seamless, magic), no "AI-powered", no greeting headlines, no badges/"New" pills.
-  Placeholder facts stay clearly marked with `<span class="ph-tag">Placeholder</span>` (reviews, ratings, rankings, press, 99% claims, famous minds).
-- No captions under images. No stock photos (there are none). Visuals are code-built: the real puzzle items (SVG via `cellSVG`, `polySVG`) are the imagery.
-- Mobile: 375 and 320 must have no horizontal overflow, no text under 13px, buttons full width on phones, 44px touch targets.
-- Accessibility: body text 7:1 where possible, muted 4.5:1, visible focus ring, labels on inputs.
+## Tokens
+All in `base.css` (already rewritten for this direction): colours, `--f-display`, `--f-sans`, `--r-s/m/l/pill`, `.btn`, `.btn-primary`, `.btn-line`, `.btn-sm`,
+`.nav`, `.logo`, `.nav-links`, `.link`, `.label`, `.ph-tag`, `footer.closing`, `.wrap`, `.lead`. Use them; do not redefine.
 
-## File ownership (parallel work, do not touch another owner's files)
-- `index.html`, `landing.css`, `landing.js`: landing page owner. (`data.js` is shared and read-only.)
-- `app.css`, `engine.js`: test app owner (test screens, checkpoints, word memorize/recall, mock paywall gate, results, certificate, print).
-- `base.css`, `DESIGN.md`, `data.js`: read-only for both. Ask the lead if base needs a change.
-- `_old/` holds the previous version (`old.css`, `old-index.html`, `app-shell.html`) for reference only. Do not ship it.
+## File ownership
+- landing: `index.html`, `landing.css`, `landing.js` (the head must load Source Serif 4 + Libre Franklin and base/landing/app css).
+- app: `app.css`, `engine.js` (test screens, checkpoints, word memorize/recall, mock paywall gate, results, certificate, print).
+- `base.css`, `data.js`, `DESIGN.md`: read-only for agents. Keep every element id/class that JS reads (or update it in the file you own).
 
 ## Load order
-`data.js` (shapes, item bank, ITEMS, renderMatrix) -> `engine.js` (injects `#app` shell over `<div id="shell">`, engine, `bell`, `certHTML`)
--> `landing.js`. Landing buttons with class `js-start` start the test (engine wires them at load). The app shows `#app` and hides `#landing`.
-Keep all existing element ids that JS reads, or update the JS in the same file you own.
+`data.js` -> `engine.js` (injects `#app` over `<div id="shell">`) -> `landing.js`. `.js-start` buttons start the test. `#app` shown, `#landing` hidden while testing.

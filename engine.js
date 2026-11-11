@@ -1,5 +1,5 @@
 /* App shell is injected here so index.html only holds the landing page. */
-(function(){const h="<div id=\"app\" hidden>\n  <div class=\"t-top\">\n    <div class=\"wrap\">\n      <a class=\"logo\" href=\"#top\" id=\"exitLink\" aria-label=\"Leave test\">\n        <svg viewBox=\"0 0 22 22\" aria-hidden=\"true\"><path d=\"M3 4.5A1.5 1.5 0 0 1 4.5 3H14l5 5v9.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 3 17.5z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M14 3v5h5z\" fill=\"var(--accent)\"/><circle cx=\"9\" cy=\"13\" r=\"2.2\" fill=\"currentColor\"/></svg>\n        Brightfold\n      </a>\n      <div class=\"meta\"><span id=\"tCount\" class=\"mono\">1 / 20</span><span class=\"clock\" id=\"tClock\">16:00</span><button class=\"link-btn\" id=\"finishBtn\">Finish</button></div>\n    </div>\n    <div class=\"prog\"><i id=\"tProg\"></i></div>\n  </div>\n  <div class=\"wrap t-main\" id=\"tMain\"></div>\n</div>\n\n<div class=\"cheer\" id=\"cheer\" role=\"status\" aria-live=\"polite\"></div>\n";document.getElementById('shell').outerHTML=h;})();
+(function(){const h="<div id=\"app\" hidden>\n  <div class=\"t-top\">\n    <div class=\"wrap\">\n      <a class=\"logo\" href=\"#top\" id=\"exitLink\" aria-label=\"Leave test\">\n        <svg viewBox=\"0 0 22 22\" aria-hidden=\"true\"><path d=\"M3 4.5A1.5 1.5 0 0 1 4.5 3H14l5 5v9.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 3 17.5z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M14 3v5h5z\" fill=\"var(--accent)\"/><circle cx=\"9\" cy=\"13\" r=\"2.2\" fill=\"currentColor\"/></svg>\n        Brightfold\n      </a>\n      <div class=\"meta\"><span id=\"tCount\" class=\"mono\">1 / 20</span><span class=\"clock\" id=\"tClock\">16:00</span><button class=\"link-btn\" id=\"finishBtn\">Finish</button></div>\n    </div>\n    <div class=\"wrap pipwrap\"><div class=\"pips\" id=\"tPips\" aria-hidden=\"true\"></div></div>\n  </div>\n  <div class=\"wrap t-main\" id=\"tMain\"></div>\n</div>\n\n<div class=\"cheer\" id=\"cheer\" role=\"status\" aria-live=\"polite\"></div>\n";document.getElementById('shell').outerHTML=h;})();
 /* bell curve */
 function bell(svg,mark){
   const bw=svg.getBoundingClientRect().width,W=bw>=300?Math.min(760,Math.round(bw)):640,H=Math.round(W*.39),L=24,R=W-24,T=36,B=H-44,lo=55,hi=145;
@@ -38,16 +38,16 @@ $('finishBtn').addEventListener('click',()=>{
   finish();
 });
 
-function railHTML(){
-  const nm=id=>DOMAINS.find(d=>d.id===id).name;
-  return `<div class="d">Items</div><div class="row">${ITEMS.map(it=>`<button data-go="${it.idx}" class="${st.ans[it.idx]!==null?'done':''}${it.idx===st.i?' cur':''}" title="${nm(it.d)}" aria-label="Item ${it.idx+1}, ${nm(it.d)}">${it.idx+1}</button>`).join('')}</div>
-  <div class="legend">${DOMAINS.map(d=>{const its=ITEMS.filter(x=>x.d===d.id);return `<div><span>${d.name}</span><b>${its.filter(x=>st.ans[x.idx]!==null).length}/${its.length}</b></div>`;}).join('')}</div>`;
+const DCOL={fluid:'purple',quant:'yellow',verbal:'green',spatial:'blue',memory:'orange',speed:'pink'};
+function pips(all){
+  const el=$('tPips');if(!el)return;
+  el.innerHTML=ITEMS.map(it=>{const on=all||(st&&st.ans[it.idx]!==null);const cur=!all&&st&&!st.done&&!st.hold&&it.idx===st.i;return `<i class="${on?'on c-'+DCOL[it.d]:''}${cur?' cur':''}"></i>`;}).join('');
 }
 function render(){
   clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   const it=ITEMS[st.i],dom=DOMAINS.find(d=>d.id===it.d);
   $('tCount').textContent=`${st.i+1} / ${ITEMS.length}`;
-  $('tProg').style.transform=`scaleX(${st.ans.filter(a=>a!==null).length/ITEMS.length})`;
+  pips();
   let body='';
   if(it.type==='matrix'){
     body=`<div class="mx" id="qMx"></div><div class="opts" role="radiogroup" aria-label="Answers">${it.choices.map((ch,j)=>optFig(j,cellSVG(ch.c))).join('')}</div>`;
@@ -68,29 +68,25 @@ function render(){
   }else if(it.type==='scan'){
     body=scanHTML(it);
   }
-  $('tMain').innerHTML=`<div class="t-grid"><aside class="rail" aria-label="Items">${railHTML()}</aside>
-    <div class="qcard"><div class="qhead"><span>${dom.name}</span><span class="num">Item ${st.i+1} of ${ITEMS.length}</span></div>
+  $('tMain').innerHTML=`<div class="qcard"><div class="qhead"><span class="chip c-${DCOL[it.d]}">${dom.name}</span><span class="num">Item ${st.i+1} of ${ITEMS.length}</span></div>
     <h2 class="qtitle">${it.q}</h2>${it.type==='memory'&&it.mode==='backward'?'<p class="qsub">Last digit first.</p>':''}
     ${body}
-    <div class="qnav"><button class="link-btn" id="prevBtn"${st.i===0?' disabled':''}>Back</button><span class="kbd">Keys 1–6 to answer · Enter after answering</span><button class="btn btn-primary" id="nextBtn">${st.i===ITEMS.length-1?'See results':'Next'} <span class="arr" aria-hidden="true">→</span></button></div></div></div>`;
+    <div class="qnav"><button class="btn btn-primary" id="nextBtn">${st.i===ITEMS.length-1?'Submit':'Next'}</button><button class="link-btn" id="prevBtn"${st.i===0?' disabled':''}>Back</button><span class="kbd">Keys 1–6 to answer · Enter after answering</span></div></div>`;
   if(it.type==='matrix')renderMatrix($('qMx'),it,false);
   markSel();
   $('prevBtn').onclick=()=>go(st.i-1);
   $('nextBtn').onclick=next;
-  $('tMain').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
   $('tMain').querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.j));
   if(it.type==='memory')wireMemory(it);
   if(it.type==='scan')wireScan(it);
 }
 const optFig=(j,svg,cls)=>`<button class="opt fig ${cls||''}" data-j="${j}" role="radio" aria-label="Option ${j+1}"><span class="k">${j+1}</span>${svg}</button>`;
-const optText=(opts,mono)=>`<div class="opts text" role="radiogroup">${opts.map((o,j)=>`<button class="opt${mono?' mono':''}" data-j="${j}" role="radio"><span class="k">${j+1}</span><span>${o}</span></button>`).join('')}</div>`;
+const optText=(opts,mono)=>`<div class="opts text${opts.every(o=>String(o).length<=9)?' short':''}" role="radiogroup">${opts.map((o,j)=>`<button class="opt${mono?' mono':''}" data-j="${j}" role="radio"><span class="k">${j+1}</span><span>${o}</span></button>`).join('')}</div>`;
 function markSel(){$('tMain').querySelectorAll('.opt').forEach(b=>{const on=+b.dataset.j===st.ans[st.i];b.classList.toggle('sel',on);b.setAttribute('aria-checked',on);});}
 let cheerN=0;function cheer(){const c=$('cheer');if(!c)return;c.textContent=CHEERS[cheerN++%CHEERS.length];c.classList.remove('on');void c.offsetWidth;c.classList.add('on');}
 function pick(j){const it=ITEMS[st.i];if(it.type==='scan'&&st.seen[st.i]==='closed')return;const first=st.ans[st.i]===null;st.ans[st.i]=j;markSel();if(first&&(st.ans.filter(a=>a!==null).length%3===2))cheer();
   clearTimeout(autoTimer);if(first&&st.i<ITEMS.length-1){const at=st.i;autoTimer=setTimeout(()=>{if(st&&!st.done&&st.i===at)next();},480);}
-  const lg=$('tMain').querySelector('.legend');if(lg)lg.outerHTML=railHTML().slice(railHTML().indexOf('<div class="legend">'));
-  $('tMain').querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('done',st.ans[+b.dataset.go]!==null));
-  $('tProg').style.transform=`scaleX(${st.ans.filter(a=>a!==null).length/ITEMS.length})`;}
+  pips();}
 function go(i){if(i<0||i>=ITEMS.length)return;st.i=i;render();window.scrollTo({top:0});}
 function next(){const it=ITEMS[st.i];if(it.type==='memory'){const v=($('memIn')||{}).value;if(v!=null&&v!=='')st.ans[st.i]=v.replace(/\D/g,'');}
   if(st.i===ITEMS.length-1){recallScreen();return;}
@@ -98,10 +94,10 @@ function next(){const it=ITEMS[st.i];if(it.type==='memory'){const v=($('memIn')|
   go(st.i+1);}
 function segsHTML(k){return `<div class="segs" aria-hidden="true">${CHECKPOINTS.map((_,x)=>`<i class="${x<=k?'on':''}"></i>`).join('')}</div>`;}
 function wordScreen(){
-  st.hold=true;$('tCount').textContent='Before you start';$('tProg').style.transform='scaleX(0)';
+  st.hold=true;$('tCount').textContent='Before you start';pips();
   $('tMain').innerHTML=`<div class="mo" role="status"><p class="label">One quick thing first</p><h2>Memorize this word</h2>
    <p>You will be asked about it after the last question.</p><div class="word">${st.word}</div>
-   <p class="hold">The clock starts when you continue.</p><button class="btn btn-primary" id="moGo">I’ve memorized it <span class="arr" aria-hidden="true">→</span></button></div>`;
+   <p class="hold">The clock starts when you continue.</p><button class="btn btn-primary" id="moGo">I’ve memorized it</button></div>`;
   $('moGo').onclick=()=>{st.hold=false;render();window.scrollTo({top:0});};$('moGo').focus();
 }
 function recallScreen(){
@@ -125,7 +121,7 @@ function checkpoint(n){
     const seen=new Set(ITEMS.slice(0,n).map(x=>x.d));
     h='A pattern is starting to show in how you think.';
     fig=`<span class="cp-n">${seen.size} of ${DOMAINS.length}</span><span class="cp-u">domains covered so far</span>`;
-    meter=`<ul class="cp-dom">${DOMAINS.map(d=>`<li class="${seen.has(d.id)?'on':''}"><span>${d.name}</span><span>${seen.has(d.id)?'Covered':'Still to come'}</span></li>`).join('')}</ul>`;
+    meter=`<ul class="cp-dom">${DOMAINS.map(d=>`<li class="${seen.has(d.id)?'on c-'+DCOL[d.id]:''}"><span>${d.name}</span><span>${seen.has(d.id)?'Covered':'Still to come'}</span></li>`).join('')}</ul>`;
     lead=`Every answer adds detail to your profile.`;
   }else if(k===2){
     h='Past the halfway mark. Keep that rhythm.';
@@ -139,7 +135,7 @@ function checkpoint(n){
   }
   $('tMain').innerHTML=`<div class="mo cp" role="status"><p class="label">Checkpoint ${k+1} of ${CHECKPOINTS.length}, clock paused</p><h2>${h}</h2><p>${lead}</p>
    <div class="cp-side"><div class="cp-fig">${fig}</div>${meter||''}<p class="fact"><b>Did you know?</b> ${FACTS[k]}</p></div>
-   <button class="btn btn-primary" id="cpGo">Continue <span class="arr" aria-hidden="true">→</span></button></div>`;
+   <button class="btn btn-primary" id="cpGo">Continue</button></div>`;
   if(k===2)requestAnimationFrame(()=>requestAnimationFrame(()=>{const m=$('moMeter');if(m)m.style.transform=`scaleX(${n/ITEMS.length})`;}));
   $('cpGo').onclick=()=>{st.hold=false;go(n);};$('cpGo').focus();window.scrollTo({top:0});
 }
@@ -161,7 +157,7 @@ function wireMemory(it){
   };
   const inp=$('memIn');
   if(inp)inp.addEventListener('input',()=>{const v=inp.value.replace(/\D/g,'');inp.value=v;st.ans[st.i]=v||null;
-    $('tMain').querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('done',st.ans[+b.dataset.go]!==null));});
+    pips();});
 }
 /* scan */
 function scanHTML(it){
@@ -205,7 +201,7 @@ function correctText(it){
 let gateTimer;
 function finish(){
   if(st.done&&st.finished)return;st.done=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
-  $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';$('tCount').textContent='Almost done';
+  $('finishBtn').hidden=true;pips(true);$('tCount').textContent='Almost done';
   let left=600;
   $('tMain').innerHTML=`<div class="gate" role="region" aria-label="Unlock your results">
    <div class="g-l"><span class="mockbar">Mock paywall, no payment is taken</span>
@@ -217,7 +213,7 @@ function finish(){
     <label class="plan"><input type="radio" name="plan" value="year"><span class="dot"></span><span class="t"><b>12 months</b><span>Billed yearly</span></span><span class="pr">$29.99</span></label>
    </fieldset>
    <ul class="inc"><li>Full score and percentile</li><li>Domain breakdown</li><li>Every item explained</li><li>Printable certificate</li></ul>
-   <button class="btn btn-primary" id="gateGo">Show my results <span class="arr" aria-hidden="true">→</span></button>
+   <button class="btn btn-primary" id="gateGo">Show my results</button>
    <p class="fine">Placeholder flow for the proof of concept. Nothing is charged and no card details are asked for.</p></div></div>`;
   const t=$('gateT');gateTimer=setInterval(()=>{left=Math.max(0,left-1);t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');},1000);
   $('gateGo').onclick=()=>{clearInterval(gateTimer);st.done=false;showResults();};
@@ -226,7 +222,7 @@ function finish(){
 
 function showResults(){
   if(st.done&&st.finished)return;st.done=true;st.finished=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);
-  $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';
+  $('finishBtn').hidden=true;pips(true);
   const right=ITEMS.map(it=>isRight(it,st.ans[it.idx]));const raw=right.filter(Boolean).length;const pct=raw/ITEMS.length;
   const iq=Math.round(Math.max(62,Math.min(145,100+15*(pct-.5)/.2)));
   const percentile=Math.round(50*(1+erf((iq-100)/15/Math.SQRT2))*10)/10;
@@ -235,18 +231,18 @@ function showResults(){
   const dom=DOMAINS.map(d=>{const its=ITEMS.filter(it=>it.d===d.id);const ok=its.filter(it=>right[it.idx]).length;return{...d,ok,n:its.length};});
   const ranked=dom.slice().sort((x,y)=>y.ok/y.n-x.ok/x.n);const best=ranked[0],worst=ranked[ranked.length-1];
   $('tCount').textContent='Results';
-  $('tMain').innerHTML=`
-   <section class="res-sec res-hero"><div><p class="label">Estimated score, practice scale</p><div class="res-num" id="resNum">${iq}</div></div><div class="res-r"><h2 class="cls">${cls}</h2>
-    <p>You answered ${raw} of ${ITEMS.length} items correctly in ${fmt(used)}.${st.recall===null?'':st.recall?' You also remembered the opening word.':' The opening word slipped away, which happens to everyone.'} On a mean-100, σ-15 scale that sits near the ${percentile}th percentile. This test is not normed, so read the number as a rough guide.</p>
-    <div class="res-acts"><button class="link-btn" id="againBtn">Take it again</button><button class="link-btn" id="copyBtn">Copy result</button><button class="link-btn" id="homeBtn">Back to Brightfold</button></div></div></section>
-   <section class="res-sec res-two"><div><h3>Where your estimate falls</h3><p class="sub">The curve shows how scores spread on a mean-100 scale. About two in three people land in the middle band.</p><svg class="bell" id="bellRes" viewBox="0 0 640 250" role="img" aria-label="Your estimate on the normal curve"></svg></div>
-    <div><h3>By domain</h3><div class="dtable">${dom.map(d=>`<div class="drow${d===best?' best':''}"><span class="nm">${d.name}</span><span class="track"><i data-w="${d.ok/d.n}"></i></span><span class="sc">${d.ok} / ${d.n}</span></div>`).join('')}</div>
-    <p class="dnote"><b>Strongest:</b> ${best.name}. <b>Most room to grow:</b> ${best.ok/best.n===worst.ok/worst.n?"even across all six":worst.name}.</p></div></section>
-   <section class="res-sec res-cert"><div class="res-cert-l"><h3>Your certificate</h3><div class="cert-form"><div class="fld"><label for="certIn">Name on certificate</label><input id="certIn" type="text" maxlength="40" placeholder="Type your name" autocomplete="name"></div><button class="btn btn-primary" id="certPrint">Print or save as PDF</button></div></div>${certHTML({name:'Brightfold participant',nameId:'certName',score:iq,cls,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),items:ITEMS.length})}</section>
-   <section class="res-sec res-review"><h3>Every item, explained</h3><div class="review-list">${ITEMS.map(it=>{const ok=right[it.idx];return `<div class="rv"><span class="n">${String(it.idx+1).padStart(2,'0')}</span><div><div class="q">${it.q}</div><div class="x">Your answer: ${answerText(it,st.ans[it.idx])}${ok?'':` · Correct: ${correctText(it)}`}</div><div class="x why">${it.why}</div></div><span class="st ${ok?'ok':'no'}">${ok?'Correct':'Missed'}</span></div>`;}).join('')}</div></section>`;
+  $('tMain').innerHTML=`<div class="res">
+   <section class="res-sec res-hero"><p class="label">Estimated score, practice scale</p><div class="res-num" id="resNum">${iq}</div><h2 class="cls">${cls}</h2>
+    <div class="share" role="list" aria-label="Score by domain">${dom.map(d=>`<div class="sq c-${DCOL[d.id]}${d===best?' best':''}" role="listitem"><i style="transform:scaleY(${d.ok/d.n})"></i><span class="nm">${d.name}</span><b>${d.ok}/${d.n}</b></div>`).join('')}</div>
+    <div class="stats" aria-label="Statistics"><div><b>${raw}</b><span>Correct</span></div><div><b>${Math.round(pct*100)}</b><span>Percent</span></div><div><b>${fmt(used)}</b><span>Time used</span></div><div><b>${Math.round(percentile)}</b><span>Percentile</span></div></div>
+    <p class="res-txt">You answered ${raw} of ${ITEMS.length} items correctly in ${fmt(used)}.${st.recall===null?'':st.recall?' You also remembered the opening word.':' The opening word slipped away, which happens to everyone.'} On a mean-100, σ-15 scale that sits near the ${percentile}th percentile. This test is not normed, so read the number as a rough guide.</p>
+    <p class="dnote"><b>Strongest:</b> ${best.name}. <b>Most room to grow:</b> ${best.ok/best.n===worst.ok/worst.n?"even across all six":worst.name}.</p>
+    <div class="res-acts"><button class="btn btn-primary" id="copyBtn">Copy result</button><button class="btn btn-line" id="againBtn">Take it again</button><button class="link-btn" id="homeBtn">Back to Brightfold</button></div></section>
+   <section class="res-sec"><h3>Where your estimate falls</h3><p class="sub">The curve shows how scores spread on a mean-100 scale. About two in three people land in the middle band.</p><svg class="bell" id="bellRes" viewBox="0 0 640 250" role="img" aria-label="Your estimate on the normal curve"></svg></section>
+   <section class="res-sec res-cert"><h3>Your certificate</h3><div class="cert-form"><div class="fld"><label for="certIn">Name on certificate</label><input id="certIn" type="text" maxlength="40" placeholder="Type your name" autocomplete="name"></div><button class="btn btn-primary" id="certPrint">Print or save as PDF</button></div>${certHTML({name:'Brightfold participant',nameId:'certName',score:iq,cls,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),items:ITEMS.length})}</section>
+   <section class="res-sec res-review"><h3>Every item, explained</h3><div class="review-list">${ITEMS.map(it=>{const ok=right[it.idx];return `<div class="rv"><span class="n">${it.idx+1}</span><div><div class="q">${it.q}</div><div class="x">Your answer: ${answerText(it,st.ans[it.idx])}${ok?'':` · Correct: ${correctText(it)}`}</div><div class="x why">${it.why}</div></div><span class="st ${ok?'ok':'no'}">${ok?'Correct':'Missed'}</span></div>`;}).join('')}</div></section></div>`;
   bell($('bellRes'),iq);
   clearTimeout(window._bellT);window.onresize=()=>{clearTimeout(window._bellT);window._bellT=setTimeout(()=>{const b=$('bellRes');if(b)bell(b,iq);},150);};
-  requestAnimationFrame(()=>requestAnimationFrame(()=>$('tMain').querySelectorAll('.drow i').forEach(i=>i.style.transform=`scaleX(${i.dataset.w})`)));
   $('certIn').oninput=e=>{$('certName').textContent=e.target.value.trim()||'Brightfold participant';};$('certPrint').onclick=()=>window.print();$('againBtn').onclick=startTest;$('homeBtn').onclick=leave;window.scrollTo(0,0);
   $('copyBtn').onclick=async()=>{const t=`I scored ${iq} on the Brightfold reasoning test (${raw}/${ITEMS.length} correct). Strongest domain: ${best.name}.`;
     try{await navigator.clipboard.writeText(t);$('copyBtn').textContent='Copied';}catch(e){$('copyBtn').textContent='Copy not available';}

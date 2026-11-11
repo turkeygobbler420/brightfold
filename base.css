@@ -1,77 +1,79 @@
-/* Brightfold design system (shared). Warm paper ground, one ember accent, Instrument Serif + Geist.
-   Rules followed: taste-skill + unslop (see DESIGN.md). No violet, no gradients, no glows, weights 400/500 only,
-   sentence-case labels, one filled button per view, radii 6/10/16, transform+opacity motion only. */
+/* Brightfold design system v3: modelled on NYT Games (Wordle, Connections, Spelling Bee).
+   White page, black ink, chunky rounded game tiles in a four-colour pastel set, black pill buttons,
+   serif display type over a grotesque UI face. Content-first, playful but plain. */
 :root{
-  --bg:#f4f0e8; --bg-alt:#ebe5d9; --surface:#fbf9f4; --surface-2:#efe9dd;
-  --ink:#1c1a17; --ink-2:#4a453d; --muted:#6a645a;
-  --line:rgba(28,26,23,.14); --line-2:rgba(28,26,23,.26);
-  --accent:#c2410c; --accent-hover:#a93a0a; --accent-ink:#fff; --accent-soft:rgba(194,65,12,.10);
-  --dark:#1c1a17; --dark-ink:#f4f0e8; --dark-muted:#a8a193;
-  --good:#2f6b4f; --bad:#a8322a; --dot:rgba(28,26,23,.07);
-  --f-display:"Instrument Serif","Iowan Old Style",Georgia,serif;
-  --f-sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:var(--f-sans); /* legacy alias: numerals use tabular figures instead of a third face */
+  --bg:#ffffff; --bg-alt:#f6f6f3; --surface:#ffffff; --surface-2:#efefe6;
+  --ink:#121212; --ink-2:#3b3b3b; --muted:#5e5e5e;
+  --line:#dcdcdc; --line-2:#121212;
+  --accent:#121212; --accent-hover:#3b3b3b; --accent-ink:#ffffff; --accent-soft:#efefe6;
+  --dark:#121212; --dark-ink:#ffffff; --dark-muted:#b9b9b9;
+  /* game palette (Connections-style groups) */
+  --tile:#efefe6; --tile-hover:#e4e4d8;
+  --yellow:#f9df6d; --green:#a0c35a; --blue:#b0c4ef; --purple:#ba81c5; --orange:#f5a25d;
+  --good:#6aaa64; --warn:#c9b458; --bad:#d4483b; --dot:rgba(18,18,18,.06);
+  --f-display:"Source Serif 4","Libre Caslon Text",Georgia,"Times New Roman",serif;
+  --f-sans:"Libre Franklin","Franklin Gothic Medium","Helvetica Neue",Arial,sans-serif;
+  --f-mono:var(--f-sans);
   --ease:cubic-bezier(.2,.8,.2,1); --ease-in:cubic-bezier(.22,1,.36,1); --ease-travel:cubic-bezier(.65,0,.35,1);
-  --r-s:6px; --r-m:10px; --r-l:16px;
-  --gut:24px; --max:1280px; --nav:64px;
+  --r-s:6px; --r-m:12px; --r-l:16px; --r-pill:999px;
+  --gut:20px; --max:1120px; --nav:56px;
   color-scheme:light;
 }
-@media (min-width:1024px){:root{--gut:80px;--nav:72px}}
+@media (min-width:1024px){:root{--gut:48px;--nav:64px}}
 
 *{box-sizing:border-box}
 html{scroll-padding-top:calc(var(--nav) + 16px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.5;font-weight:400;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 a{color:inherit}
 button{font:inherit;color:inherit}
 img,svg{max-width:100%}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .wrap{width:min(100% - 2*var(--gut),var(--max));margin-inline:auto}
 .mono,.num{font-variant-numeric:tabular-nums}
 
-/* type: size and tight tracking carry the hierarchy; weights 400/500 only */
-h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
-h1{font-size:clamp(40px,6.2vw,84px);line-height:1;letter-spacing:-.03em}
-h2{font-size:clamp(30px,3.6vw,48px);line-height:1.08;letter-spacing:-.02em}
-h3{font-size:clamp(22px,2.2vw,28px);line-height:1.2;letter-spacing:-.01em}
+/* type: serif display (weight 700 like Karnak headlines), Franklin for UI */
+h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:-.015em}
+h1{font-size:clamp(40px,7vw,80px);line-height:1.02}
+h2{font-size:clamp(28px,4vw,44px);line-height:1.1}
+h3{font-size:clamp(20px,2.4vw,26px);line-height:1.2}
 p{margin:0}
-.lead{font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:var(--ink-2);max-width:56ch}
+.lead{font-size:clamp(17px,1.8vw,21px);line-height:1.45;color:var(--ink-2);max-width:52ch}
 .body{max-width:62ch}
-.label{font-size:13px;line-height:1.2;font-weight:500;color:var(--muted)}
+.label{font-size:13px;line-height:1.2;font-weight:600;color:var(--muted)}
 .muted{color:var(--muted)}
-.hl{color:var(--accent)} /* colour inside a word: at most once per page */
+.hl{background:var(--yellow);padding:0 .12em}
 
-/* nav: opaque, hairline, no blur/shrink/shadow */
+/* header: white, hairline, centred wordmark on phones, links right on desktop */
 .nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
 .nav .wrap{height:var(--nav);display:flex;align-items:center;gap:32px}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:24px;letter-spacing:-.01em;text-decoration:none}
-.logo svg{width:22px;height:22px;flex:none}
-.nav-links{display:flex;gap:28px;margin-left:auto}
-.nav-links a{font-size:15px;color:var(--ink-2);text-decoration:none;background:linear-gradient(currentColor,currentColor) 100% 100%/0 1px no-repeat;padding-bottom:2px;transition:background-size .24s var(--ease-in)}
-@media (hover:hover){.nav-links a:hover{background-position:0 100%;background-size:100% 1px;color:var(--ink)}}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:24px;letter-spacing:-.01em;text-decoration:none}
+.logo svg{width:24px;height:24px;flex:none}
+.nav-links{display:flex;gap:24px;margin-left:auto}
+.nav-links a{font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;transition:border-color .15s var(--ease)}
+@media (hover:hover){.nav-links a:hover{border-bottom-color:var(--ink)}}
 @media (max-width:720px){.nav-links{display:none}.nav .btn{margin-left:auto}}
 
-/* buttons: 44px, 16px label, one filled primary per view; secondary is tonal or a text link */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 24px;border-radius:var(--r-s);font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease)}
-.btn:active{transform:translateY(1px) scale(.985);transition-duration:.09s}
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
-.btn-line,.btn-tonal{background:var(--surface-2);border-color:transparent;color:var(--ink)}
-.btn-sm{height:36px;padding:0 16px;font-size:15px}
+/* buttons: pill, 48px, black fill primary, outlined secondary (NYT Games style) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 28px;border-radius:var(--r-pill);font-size:16px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff;transition:transform .15s var(--ease),background-color .15s var(--ease),color .15s var(--ease)}
+.btn:active{transform:scale(.97);transition-duration:.09s}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-line,.btn-tonal{background:#fff;color:var(--ink)}
+.btn-sm{height:36px;padding:0 18px;font-size:14px}
 .btn .arr{transition:transform .15s var(--ease)}
-.btn[disabled]{opacity:.4;pointer-events:none}
+.btn[disabled]{opacity:.35;pointer-events:none}
 @media (hover:hover){
-  .btn:hover{transform:translateY(-1px)}
-  .btn-primary:hover{background:var(--accent-hover)}
-  .btn-line:hover,.btn-tonal:hover{background:var(--bg-alt)}
+  .btn-primary:hover{background:#3b3b3b;border-color:#3b3b3b}
+  .btn-line:hover,.btn-tonal:hover{background:var(--tile)}
   .btn:hover .arr{transform:translateX(3px)}
 }
-.link{color:var(--ink);text-decoration:none;font-weight:500;background:linear-gradient(currentColor,currentColor) 100% 100%/0 1px no-repeat;padding-bottom:2px;transition:background-size .24s var(--ease-in)}
-@media (hover:hover){.link:hover{background-position:0 100%;background-size:100% 1px}}
+.link{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+@media (hover:hover){.link:hover{text-decoration-thickness:2px}}
 @media (max-width:640px){.btn-block-m{width:100%}}
 
 /* shared bits */
 .hair{border:0;border-top:1px solid var(--line);margin:0}
-.ph-tag{display:inline-block;font-size:12px;font-weight:500;color:var(--muted);border:1px dashed var(--line-2);border-radius:4px;padding:1px 6px;vertical-align:middle}
+.ph-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--muted);border:1px dashed #9a9a9a;border-radius:4px;padding:1px 6px;vertical-align:middle}
 footer.closing{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:14px}
 footer.closing .wrap{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:space-between}
 
