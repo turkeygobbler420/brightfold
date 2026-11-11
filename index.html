@@ -1,543 +1,15 @@
 <!doctype html>
 <html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Brightfold Reasoning Test</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Brightfold: a free 20-question reasoning test across six cognitive domains, with a full breakdown of your answers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
-<style>
-/* Layout: component-gallery look. Opaque hairline nav, split hero with a live puzzle "preview card",
-   a grid of domain cards that each run a tiny live demo, then scoring, FAQ (always open) and the test app. */
-:root{
-  --bg:#0b0d10; --surface:#111418; --surface-2:#171a20; --line:#232830; --line-2:#2e343e;
-  --ink:#eceef2; --muted:#8c94a2; --accent:#4c8dff; --accent-ink:#ffffff; --accent-soft:rgba(76,141,255,.14);
-  --good:#3fb27f; --bad:#e5636b; --dot:rgba(236,238,242,.07);
-  --f-sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
-  --ease:cubic-bezier(.2,.8,.2,1); --ease-in:cubic-bezier(.22,1,.36,1); --ease-travel:cubic-bezier(.65,0,.35,1);
-  --r-s:8px; --r-m:12px; --r-l:20px;
-  color-scheme:dark;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --bg:#f6f7f9; --surface:#ffffff; --surface-2:#eff1f4; --line:#e1e4e9; --line-2:#cfd4db;
-    --ink:#14171c; --muted:#5a6371; --accent:#2862e8; --accent-ink:#ffffff; --accent-soft:rgba(40,98,232,.10);
-    --good:#1c8656; --bad:#c63a44; --dot:rgba(20,23,28,.07); color-scheme:light;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#f6f7f9; --surface:#ffffff; --surface-2:#eff1f4; --line:#e1e4e9; --line-2:#cfd4db;
-  --ink:#14171c; --muted:#5a6371; --accent:#2862e8; --accent-ink:#ffffff; --accent-soft:rgba(40,98,232,.10);
-  --good:#1c8656; --bad:#c63a44; --dot:rgba(20,23,28,.07); color-scheme:light;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
-a{color:inherit}
-button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-@media (min-width:900px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-
-/* nav */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
-.nav .wrap{height:64px;display:flex;align-items:center;gap:32px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;text-decoration:none;letter-spacing:-.02em}
-.logo svg{width:22px;height:22px}
-.nav-links{display:flex;gap:24px;margin-left:auto}
-.nav-links a{font-size:15px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .15s var(--ease)}
-.nav-links a:hover{color:var(--ink)}
-@media (max-width:720px){.nav-links{display:none}.nav .btn{margin-left:auto}}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 22px;border-radius:var(--r-s);font-size:15px;font-weight:500;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease)}
-.btn:hover{transform:translateY(-1px)}
-.btn:active{transform:translateY(1px) scale(.985);transition-duration:.09s}
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
-.btn-line{border-color:var(--line-2);background:var(--surface)}
-.btn-line:hover{border-color:var(--muted)}
-.btn-sm{height:36px;padding:0 14px;font-size:14px}
-.btn .arr{transition:transform .15s var(--ease)}
-.btn:hover .arr{transform:translateX(3px)}
-.btn[disabled]{opacity:.4;pointer-events:none}
-
-/* hero */
-.hero{position:relative;border-bottom:1px solid var(--line);overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(to bottom,#000 40%,transparent);-webkit-mask-image:linear-gradient(to bottom,#000 40%,transparent);pointer-events:none}
-.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding-block:88px 72px}
-@media (max-width:960px){.hero .wrap{grid-template-columns:1fr;gap:40px;padding-block:56px 48px}}
-.chip{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px;border:1px solid var(--line-2);border-radius:999px;font-size:13px;font-weight:500;color:var(--muted);background:var(--surface)}
-.chip i{width:6px;height:6px;border-radius:50%;background:var(--accent);display:block}
-h1{font-size:clamp(38px,5.4vw,64px);line-height:1.04;letter-spacing:-.035em;font-weight:600;margin:20px 0 20px;text-wrap:balance}
-h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
-h1 .ln>span{display:block}
-h1 em{font-style:normal;color:var(--muted)}
-.lead{font-size:18px;color:var(--muted);max-width:52ch;margin:0 0 32px}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
-.facts{display:flex;flex-wrap:wrap;gap:28px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
-.facts div{display:flex;flex-direction:column}
-.facts b{font-size:28px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.facts span{font-size:13px;color:var(--muted);font-weight:500}
-
-.m-enter h1 .ln>span{animation:rise .7s var(--ease-in) both}
-.m-enter h1 .ln:nth-child(2)>span{animation-delay:.08s}
-.m-enter h1 .ln:nth-child(3)>span{animation-delay:.16s}
-.m-enter [data-up]{animation:fadeup .52s var(--ease-in) both}
-.m-enter [data-up="1"]{animation-delay:.28s}.m-enter [data-up="2"]{animation-delay:.34s}.m-enter [data-up="3"]{animation-delay:.40s}.m-enter [data-up="4"]{animation-delay:.46s}
-@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
-@keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-
-/* preview card (hero) */
-.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
-.pbar{display:flex;align-items:center;gap:12px;height:44px;padding:0 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
-.pbar .dots{display:flex;gap:6px}.pbar .dots i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
-.pbar .path{font-family:var(--f-mono);font-size:12.5px}
-.pbar .tabs{margin-left:auto;display:flex;gap:2px;background:var(--surface-2);border-radius:7px;padding:2px}
-.pbar .tabs span{padding:3px 10px;border-radius:5px;font-size:12.5px}
-.pbar .tabs span.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
-.pbody{padding:24px;display:grid;gap:20px}
-.pq{font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
-.pq b{color:var(--ink);font-weight:500}
-
-/* matrices and shapes */
-.mx{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:330px;margin:0 auto;width:100%}
-.mx .c{aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);display:grid;place-items:center;color:var(--ink);position:relative}
-.mx .c svg{width:86%;height:86%;display:block}
-.mx .c.q{border-style:dashed;border-color:var(--line-2);background:transparent;color:var(--muted);font-family:var(--f-mono);font-size:22px}
-.mx .c.q.hit{border-style:solid;border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
-.opts-mini{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.opts-mini div{aspect-ratio:1;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--ink);transition:border-color .2s var(--ease),background-color .2s var(--ease)}
-.opts-mini div svg{width:80%;height:80%}
-.opts-mini div.on{border-color:var(--muted)}
-.opts-mini div.ok{border-color:var(--accent);background:var(--accent-soft)}
-
-/* sections */
-section.sec{padding-block:112px 72px;border-bottom:1px solid var(--line)}
-@media (max-width:720px){section.sec{padding-block:80px 48px}}
-.sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:48px}
-.sec-head h2{font-size:clamp(28px,3.2vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:600;margin:12px 0 0;text-wrap:balance;max-width:20ch}
-.sec-head p{color:var(--muted);max-width:46ch;margin:0}
-.label{font-size:13px;font-weight:500;color:var(--muted)}
-
-/* domain cards grid */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media (max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:620px){.grid{grid-template-columns:1fr}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s var(--ease),border-color .15s var(--ease)}
-.card:hover{transform:translateY(-2px);border-color:var(--line-2)}
-.stage{height:184px;background:var(--surface-2);border-bottom:1px solid var(--line);display:grid;place-items:center;position:relative;overflow:hidden;background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:16px 16px}
-.card-body{padding:18px 20px 20px;display:grid;gap:6px}
-.card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.card h3{font-size:16px;font-weight:600;margin:0;letter-spacing:-.01em}
-.tag{font-family:var(--f-mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap}
-.card p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
-.motion-toggle{display:inline-flex;align-items:center;gap:8px}
-
-/* stage demos */
-.d-mx{display:grid;grid-template-columns:repeat(3,38px);gap:4px}
-.d-mx div{width:38px;height:38px;border:1px solid var(--line-2);border-radius:7px;display:grid;place-items:center;background:var(--surface);color:var(--ink)}
-.d-mx div svg{width:30px;height:30px}
-.d-mx .qq{position:relative;border-style:dashed}
-.d-mx .qq span,.d-mx .qq svg{position:absolute;inset:0;margin:auto}
-.d-mx .qq span{display:grid;place-items:center;font-family:var(--f-mono);color:var(--muted);animation:swapA 3.2s linear infinite}
-.d-mx .qq svg{color:var(--accent);animation:swapB 3.2s linear infinite}
-@keyframes swapA{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
-@keyframes swapB{0%,45%{opacity:0}50%,95%{opacity:1}100%{opacity:0}}
-.d-series{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent)}
-.d-series .track{display:flex;gap:14px;width:max-content;animation:slide 4s linear infinite}
-.d-series .track span{font-family:var(--f-mono);font-size:22px;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:6px 12px;min-width:56px;text-align:center}
-.d-series .track span.a{color:var(--accent);border-color:var(--accent)}
-@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.d-verbal{font-size:20px;font-weight:500;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;justify-content:center;padding:0 16px;letter-spacing:-.01em}
-.d-verbal .sep{font-family:var(--f-mono);color:var(--muted);font-size:16px}
-.d-verbal .slot{display:inline-block;min-width:76px;text-align:center;border-bottom:1.5px solid var(--line-2);transition:color .2s var(--ease)}
-.d-verbal .slot.ok{color:var(--accent);border-color:var(--accent)}
-.d-spatial{display:flex;gap:28px;align-items:center}
-.d-spatial svg{width:70px;height:70px;color:var(--ink)}
-.d-spatial .spin{animation:spin 3.2s var(--ease-travel) infinite}
-@keyframes spin{0%,20%{transform:rotate(0)}30%,45%{transform:rotate(90deg)}55%,70%{transform:rotate(180deg)}80%,95%{transform:rotate(270deg)}100%{transform:rotate(360deg)}}
-.d-mem{display:flex;gap:8px}
-.d-mem span{width:38px;height:48px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);display:grid;place-items:center;font-family:var(--f-mono);font-size:22px;transition:opacity .15s var(--ease),transform .15s var(--ease)}
-.d-mem span.off{opacity:.15;transform:translateY(3px)}
-.d-scan{position:relative;display:grid;grid-template-columns:repeat(8,22px);gap:4px 6px;font-size:16px;line-height:22px;text-align:center;color:var(--muted)}
-.d-scan b{color:var(--accent);font-weight:400}
-.d-scan .bar{position:absolute;left:-8px;right:-8px;top:0;height:22px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft);animation:scan 3.2s var(--ease-travel) infinite}
-@keyframes scan{0%,15%{transform:translateY(0)}25%,40%{transform:translateY(26px)}50%,65%{transform:translateY(52px)}75%,90%{transform:translateY(78px)}100%{transform:translateY(0)}}
-html[data-motion="off"] *{animation-play-state:paused!important}
-
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
-@media (max-width:820px){.steps{grid-template-columns:1fr}}
-.step{border-top:1px solid var(--line-2);padding-top:20px;display:grid;gap:8px}
-.step .n{font-family:var(--f-mono);font-size:13px;color:var(--accent)}
-.step h3{margin:0;font-size:18px;font-weight:600;letter-spacing:-.015em}
-.step p{margin:0;color:var(--muted);font-size:15px}
-
-/* scoring */
-.score-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center}
-@media (max-width:900px){.score-wrap{grid-template-columns:1fr}}
-.bell{width:100%;height:auto;display:block;overflow:visible}
-.bell text{fill:var(--muted);font-family:var(--f-mono);font-size:12px}
-.bands{display:grid;gap:0;margin:0;padding:0;list-style:none}
-.bands li{display:grid;grid-template-columns:96px 1fr auto;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;align-items:baseline}
-.bands li:first-child{border-top:1px solid var(--line)}
-.bands .r{font-family:var(--f-mono);color:var(--muted);font-size:14px}
-.bands .p{font-family:var(--f-mono);color:var(--muted);font-size:13px}
-.note{font-size:14px;color:var(--muted);margin-top:20px;max-width:58ch}
-
-/* faq */
-.faq{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 56px}
-@media (max-width:820px){.faq{grid-template-columns:1fr;gap:32px}}
-.faq h3{font-size:17px;margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
-.faq p{margin:0;color:var(--muted);font-size:15px;max-width:60ch}
-
-.cta-band{padding-block:96px}
-.cta-band .wrap{display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap}
-.cta-band h2{font-size:clamp(28px,3.4vw,44px);letter-spacing:-.035em;line-height:1.08;font-weight:600;margin:0;max-width:18ch;text-wrap:balance}
-footer{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:13px}
-footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-
-/* ---------- test app ---------- */
-#app{min-height:100%}
-.t-top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
-.t-top .wrap{height:64px;display:flex;align-items:center;gap:20px}
-.t-top .meta{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:14px;color:var(--muted)}
-#tCount{white-space:nowrap}
-@media (max-width:560px){.t-top .wrap{gap:12px}.t-top .logo{font-size:0;gap:0;min-width:44px;min-height:44px;justify-content:flex-start;align-items:center}.t-top .meta{gap:10px}.opts[style*="repeat(5"]{grid-template-columns:repeat(3,1fr)!important}}
-.t-top .clock{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 10px}
-.t-top .clock.low{color:var(--bad);border-color:var(--bad)}
-.prog{height:2px;background:var(--line);position:relative;overflow:hidden}
-.prog i{position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform .24s var(--ease)}
-.t-main{padding-block:48px 96px}
-.t-grid{display:grid;grid-template-columns:220px 1fr;gap:48px}
-@media (max-width:900px){.t-grid{grid-template-columns:1fr;gap:24px}}
-.rail{display:grid;gap:4px;align-content:start;position:sticky;top:120px}
-@media (max-width:900px){.rail{display:none}}
-.rail .d{font-size:13px;font-weight:500;color:var(--muted);margin:14px 0 6px}
-.rail .d:first-child{margin-top:0}
-.rail .row{display:flex;flex-wrap:wrap;gap:4px}
-.rail button{width:30px;height:30px;border-radius:7px;border:1px solid var(--line);background:var(--surface);font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer;transition:border-color .15s var(--ease)}
-.rail button.done{color:var(--ink);border-color:var(--line-2);background:var(--surface-2)}
-.rail button.cur{border-color:var(--accent);color:var(--ink)}
-.qcard{max-width:760px;display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
-.t-grid>*{min-width:0}
-.qcard>*{min-width:0}
-.qhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.qhead .num{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
-.qtitle{font-size:clamp(22px,2.6vw,30px);line-height:1.25;letter-spacing:-.025em;font-weight:600;margin:0;text-wrap:balance}
-.qsub{color:var(--muted);margin:-16px 0 0;font-size:15px}
-.qcard .mx{max-width:360px;margin:0}
-.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.opts.text{grid-template-columns:repeat(2,1fr)}
-@media (max-width:560px){.opts{grid-template-columns:repeat(3,1fr)}.opts.text{grid-template-columns:1fr}}
-.opt{position:relative;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-m);cursor:pointer;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:56px;transition:border-color .15s var(--ease),transform .15s var(--ease),background-color .15s var(--ease)}
-.opt:hover{border-color:var(--line-2);transform:translateY(-1px)}
-.opt:active{transform:translateY(1px) scale(.985)}
-.opt .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:5px;width:22px;height:22px;display:grid;place-items:center;flex:none}
-.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
-.opt.sel .k{border-color:var(--accent);color:var(--accent)}
-.opt.fig{flex-direction:column;padding:10px;gap:6px;align-items:stretch}
-.opt.fig .k{position:absolute;top:8px;left:8px}
-.opt.fig svg{width:100%;height:auto;aspect-ratio:1;display:block;color:var(--ink)}
-.opt.fig.wide svg{aspect-ratio:5/3}
-.target{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.target svg{width:150px;height:150px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-m)}
-.seq{display:flex;gap:10px;flex-wrap:wrap}
-.seq span{min-width:60px;height:60px;padding:0 12px;border:1px solid var(--line-2);border-radius:var(--r-s);background:var(--surface);display:grid;place-items:center;font-family:var(--f-mono);font-size:24px}
-.seq span.blank{border-style:dashed;color:var(--muted)}
-.memo{border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface-2);min-height:150px;display:grid;place-items:center;padding:24px;text-align:center}
-.memo .big{font-family:var(--f-mono);font-size:64px;line-height:1;letter-spacing:.02em}
-.memo .hint{color:var(--muted);font-size:14px}
-.field{display:grid;gap:8px;max-width:360px}
-.field label{font-size:14px;font-weight:500}
-.field input{height:48px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:var(--r-s);padding:0 14px;font-family:var(--f-mono);font-size:20px;letter-spacing:.12em}
-.field input:focus{outline:2px solid var(--accent);outline-offset:1px}
-.scan-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;max-width:440px;font-size:22px;text-align:center;line-height:1}
-.scan-grid span{aspect-ratio:1;display:grid;place-items:center;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
-.scan-grid.hide span{color:transparent;background:var(--surface-2)}
-.tbar{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
-.tbar .tb{flex:1;max-width:240px;height:4px;background:var(--line);border-radius:4px;overflow:hidden}
-.tbar .tb i{display:block;height:100%;background:var(--accent);transform-origin:left;transition:transform 1s linear}
-.qnav{display:flex;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
-.kbd{font-size:13px;color:var(--muted)}
-@media (max-width:560px){.kbd{display:none}}
-
-/* results */
-.res-hero{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding-bottom:48px;border-bottom:1px solid var(--line)}
-@media (max-width:820px){.res-hero{grid-template-columns:1fr;gap:24px}}
-.res-num{font-size:clamp(88px,12vw,148px);line-height:.9;font-weight:600;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
-.res-meta{display:grid;gap:8px}
-.res-meta .cls{font-size:22px;font-weight:600;letter-spacing:-.02em}
-.res-meta p{margin:0;color:var(--muted);max-width:56ch}
-.res-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding-block:48px;border-bottom:1px solid var(--line)}
-@media (max-width:820px){.res-cols{grid-template-columns:1fr}}
-.res-cols h3{font-size:17px;margin:0 0 16px;font-weight:600}
-.dbars{display:grid;gap:14px}
-.dbar{display:grid;gap:6px}
-.dbar .top{display:flex;justify-content:space-between;font-size:14.5px}
-.dbar .top span:last-child{font-family:var(--f-mono);color:var(--muted);font-size:13px}
-.dbar .track{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
-.dbar .track i{display:block;height:100%;background:var(--accent);border-radius:6px;transform-origin:left;transform:scaleX(0);transition:transform .6s var(--ease-in)}
-.review{display:grid;gap:0;padding-top:24px}
-.rv{display:grid;grid-template-columns:40px 1fr auto;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start}
-.rv .n{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding-top:2px}
-.rv .q{font-weight:500;font-size:15px}
-.rv .x{color:var(--muted);font-size:14.5px;margin-top:4px}
-.pill{font-size:12.5px;font-weight:500;border-radius:999px;padding:2px 10px;border:1px solid}
-.pill.ok{color:var(--good);border-color:var(--good)}
-.pill.no{color:var(--bad);border-color:var(--bad)}
-.qcard{animation:qin .24s var(--ease-in) both}
-@keyframes qin{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
-.opt.sel{animation:tap .2s var(--ease)}
-@keyframes tap{0%{transform:scale(.97)}100%{transform:scale(1)}}
-.opt.mono span:last-child{font-family:var(--f-mono);letter-spacing:.06em}
-.seq.figs span{width:72px;height:72px;padding:6px;color:var(--ink)}
-.seq.figs span svg{width:100%;height:100%}
-@media (max-width:560px){.seq.figs span{width:52px;height:52px;min-width:0}}
-.scales{display:grid;gap:10px}
-.scales div{display:flex;align-items:center;gap:14px}
-.scales span{min-width:96px;height:52px;padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r-s);background:var(--surface);display:grid;place-items:center;font-size:22px;letter-spacing:.1em}
-.scales span.blank{border-style:dashed;color:var(--muted);font-family:var(--f-mono);font-size:18px}
-.scales i{font-style:normal;font-family:var(--f-mono);color:var(--muted)}
-.compass{width:120px;height:120px;border:1px solid var(--line-2);border-radius:50%;position:relative;background:var(--surface);font-family:var(--f-mono);font-size:13px;color:var(--muted)}
-.compass span{position:absolute}
-.compass span:nth-child(1){top:8px;left:50%;transform:translateX(-50%);color:var(--accent)}
-.compass span:nth-child(2){right:10px;top:50%;transform:translateY(-50%)}
-.compass span:nth-child(3){bottom:8px;left:50%;transform:translateX(-50%)}
-.compass span:nth-child(4){left:10px;top:50%;transform:translateY(-50%)}
-.codekey{display:flex;flex-wrap:wrap;gap:8px}
-.codekey span{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:var(--r-s);padding:6px 12px;font-size:20px;background:var(--surface-2)}
-.codekey b{font-family:var(--f-mono);font-weight:500;font-size:16px;color:var(--accent)}
-.rail .legend{display:grid;gap:6px;margin-top:20px;font-size:13px;color:var(--muted)}
-.rail .legend div{display:flex;justify-content:space-between;gap:8px}
-.rail .legend b{font-family:var(--f-mono);font-weight:400;color:var(--ink)}
-.cp{max-width:640px;display:grid;gap:24px;padding:40px;border:1px solid var(--line);border-radius:var(--r-l);background:var(--surface);animation:qin .3s var(--ease-in) both}
-@media (max-width:560px){.cp{padding:24px}}
-.cp h2{font-size:clamp(26px,3vw,34px);letter-spacing:-.03em;line-height:1.1;margin:0;font-weight:600}
-.cp .stats{display:flex;gap:32px;flex-wrap:wrap}
-.cp .stats div{display:grid}
-.cp .stats b{font-size:28px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.cp .stats span{font-size:13px;color:var(--muted)}
-.cp .fact{border-left:2px solid var(--accent);padding-left:16px;color:var(--muted);margin:0}
-.cp .fact b{display:block;color:var(--ink);font-weight:500;font-size:14px;margin-bottom:4px}
-.cp .segs{display:flex;gap:6px}
-.cp .segs i{flex:1;height:6px;border-radius:6px;background:var(--line)}
-.cp .segs i.on{background:var(--accent)}
-.memo .count{font-family:var(--f-mono);font-size:40px;color:var(--muted)}
-.callouts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
-@media (max-width:560px){.callouts{grid-template-columns:1fr}}
-.callouts div{border:1px solid var(--line);border-radius:var(--r-m);padding:16px;background:var(--surface)}
-.callouts span{font-size:13px;color:var(--muted);display:block}
-.callouts b{font-weight:600;font-size:16px}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-/* mobile polish */
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-button,a,.opt{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-@media (max-width:560px){
-  .t-main{padding-block:28px 64px}
-  .qcard{gap:22px}
-  .qtitle{font-size:21px}
-  .opt{min-height:56px}
-  .seq{gap:8px}.seq span{min-width:48px;height:52px;font-size:20px;padding:0 8px}
-  .memo{padding:20px 16px}.memo .big{font-size:clamp(40px,14vw,64px)}
-  .field input{font-size:18px;letter-spacing:.08em}
-  .scan-grid{font-size:clamp(14px,4.6vw,22px);gap:3px}
-  .target svg{width:120px;height:120px}
-  .qnav .btn{min-height:48px}
-  .btn-sm{min-height:44px}
-  .nav .btn,.t-top .btn{min-height:44px}
-  .nav .logo{min-height:44px}
-}
-@media (max-width:340px){.t-top .logo{display:none}.t-top .meta{margin-left:0;width:100%;justify-content:space-between}.t-top .clock{padding:3px 8px}}
-/* press carousel + stats */
-.trust{padding-block:36px;border-block:1px solid var(--line);overflow:hidden}
-.trust .label{text-align:center;margin:0 0 22px}
-.marq{display:flex;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.marq-track{display:flex;flex:none;align-items:center;margin:0;padding:0;list-style:none;animation:marq var(--marq-dur,32s) linear infinite;will-change:transform}
-.marq:hover .marq-track{animation-play-state:paused}
-.marq li{flex:none;display:flex;align-items:center;padding:6px 28px}
-.marq img{height:20px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.55;transition:opacity .2s}
-.marq li:hover img{opacity:.95}
-:root[data-theme="light"] .marq img{filter:brightness(0);opacity:.5}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .marq img{filter:brightness(0);opacity:.5}}
-@keyframes marq{to{transform:translateX(-100%)}}
-.statsec{padding-block:72px}
-.stats-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center}
-.statsec h2{margin:0;font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.025em;font-weight:600;text-wrap:balance}
-.stat-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0}
-.stat{position:relative;padding:20px 18px 18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
-.stat::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:36%;background:var(--accent);border-radius:2px}
-.stat dd{margin:0;order:0}
-.stat dt{margin-top:8px;color:var(--muted);font-size:13.5px;line-height:1.35}
-.stat{display:flex;flex-direction:column-reverse;justify-content:flex-end}
-.stat b{font-family:var(--f-mono);font-size:clamp(28px,3.6vw,40px);font-weight:600;letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums}
-.ph-note{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;margin:4px 0 0}
-@media (max-width:860px){.statsec{padding-block:48px}.stats-grid{grid-template-columns:minmax(0,1fr);gap:28px}}
-@media (max-width:560px){.trust{padding-block:28px}.marq li{padding:6px 22px}.stat-list{grid-template-columns:minmax(0,1fr);gap:10px}.stat{flex-direction:row-reverse;align-items:baseline;justify-content:space-between;gap:12px;padding:16px}.stat dt{margin:0}}
-
-/* moments: encouragement interstitials */
-.mo{max-width:680px;margin:0 auto;display:grid;justify-items:center;gap:22px;text-align:center;padding:28px 0 8px;animation:qin .35s var(--ease-in) both}
-.mo .segs{display:flex;gap:6px;width:min(320px,100%)}
-.mo .segs i{flex:1;height:5px;border-radius:5px;background:var(--line)}
-.mo .segs i.on{background:var(--accent)}
-.mo h2{margin:0;font-size:clamp(28px,5.4vw,46px);line-height:1.08;letter-spacing:-.035em;font-weight:600;text-wrap:balance}
-.mo h2 .hl{color:var(--accent)}
-.mo p{margin:0;color:var(--muted);font-size:clamp(15px,2.2vw,18px);line-height:1.55;max-width:520px;text-wrap:pretty}
-.mo-ico{position:relative;width:168px;height:168px;display:grid;place-items:center;margin:4px 0}
-.mo-ico .ring{position:absolute;inset:22px;border-radius:50%;border:1.5px solid var(--line-2);background:var(--surface)}
-.mo-ico .orbit{position:absolute;inset:0;animation:spin 24s linear infinite}
-.mo-ico .orbit circle{fill:none;stroke:var(--line-2);stroke-width:2;stroke-linecap:round;stroke-dasharray:.1 9}
-.mo-ico .glyph{position:relative;width:76px;height:76px;color:var(--accent);animation:pulse 2.4s var(--ease-in) infinite}
-.mo-ico .halo{position:absolute;inset:22px;border-radius:50%;background:var(--accent);opacity:.1;animation:halo 2.4s var(--ease-in) infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{50%{transform:scale(1.08)}}
-@keyframes halo{0%,100%{transform:scale(.9);opacity:.12}50%{transform:scale(1.08);opacity:.04}}
-.mo .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.mo .chips span{padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:13.5px;color:var(--muted);transition:transform .4s var(--ease-in),opacity .4s;opacity:.55}
-.mo .chips span.on{color:var(--ink);border-color:var(--accent);background:var(--accent-soft);opacity:1}
-.mo .reel{height:1.1em;overflow:hidden;font-family:var(--f-mono);font-size:clamp(64px,16vw,104px);line-height:1.1em;font-weight:600;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
-.mo .reel-col{display:flex;flex-direction:column;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
-.mo .reel-col b{height:1.1em;display:block;font-weight:600}
-.mo .big{font-family:var(--f-mono);font-size:clamp(56px,14vw,88px);font-weight:600;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-.mo .big small{font-size:.38em;color:var(--muted);letter-spacing:0}
-.mo .meter{width:min(320px,100%);height:8px;border-radius:8px;background:var(--line);overflow:hidden}
-.mo .meter i{display:block;height:100%;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
-.mo .hold{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.mo .fact{border-left:2px solid var(--accent);padding-left:14px;text-align:left;font-size:14px;max-width:520px}
-.mo .fact b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
-.mo .btn{min-width:min(280px,100%);justify-content:center}
-.wordcard{padding:28px 40px;border-radius:var(--r-l);background:var(--surface);border:1px solid var(--line);font-size:clamp(34px,8vw,56px);font-weight:600;letter-spacing:-.03em}
-.mo .opts-w{display:grid;gap:10px;width:min(360px,100%)}
-.mo .opts-w .opt{justify-content:center}
-.cheer{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;pointer-events:none;z-index:30;padding:8px 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:13.5px;font-weight:500;white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
-.cheer.on{animation:cheer 1.3s var(--ease-in) both}
-@keyframes cheer{0%{opacity:0;transform:translate(-50%,12px)}15%,75%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-6px)}}
-html[data-motion="off"] .mo *,html[data-motion="off"] .cheer{animation:none!important;transition:none!important}
-@media (prefers-reduced-motion:reduce){.mo *,.cheer{animation:none!important;transition:none!important}.cheer.on{opacity:1;transform:translate(-50%,0)}}
-@media (max-width:560px){.mo-ico{width:132px;height:132px}.mo-ico .glyph{width:60px;height:60px}.wordcard{padding:22px 28px}}
-
-/* landing extras */
-.rise.pre{opacity:0;transform:translateY(16px)}
-.rise{transition:opacity .6s var(--ease-in,ease),transform .6s var(--ease-in,ease)}
-html[data-motion="off"] .rise,html[data-motion="off"] .rise.pre{opacity:1;transform:none;transition:none}
-@media (prefers-reduced-motion:reduce){.rise,.rise.pre{opacity:1;transform:none;transition:none}}
-.x-head{max-width:640px;margin:0 0 36px}
-.x-head h2{margin:8px 0 12px;font-size:clamp(26px,3.6vw,40px);line-height:1.1;letter-spacing:-.025em;font-weight:600;text-wrap:balance}
-.x-head p{margin:0;color:var(--muted)}
-.minds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0;padding:0;list-style:none}
-.mind{position:relative;display:flex;flex-direction:column;gap:14px;padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;transition:transform .25s var(--ease-in,ease),border-color .25s}
-.mind:hover{transform:translateY(-3px);border-color:var(--line-2)}
-.mono-av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;font-size:16px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line-2)}
-.mind h3{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
-.mind .era{color:var(--muted);font-size:13px;margin-top:2px}
-.mind .est{margin-top:auto;display:flex;align-items:baseline;gap:8px;font-family:var(--f-mono)}
-.mind .est b{font-size:30px;font-weight:600;letter-spacing:-.03em}
-.mind .est span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.mind .tr{height:4px;border-radius:4px;background:var(--line);overflow:hidden}
-.mind .tr i{display:block;height:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform 1.1s var(--ease-in,ease)}
-.mind.in .tr i{transform:scaleX(var(--w))}
-html[data-motion="off"] .mind .tr i,.mind.nomo .tr i{transform:scaleX(var(--w));transition:none}
-.fine{margin:18px 0 0;color:var(--muted);font-size:12.5px;max-width:70ch}
-.bp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
-.bp-list{display:grid;gap:12px;margin:22px 0 0;padding:0;list-style:none}
-.bp-list li{display:flex;gap:12px;align-items:flex-start;color:var(--muted);font-size:15px}
-.bp-list li b{color:var(--ink);font-weight:600}
-.bp-list svg{flex:none;width:20px;height:20px;margin-top:2px;color:var(--accent)}
-.radar-card{border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:20px}
-.radar{display:block;width:100%;height:auto;overflow:visible}
-.radar .ring{fill:none;stroke:var(--line);stroke-width:1}
-.radar .ax{stroke:var(--line);stroke-width:1}
-.radar .shape{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2;stroke-linejoin:round;transform-origin:180px 160px;transform:scale(.05);opacity:0;transition:transform 1.1s var(--ease-in,ease),opacity .6s}
-.radar.in .shape{transform:scale(1);opacity:1}
-html[data-motion="off"] .radar .shape,.radar.nomo .shape{transform:none;opacity:1;transition:none}
-.radar .dot{fill:var(--accent)}
-.radar text{fill:var(--muted);font-size:11.5px;font-family:inherit}
-.radar-cap{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:var(--muted);font-size:12px;font-family:var(--f-mono)}
-.certsec .cert-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center}
-.cert-sheet{position:relative;color:#1b1d24;background:#fbf8f1;border-radius:14px;padding:clamp(18px,3.4vw,34px);text-align:center;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 24px 60px -24px rgba(0,0,0,.55);overflow:hidden;font-family:inherit}
-.cert-sheet::before{content:"";position:absolute;inset:8px;border:1px solid #cdbf9f;border-radius:8px;pointer-events:none}
-.cert-sheet::after{content:"";position:absolute;inset:13px;border:1px solid #e3d9c0;border-radius:5px;pointer-events:none}
-.cert-sheet .c-brand{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;letter-spacing:-.01em}
-.cert-sheet .c-brand i{width:18px;height:18px;border-radius:5px;background:#3b82f6;display:inline-block}
-.cert-sheet .c-kicker{margin:14px 0 2px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7b705a}
-.cert-sheet h3{margin:0;font-size:clamp(20px,3.2vw,28px);letter-spacing:-.02em;font-weight:600}
-.cert-sheet .c-name{margin:14px auto 4px;font-size:clamp(20px,3.4vw,30px);font-weight:600;border-bottom:1px solid #cdbf9f;padding:2px 16px 6px;max-width:100%;overflow-wrap:anywhere;display:inline-block;min-width:50%}
-.cert-sheet .c-line{margin:8px 0 0;font-size:13px;color:#4f4a3d}
-.cert-sheet .c-score{margin:12px 0 2px;font-family:var(--f-mono);font-size:clamp(46px,8vw,72px);line-height:1;font-weight:600;letter-spacing:-.05em;color:#2563eb}
-.cert-sheet .c-cls{font-size:14px;font-weight:600}
-.cert-sheet .c-foot{display:flex;justify-content:space-between;gap:12px;margin-top:18px;font-size:11px;color:#7b705a;font-family:var(--f-mono);text-align:left}
-.cert-sheet .c-fine{margin:10px 0 0;font-size:10.5px;color:#7b705a}
-.cert-sheet .c-stamp{position:absolute;right:22px;top:22px;transform:rotate(8deg);border:1.5px solid #b45309;color:#b45309;border-radius:6px;padding:2px 8px;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
-.cert-form{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
-.cert-form input{flex:1 1 200px;min-width:0;padding:11px 14px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font:inherit}
-.cert-form input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.res-cert{padding-block:48px;border-bottom:1px solid var(--line)}
-.res-cert h3{font-size:17px;margin:0 0 16px;font-weight:600}
-.why-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.why{padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
-.why svg{width:26px;height:26px;color:var(--accent);margin-bottom:14px}
-.why h3{margin:0 0 6px;font-size:16px;font-weight:600}
-.why p{margin:0;color:var(--muted);font-size:14px}
-.acc{display:grid;gap:10px;max-width:820px}
-.acc details{border:1px solid var(--line);border-radius:14px;background:var(--surface);transition:border-color .2s}
-.acc details[open]{border-color:var(--line-2)}
-.acc summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;font-weight:600;font-size:15.5px;min-height:48px}
-.acc summary::-webkit-details-marker{display:none}
-.acc summary::after{content:"";flex:none;width:10px;height:10px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-2px);transition:transform .25s var(--ease-in,ease)}
-.acc details[open] summary::after{transform:rotate(225deg) translateY(-2px)}
-.acc summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
-.acc .ans{padding:0 18px 18px;color:var(--muted);font-size:14.5px}
-.acc .ans p{margin:0}
-@media (max-width:980px){.minds,.why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bp,.certsec .cert-grid{grid-template-columns:minmax(0,1fr);gap:28px}}
-@media (max-width:560px){.minds,.why-grid{grid-template-columns:minmax(0,1fr)}.mind{flex-direction:row;flex-wrap:wrap;align-items:center}.mind .est{margin-top:0;margin-left:auto}.mind .tr{flex:1 0 100%}.x-head{margin-bottom:24px}.cert-sheet .c-foot{flex-direction:column;gap:2px}.cert-sheet .c-stamp{position:static;display:inline-block;margin-top:8px;transform:none}}
-@media print{body *{visibility:hidden!important}.cert-sheet,.cert-sheet *{visibility:visible!important}.cert-sheet{position:fixed;left:0;top:0;width:100%;box-shadow:none;border-radius:0}@page{margin:14mm}}
-
-.ph-tag{display:inline-block;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line-2);border-radius:6px;padding:2px 7px;vertical-align:middle}
-.rate{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0 0;color:var(--muted);font-size:14px}
-.stars{display:inline-flex;gap:2px;color:#f5b301}
-.stars svg{width:16px;height:16px;fill:currentColor}
-.rate b{color:var(--ink);font-weight:600}
-.revs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.rev{display:flex;flex-direction:column;gap:12px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
-.rev p{margin:0;font-size:15px}
-.rev .who{margin-top:auto;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
-.rev .who .mono-av{width:34px;height:34px;font-size:12px}
-.rank{display:grid;gap:10px;max-width:720px;margin:0;padding:0;list-style:none}
-.rank li{display:grid;grid-template-columns:28px minmax(0,150px) minmax(0,1fr) 44px;align-items:center;gap:12px;font-size:14px}
-.rank .n{font-family:var(--f-mono);color:var(--muted)}
-.rank .tr{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
-.rank .tr i{display:block;height:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform 1.1s var(--ease-in,ease)}
-.rank.in .tr i,.rank.nomo .tr i{transform:scaleX(var(--w))}
-.rank b{font-family:var(--f-mono);text-align:right;font-weight:600}
-@media (max-width:980px){.revs{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:560px){.rank li{grid-template-columns:22px minmax(0,1fr) 40px}.rank .tr{grid-column:2/-1;grid-row:2}}
-
-.gate{max-width:560px;margin:0 auto;text-align:center;display:grid;gap:18px;justify-items:center;padding-block:16px}
-.gate .mockbar{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line-2);border-radius:8px;padding:6px 12px}
-.gate h2{margin:0;font-size:clamp(24px,5vw,34px);letter-spacing:-.025em;line-height:1.1;text-wrap:balance}
-.gate .blur{font-family:var(--f-mono);font-size:clamp(64px,18vw,104px);font-weight:600;letter-spacing:-.05em;line-height:1;color:var(--accent);filter:blur(10px);user-select:none}
-.gate .timer{font-family:var(--f-mono);color:var(--muted);font-size:14px}
-.gate .timer b{color:var(--ink)}
-.plans{display:grid;gap:10px;width:100%;text-align:left;border:0;padding:0;margin:0}
-.plan{position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);cursor:pointer;min-height:64px}
-.plan input{position:absolute;opacity:0;pointer-events:none}
-.plan .dot{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center}
-.plan .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);transform:scale(0);transition:transform .2s var(--ease-in,ease)}
-.plan:has(input:checked){border-color:var(--accent)}
-.plan:has(input:checked) .dot{border-color:var(--accent)}
-.plan:has(input:checked) .dot::after{transform:scale(1)}
-.plan:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
-.plan .t{flex:1;min-width:0}.plan .t b{display:block;font-size:15.5px}.plan .t span{color:var(--muted);font-size:13px}
-.plan .pr{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
-.plan .best{position:absolute;right:14px;top:-9px;background:var(--accent);color:#fff;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border-radius:6px;padding:2px 8px}
-.gate ul.inc{list-style:none;margin:0;padding:0;display:grid;gap:6px;color:var(--muted);font-size:14px;text-align:left}
-.gate .btn{width:100%}
-.gate .fine{margin:0;text-align:center}
-</style>
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="landing.css">
+<link rel="stylesheet" href="app.css">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <pattern id="gm-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -561,783 +33,253 @@ html[data-motion="off"] .radar .shape,.radar.nomo .shape{transform:none;opacity:
 </header>
 
 <main id="top">
-<section class="hero" data-enter aria-labelledby="hero-h">
-  <div class="wrap">
-    <div>
-      <span class="chip" data-up="1"><i></i>20 original items · 6 domains</span>
-      <h1 id="hero-h"><span class="ln"><span>Measure how you</span></span><span class="ln"><span>reason, <em>not what</em></span></span><span class="ln"><span><em>you memorised.</em></span></span></h1>
-      <p class="lead" data-up="2">Brightfold is a free reasoning test built on the six domains clinical IQ batteries use. Expect balance scales, codes, clock faces, hidden words, memory flashes and pattern puzzles, shuffled so no two items in a row feel alike.</p>
-      <div class="hero-ctas" data-up="3">
-        <button class="btn btn-primary js-start">Start the 16-minute test <span class="arr" aria-hidden="true">→</span></button>
-        <a class="btn btn-line" href="#domains">See the six domains</a>
+
+<!-- 1. hero: statement left, live puzzle right -->
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-h"><span class="ln"><span>Measure how you</span></span><span class="ln"><span>reason, not what</span></span><span class="ln"><span>you memorised</span></span></h1>
+      <p class="lead hero-in" style="--d:.42s">Brightfold is a free reasoning test built on the six domains clinical IQ batteries use. Twenty original items, sixteen minutes, and a full breakdown of every answer.</p>
+      <div class="hero-ctas hero-in" style="--d:.52s">
+        <button class="btn btn-primary btn-block-m js-start">Start the 16-minute test <span class="arr" aria-hidden="true">→</span></button>
+        <a class="link" href="#domains">See the six domains</a>
       </div>
-      <div class="facts" data-up="4">
-        <div><b>20</b><span>questions</span></div>
-        <div><b>16:00</b><span>time limit</span></div>
-        <div><b>6</b><span>cognitive domains</span></div>
-        <div><b>σ 15</b><span>scale, mean 100</span></div>
+      <p class="hero-facts hero-in" style="--d:.62s">No account. Nothing leaves your browser tab.</p>
+    </div>
+
+    <div class="plate hero-in" style="--d:.34s" role="group" aria-label="Live example of a matrix item">
+      <div class="plate-top">
+        <span class="label">Which tile completes the grid?</span>
+        <button class="btn btn-tonal btn-sm" id="motionBtn" aria-pressed="false" type="button">Pause</button>
       </div>
-    </div>
-
-    <div class="pcard" data-up="3" aria-label="Live example of a matrix item">
-      <div class="pbar">
-        <div class="dots"><i></i><i></i><i></i></div>
-        <span class="path">fluid-reasoning / item-14</span>
-        <div class="tabs"><span class="on">Preview</span><span>Rule</span></div>
-      </div>
-      <div class="pbody">
-        <div class="pq"><span><b>Which tile completes the grid?</b></span><span class="mono">11 / 20</span></div>
-        <div class="mx" id="heroMx"></div>
-        <div class="opts-mini" id="heroOpts"></div>
-      </div>
+      <div class="mx" id="heroMx"></div>
+      <div class="opts" id="heroOpts"></div>
     </div>
   </div>
 </section>
 
-<!-- PLACEHOLDER (proof of concept): press logos and figures copied from myiq.com. Replace with real, permitted marks and verified numbers -->
-<section class="trust" aria-labelledby="trust-h">
-  <div class="wrap">
-    <p class="label" id="trust-h">Featured on</p>
-    <div class="marq" id="marq" role="group" aria-label="Press logos (placeholders)">
-      <ul class="marq-track" id="marqSrc"><li><img src="press/business-insider.svg" alt="Business Insider" height="20"></li><li><img src="press/digital-trends.svg" alt="Digital Trends" height="20"></li><li><img src="press/new_msn.svg" alt="MSN" height="20"></li><li><img src="press/newsweek.svg" alt="Newsweek" height="20"></li><li><img src="press/usa-today.svg" alt="USA Today" height="20"></li><li><img src="press/yahoo-finance.svg" alt="Yahoo Finance" height="20"></li></ul>
-    </div>
-    <p class="rate"><span class="stars" aria-hidden="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><span><b>4.8</b> out of 5 from 12,400+ reviews</span><span class="ph-tag">Placeholder</span></p>
+<!-- 2. press: one quiet static row. PLACEHOLDER (proof of concept): logos copied from myiq.com. Replace with real, permitted marks -->
+<section class="press" aria-label="Press">
+  <div class="wrap press-row">
+    <p class="label">Featured on <span class="ph-tag">Placeholder</span></p>
+    <ul>
+      <li><img src="press/business-insider.svg" alt="Business Insider" height="20"></li>
+      <li><img src="press/digital-trends.svg" alt="Digital Trends" height="20"></li>
+      <li><img src="press/new_msn.svg" alt="MSN" height="20"></li>
+      <li><img src="press/newsweek.svg" alt="Newsweek" height="20"></li>
+      <li><img src="press/usa-today.svg" alt="USA Today" height="20"></li>
+      <li><img src="press/yahoo-finance.svg" alt="Yahoo Finance" height="20"></li>
+    </ul>
   </div>
 </section>
 
-<section class="statsec" aria-labelledby="stats-h">
-  <div class="wrap stats-grid">
-    <h2 id="stats-h">Join millions discovering what their minds can do.</h2>
-    <dl class="stat-list">
-      <div class="stat"><dt>Test takers worldwide</dt><dd><b data-to="80" data-suf="M+">0</b></dd></div>
-      <div class="stat"><dt>Average IQ score today</dt><dd><b data-to="107" data-suf="">0</b></dd></div>
-      <div class="stat"><dt>Cognitive training exercises</dt><dd><b data-to="150" data-suf="+">0</b></dd></div>
-    </dl>
-    <p class="ph-note">Placeholder logos and figures. Replace before launch.</p>
-  </div>
-</section>
-
-<section class="sec" id="minds" aria-labelledby="minds-h">
-  <div class="wrap">
-    <div class="x-head rise"><span class="label">Famous minds</span><h2 id="minds-h">Where do history’s great thinkers sit on the scale?</h2><p>People have long tried to put a number on genius. Here are four popular retrospective guesses, for fun and perspective.</p></div>
-    <ul class="minds"><li class="mind rise"><span class="mono-av" aria-hidden="true">AE</span><div><h3>Albert Einstein</h3><div class="era">Physicist · 1879–1955</div></div><div class="est"><b>≈ 160</b><span>est.</span></div><div class="tr" aria-hidden="true"><i style="--w:.8"></i></div></li><li class="mind rise"><span class="mono-av" aria-hidden="true">IN</span><div><h3>Isaac Newton</h3><div class="era">Mathematician · 1643–1727</div></div><div class="est"><b>≈ 190</b><span>est.</span></div><div class="tr" aria-hidden="true"><i style="--w:.95"></i></div></li><li class="mind rise"><span class="mono-av" aria-hidden="true">LD</span><div><h3>Leonardo da Vinci</h3><div class="era">Polymath · 1452–1519</div></div><div class="est"><b>≈ 180</b><span>est.</span></div><div class="tr" aria-hidden="true"><i style="--w:.9"></i></div></li><li class="mind rise"><span class="mono-av" aria-hidden="true">SH</span><div><h3>Stephen Hawking</h3><div class="era">Cosmologist · 1942–2018</div></div><div class="est"><b>≈ 160</b><span>est.</span></div><div class="tr" aria-hidden="true"><i style="--w:.8"></i></div></li></ul>
-    <p class="fine rise">Placeholder content. None of these people sat a modern IQ test; figures are widely repeated, disputed estimates made long after the fact. Replace or remove before launch.</p>
-  </div>
-</section>
-
-<section class="sec" id="blueprint" aria-labelledby="bp-h">
-  <div class="wrap bp">
-    <div class="rise">
-      <span class="label">Your report</span><h2 id="bp-h" style="margin:8px 0 12px;font-size:clamp(26px,3.6vw,40px);line-height:1.1;letter-spacing:-.025em;font-weight:600;text-wrap:balance">A cognitive blueprint, not just one number</h2>
-      <p style="margin:0;color:var(--muted)">Two people can land on the same score for very different reasons. Your report shows the shape behind it.</p>
-      <ul class="bp-list">
-        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="m6.5 10.2 2.4 2.4 4.6-5"/></svg><span><b>Estimated score</b> on the familiar mean-100 scale, placed on the bell curve.</span></li>
-        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="m6.5 10.2 2.4 2.4 4.6-5"/></svg><span><b>Six domain bars</b> that show your strongest area and where there is room to grow.</span></li>
-        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="m6.5 10.2 2.4 2.4 4.6-5"/></svg><span><b>Pace and memory</b> notes from your checkpoints and the opening-word recall.</span></li>
-        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="m6.5 10.2 2.4 2.4 4.6-5"/></svg><span><b>Every item explained</b>, so you learn the rule behind each puzzle.</span></li>
-      </ul>
-    </div>
-    <div class="radar-card rise" aria-label="Sample domain profile">
-      <svg class="radar" id="radar" viewBox="0 0 360 330" role="img" aria-label="Sample radar chart of six cognitive domains"></svg>
-      <div class="radar-cap"><span>Sample profile</span><span>Yours appears after the test</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec certsec" id="certificate" aria-labelledby="cert-h">
-  <div class="wrap cert-grid">
-    <div class="rise">
-      <span class="label">Certificate</span><h2 id="cert-h" style="margin:8px 0 12px;font-size:clamp(26px,3.6vw,40px);line-height:1.1;letter-spacing:-.025em;font-weight:600;text-wrap:balance">Finish the test, keep a certificate. Free.</h2>
-      <p style="margin:0 0 20px;color:var(--muted)">Add your name on the results page, then print it or save it as a PDF. No email, no upsell.</p>
-      <button class="btn btn-primary js-start">Start the test <span class="arr" aria-hidden="true">→</span></button>
-    </div>
-    <div class="rise"></div>
-  </div>
-</section>
-
-<section class="sec" id="why" aria-labelledby="why-h">
-  <div class="wrap">
-    <div class="x-head rise"><span class="label">Why Brightfold</span><h2 id="why-h">Built to be finished, and worth finishing</h2></div>
-    <div class="why-grid">
-      <div class="why rise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg><h3>Short and varied</h3><p>Twenty original items shuffled across six domains, so no two in a row feel alike.</p></div>
-      <div class="why rise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Checkpoints, not stress</h3><p>Four pace screens pause the clock and show how your profile is taking shape.</p></div>
-      <div class="why rise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><h3>Explained answers</h3><p>Each item comes with the reasoning behind it, so a miss teaches you something.</p></div>
-      <div class="why rise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><h3>Private by design</h3><p>No account and no tracking of your answers. Everything stays in your tab.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="reviews" aria-labelledby="rev-h">
-  <div class="wrap">
-    <div class="x-head rise"><span class="label">Reviews</span><h2 id="rev-h">Loved by test takers <span class="ph-tag">Placeholder</span></h2><p>Proof-of-concept reviews. Replace with real, verified feedback before launch.</p></div>
-    <div class="revs"><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“Short enough to finish on a lunch break, and the puzzles actually varied. The checkpoint screens kept me going.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SA</span>Sample reviewer A</figcaption></figure><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“I liked that every answer came with an explanation. I finally understood number series.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SB</span>Sample reviewer B</figcaption></figure><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“The memory word at the end caught me out. Fun and a bit humbling. Certificate was a nice touch.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SC</span>Sample reviewer C</figcaption></figure><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“Clean, quick and no sign-up. Sent it to my whole family group chat.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SD</span>Sample reviewer D</figcaption></figure><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“The domain breakdown told me more than a single score would have.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SE</span>Sample reviewer E</figcaption></figure><figure class="rev rise" style="margin:0"><span class="stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1.5 2.5 5.4 5.9.7-4.4 4 1.2 5.8L10 14.5l-5.2 2.9L6 11.6l-4.4-4 5.9-.7z"/></svg></span><p>“Great on my phone. No pinching or scrolling sideways, which is rare for quizzes.”</p><figcaption class="who"><span class="mono-av" aria-hidden="true">SF</span>Sample reviewer F</figcaption></figure></div>
-  </div>
-</section>
-
-<section class="sec" id="ranking" aria-labelledby="rank-h">
-  <div class="wrap">
-    <div class="x-head rise"><span class="label">Rankings</span><h2 id="rank-h">Average scores by country <span class="ph-tag">Placeholder</span></h2><p>Sample figures for layout only. They are not real data.</p></div>
-    <ol class="rank rise" id="rank"><li><span class="n">1</span><span>Singapore</span><span class="tr" aria-hidden="true"><i style="--w:1.00"></i></span><b>108</b></li><li><span class="n">2</span><span>Japan</span><span class="tr" aria-hidden="true"><i style="--w:0.89"></i></span><b>106</b></li><li><span class="n">3</span><span>South Korea</span><span class="tr" aria-hidden="true"><i style="--w:0.89"></i></span><b>106</b></li><li><span class="n">4</span><span>Netherlands</span><span class="tr" aria-hidden="true"><i style="--w:0.78"></i></span><b>104</b></li><li><span class="n">5</span><span>Canada</span><span class="tr" aria-hidden="true"><i style="--w:0.72"></i></span><b>103</b></li><li><span class="n">6</span><span>Germany</span><span class="tr" aria-hidden="true"><i style="--w:0.72"></i></span><b>103</b></li><li><span class="n">7</span><span>Australia</span><span class="tr" aria-hidden="true"><i style="--w:0.67"></i></span><b>102</b></li></ol>
-  </div>
-</section>
-
+<!-- 3. domains: ruled index with a live specimen per row -->
 <section class="sec" id="domains" aria-labelledby="dom-h">
   <div class="wrap">
     <div class="sec-head">
-      <div><span class="label">What the test covers</span><h2 id="dom-h">Six domains, one composite score</h2></div>
-      <div style="display:grid;gap:12px;justify-items:start">
-        <p>Each domain maps to an index that the Wechsler and Raven’s family of tests also report. Every item was written for Brightfold.</p>
-        <button class="btn btn-line btn-sm motion-toggle" id="motionBtn" aria-pressed="false">Pause motion</button>
-      </div>
+      <h2 id="dom-h">Six domains, one composite score</h2>
+      <p class="muted">Each domain maps to an index that the Wechsler and Raven’s family of tests also report. Every item was written for Brightfold.</p>
     </div>
-    <div class="grid">
-      <article class="card">
-        <div class="stage"><div class="d-mx" id="dMx"></div></div>
-        <div class="card-body"><div class="card-top"><h3>Fluid reasoning</h3><span class="tag">4 items</span></div><p>Missing-tile matrices, figure sequences and odd-one-out sets. Find the rule hiding in the pattern.</p></div>
-      </article>
-      <article class="card">
-        <div class="stage"><div class="d-series"><div class="track" id="dSeries"></div></div></div>
-        <div class="card-body"><div class="card-top"><h3>Quantitative reasoning</h3><span class="tag">4 items</span></div><p>Number and letter series, balance scales and short word problems with a tempting wrong answer.</p></div>
-      </article>
-      <article class="card">
-        <div class="stage"><div class="d-verbal">seed<span class="sep">:</span>tree<span class="sep">::</span>egg<span class="sep">:</span><span class="slot" id="dWord">nest</span></div></div>
-        <div class="card-body"><div class="card-top"><h3>Verbal reasoning</h3><span class="tag">4 items</span></div><p>Analogies, letter codes, hidden words, anagrams, compound words and syllogisms.</p></div>
-      </article>
-      <article class="card">
-        <div class="stage"><div class="d-spatial"><svg viewBox="0 0 60 60" id="dShapeA"></svg><svg viewBox="0 0 60 60" class="spin" id="dShapeB"></svg></div></div>
-        <div class="card-body"><div class="card-top"><h3>Visual-spatial</h3><span class="tag">3 items</span></div><p>Mental rotation, cube nets, folded paper, clock angles and compass turns.</p></div>
-      </article>
-      <article class="card">
-        <div class="stage"><div class="d-mem" id="dMem"></div></div>
-        <div class="card-body"><div class="card-top"><h3>Working memory</h3><span class="tag">2 items</span></div><p>Digits appear one at a time, then disappear. Type them back in order, or reversed.</p></div>
-      </article>
-      <article class="card">
-        <div class="stage"><div class="d-scan mono" id="dScan"><div class="bar"></div></div></div>
-        <div class="card-body"><div class="card-top"><h3>Processing speed</h3><span class="tag">3 items</span></div><p>Count symbols against the clock, decode a symbol key and spot the one pair that differs.</p></div>
-      </article>
-    </div>
+    <ol class="index">
+      <li>
+        <span class="ix-n">01</span>
+        <div class="ix-name"><h3>Fluid reasoning</h3><span class="label">4 items</span></div>
+        <p class="ix-txt">Missing-tile matrices, figure sequences and odd-one-out sets. Find the rule hiding in the pattern.</p>
+        <div class="spec" aria-hidden="true"><div class="mx mx-s" id="sFluid"></div></div>
+      </li>
+      <li>
+        <span class="ix-n">02</span>
+        <div class="ix-name"><h3>Quantitative reasoning</h3><span class="label">4 items</span></div>
+        <p class="ix-txt">Number and letter series, balance scales and short word problems with a tempting wrong answer.</p>
+        <div class="spec" aria-hidden="true"><div class="seq" id="sQuant"></div></div>
+      </li>
+      <li>
+        <span class="ix-n">03</span>
+        <div class="ix-name"><h3>Verbal reasoning</h3><span class="label">4 items</span></div>
+        <p class="ix-txt">Analogies, letter codes, hidden words, anagrams, compound words and syllogisms.</p>
+        <div class="spec" aria-hidden="true"><div class="ana">seed : tree :: egg : <span>?</span></div></div>
+      </li>
+      <li>
+        <span class="ix-n">04</span>
+        <div class="ix-name"><h3>Visual-spatial</h3><span class="label">3 items</span></div>
+        <p class="ix-txt">Mental rotation, cube nets, folded paper, clock angles and compass turns.</p>
+        <div class="spec" aria-hidden="true"><div class="shapes" id="sSpatial"></div></div>
+      </li>
+      <li>
+        <span class="ix-n">05</span>
+        <div class="ix-name"><h3>Working memory</h3><span class="label">2 items</span></div>
+        <p class="ix-txt">Digits appear one at a time, then disappear. Type them back in order, or reversed.</p>
+        <div class="spec" aria-hidden="true"><div class="digits">5 8 2 9 4 7 1</div></div>
+      </li>
+      <li>
+        <span class="ix-n">06</span>
+        <div class="ix-name"><h3>Processing speed</h3><span class="label">3 items</span></div>
+        <p class="ix-txt">Count symbols against the clock, decode a symbol key and spot the one pair that differs.</p>
+        <div class="spec" aria-hidden="true"><div class="scan" id="sSpeed"></div></div>
+      </li>
+    </ol>
   </div>
 </section>
 
-<section class="sec" id="how" aria-labelledby="how-h">
+<!-- 4. how it works: the single dark band, three columns of running text -->
+<section class="sec band-dark" id="how" aria-labelledby="how-h">
   <div class="wrap">
-    <div class="sec-head"><div><span class="label">Process</span><h2 id="how-h">From first item to full breakdown</h2></div></div>
+    <h2 id="how-h">From first item to full breakdown</h2>
     <div class="steps">
-      <div class="step"><span class="n">Step 1</span><h3>Answer 20 items</h3><p>The domains are shuffled together. Pick an answer and the next item slides in. Jump back to any item from the side rail, or use keys 1 to 6.</p></div>
-      <div class="step"><span class="n">Step 2</span><h3>Beat the clock</h3><p>You have 16 minutes in total. Four short checkpoints show your pace and where your profile is taking shape, and the clock pauses while you read them.</p></div>
-      <div class="step"><span class="n">Step 3</span><h3>Read your breakdown</h3><p>See an estimated score on the mean-100 scale, a bar for each domain and the reasoning behind every answer.</p></div>
+      <div class="step"><p class="step-n">20</p><h3>Answer twenty items</h3><p>The domains are shuffled together. Pick an answer and the next item slides in. Jump back to any item from the side rail, or use keys 1 to 6.</p></div>
+      <div class="step"><p class="step-n">16</p><h3>Beat the clock</h3><p>You have sixteen minutes in total. Four short checkpoints show your pace and where your profile is taking shape, and the clock pauses while you read them.</p></div>
+      <div class="step"><p class="step-n">6</p><h3>Read your breakdown</h3><p>See an estimated score on the mean-100 scale, a bar for each domain and the reasoning behind every answer.</p></div>
     </div>
   </div>
 </section>
 
+<!-- 5. scoring: head row, one wide figure, band strip -->
 <section class="sec" id="scoring" aria-labelledby="sc-h">
   <div class="wrap">
-    <div class="sec-head"><div><span class="label">Scoring</span><h2 id="sc-h">Where scores fall on the curve</h2></div><p>IQ scales are normed so the population mean is 100 and one standard deviation is 15 points. About two thirds of people land between 85 and 115.</p></div>
-    <div class="score-wrap">
-      <svg class="bell" id="bellLanding" viewBox="0 0 640 250" role="img" aria-label="Normal distribution with mean 100 and standard deviation 15"></svg>
-      <div>
-        <ul class="bands">
-          <li><span class="r">130 +</span><span>Very high</span><span class="p">≈ 2.3%</span></li>
-          <li><span class="r">115 – 129</span><span>Above average</span><span class="p">≈ 13.6%</span></li>
-          <li><span class="r">85 – 114</span><span>Average</span><span class="p">≈ 68.2%</span></li>
-          <li><span class="r">70 – 84</span><span>Below average</span><span class="p">≈ 13.6%</span></li>
-          <li><span class="r">under 70</span><span>Low</span><span class="p">≈ 2.3%</span></li>
-        </ul>
-        <p class="note">Brightfold’s number is a practice estimate mapped onto this scale. It has not been normed on a sample population and is not a clinical assessment.</p>
-      </div>
+    <div class="sec-head">
+      <h2 id="sc-h">Where scores fall on the curve</h2>
+      <p class="muted">IQ scales are normed so the population mean is 100 and one standard deviation is 15 points. About two thirds of people land between 85 and 115.</p>
+    </div>
+    <svg class="bell" id="bellLanding" viewBox="0 0 640 250" role="img" aria-label="Normal distribution with mean 100 and standard deviation 15"></svg>
+    <dl class="bands">
+      <div><dt>130 and above</dt><dd>Very high</dd><dd class="p">about 2.3%</dd></div>
+      <div><dt>115 to 129</dt><dd>Above average</dd><dd class="p">about 13.6%</dd></div>
+      <div><dt>85 to 114</dt><dd>Average</dd><dd class="p">about 68.2%</dd></div>
+      <div><dt>70 to 84</dt><dd>Below average</dd><dd class="p">about 13.6%</dd></div>
+      <div><dt>Under 70</dt><dd>Low</dd><dd class="p">about 2.3%</dd></div>
+    </dl>
+    <p class="note muted">Brightfold’s number is a practice estimate mapped onto this scale. It has not been normed on a sample population and is not a clinical assessment.</p>
+  </div>
+</section>
+
+<!-- 6. blueprint: text left, radar plate right, on the alt ground -->
+<section class="sec alt" id="blueprint" aria-labelledby="bp-h">
+  <div class="wrap bp">
+    <div class="bp-copy">
+      <h2 id="bp-h">A cognitive blueprint, not just one number</h2>
+      <p class="lead">Two people can land on the same score for very different reasons. Your report shows the shape behind it.</p>
+      <dl class="bp-list">
+        <div><dt>Estimated score</dt><dd>On the familiar mean-100 scale, placed on the bell curve.</dd></div>
+        <div><dt>Six domain bars</dt><dd>Your strongest area, and where there is room to grow.</dd></div>
+        <div><dt>Pace and memory</dt><dd>Notes from your checkpoints and the opening-word recall.</dd></div>
+        <div><dt>Every item explained</dt><dd>The rule behind each puzzle, so a miss teaches you something.</dd></div>
+      </dl>
+    </div>
+    <svg class="radar" id="radar" viewBox="0 0 400 360" role="img" aria-label="Sample radar chart of six cognitive domains: strongest in verbal and fluid reasoning, weakest in spatial"></svg>
+  </div>
+</section>
+
+<!-- 7. stats: one ruled row of plain numerals. PLACEHOLDER figures -->
+<section class="stats" aria-labelledby="stats-h">
+  <div class="wrap">
+    <h2 class="sr" id="stats-h">Brightfold in numbers</h2>
+    <dl class="stat-row">
+      <div><dt>Test takers worldwide</dt><dd class="big">80M+</dd></div>
+      <div><dt>Average score today</dt><dd class="big">107</dd></div>
+      <div><dt>Cognitive training exercises</dt><dd class="big">150+</dd></div>
+    </dl>
+    <p class="stat-ph"><span class="ph-tag">Placeholder</span> <span class="muted">Figures for layout only. Replace before launch.</span></p>
+  </div>
+</section>
+
+<!-- 8. certificate: narrow note, wide sheet -->
+<section class="sec" id="certificate" aria-labelledby="cert-h">
+  <div class="wrap cert-grid">
+    <div class="cert-note">
+      <h2 id="cert-h">Finish the test, keep a certificate</h2>
+      <p class="body muted">Add your name on the results page, then print it or save it as a PDF. No email, no upsell.</p>
+      <button class="btn btn-primary btn-block-m js-start">Start the test <span class="arr" aria-hidden="true">→</span></button>
+    </div>
+    <div id="certSample"></div>
+  </div>
+</section>
+
+<!-- 9. famous minds: a ruler, names hung from their estimate. PLACEHOLDER -->
+<section class="sec alt" id="minds" aria-labelledby="minds-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="minds-h">Where do history’s great thinkers sit on the scale? <span class="ph-tag">Placeholder</span></h2>
+      <p class="muted">People have long tried to put a number on genius. Four popular retrospective guesses, for fun and perspective.</p>
+    </div>
+    <ul class="ruler">
+      <li style="--x:60;--row:0"><b>Albert Einstein</b><span>Physicist, 1879 to 1955</span><span>about 160</span></li>
+      <li class="r2" style="--x:60;--row:1"><b>Stephen Hawking</b><span>Cosmologist, 1942 to 2018</span><span>about 160</span></li>
+      <li style="--x:80;--row:2"><b>Leonardo da Vinci</b><span>Polymath, 1452 to 1519</span><span>about 180</span></li>
+      <li class="flip" style="--x:90;--row:3"><b>Isaac Newton</b><span>Mathematician, 1643 to 1727</span><span>about 190</span></li>
+    </ul>
+    <p class="note muted">Placeholder content. None of these people sat a modern IQ test; the figures are widely repeated, disputed estimates made long after the fact. Replace or remove before launch.</p>
+  </div>
+</section>
+
+<!-- 10. reviews: pull quotes in running columns. PLACEHOLDER -->
+<section class="sec" id="reviews" aria-labelledby="rev-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="rev-h">Loved by test takers <span class="ph-tag">Placeholder</span></h2>
+      <p class="rating"><b class="big">4.8</b><span class="muted">out of 5 from 12,400+ reviews. Proof-of-concept reviews; replace with real, verified feedback before launch.</span></p>
+    </div>
+    <div class="quotes">
+      <figure><blockquote><p>“Short enough to finish on a lunch break, and the puzzles actually varied. The checkpoint screens kept me going.”</p></blockquote><figcaption>Sample reviewer A</figcaption></figure>
+      <figure><blockquote><p>“I liked that every answer came with an explanation. I finally understood number series.”</p></blockquote><figcaption>Sample reviewer B</figcaption></figure>
+      <figure><blockquote><p>“The memory word at the end caught me out. Fun and a bit humbling. Certificate was a nice touch.”</p></blockquote><figcaption>Sample reviewer C</figcaption></figure>
+      <figure><blockquote><p>“Clean, quick and no sign-up. Sent it to my whole family group chat.”</p></blockquote><figcaption>Sample reviewer D</figcaption></figure>
+      <figure><blockquote><p>“The domain breakdown told me more than a single score would have.”</p></blockquote><figcaption>Sample reviewer E</figcaption></figure>
+      <figure><blockquote><p>“Great on my phone. No pinching or scrolling sideways, which is rare for quizzes.”</p></blockquote><figcaption>Sample reviewer F</figcaption></figure>
     </div>
   </div>
 </section>
 
-<section class="sec" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <div class="sec-head"><div><span class="label">FAQ</span><h2 id="faq-h">Questions people ask first</h2></div></div>
-    <div class="acc rise"><details><summary>Is this a real IQ test?</summary><div class="ans"><p>It uses the same item types as recognised tests, but a proper IQ score needs a test normed on thousands of people and given under controlled conditions. Treat your result as a practice estimate.</p></div></details><details><summary>Does it cost anything?</summary><div class="ans"><p>No. There is no sign-up, no payment and no paywall on your result or your certificate. Your answers stay in your browser tab and are not sent anywhere.</p></div></details><details><summary>How long does it take?</summary><div class="ans"><p>Sixteen minutes at most, for 20 items. The clock pauses on the checkpoint screens, so reading them never costs you time.</p></div></details><details><summary>Why six domains?</summary><div class="ans"><p>Modern batteries such as the WAIS report separate indexes for verbal comprehension, fluid reasoning, visual-spatial ability, working memory and processing speed. Brightfold adds number series as a quantitative strand.</p></div></details><details><summary>How is the score calculated?</summary><div class="ans"><p>Your share of correct answers is mapped onto a mean-100, standard-deviation-15 scale. Because the items have not been normed on a sample population, the number is a rough guide, not a clinical result.</p></div></details><details><summary>Can I go back and change answers?</summary><div class="ans"><p>Yes, for every item except the memory and speed tasks, which you only see once. Those depend on a single exposure to be meaningful.</p></div></details><details><summary>Can I use a calculator or paper?</summary><div class="ans"><p>Paper is fine. A calculator gives you an advantage on the series items, so your score will read higher than it should.</p></div></details><details><summary>What happens if time runs out?</summary><div class="ans"><p>The test ends and unanswered items count as wrong. You still get the full breakdown and every explanation.</p></div></details><details><summary>What does the certificate say?</summary><div class="ans"><p>It shows your name, estimated score, date and the practice-scale disclaimer. It is a keepsake for finishing the test, not an official credential. Print it or save it as a PDF from the results page.</p></div></details><details><summary>Is my data stored?</summary><div class="ans"><p>No. Everything runs in your browser. Close the tab and your answers are gone, so save your certificate before you leave.</p></div></details></div>
+<!-- 11. ranking: heading left, ruled list with thin bars right. PLACEHOLDER -->
+<section class="sec alt" id="ranking" aria-labelledby="rank-h">
+  <div class="wrap rank-grid">
+    <div class="rank-head">
+      <h2 id="rank-h">Average scores by country <span class="ph-tag">Placeholder</span></h2>
+      <p class="muted">Sample figures for layout only. They are not real data.</p>
+    </div>
+    <ol class="rank">
+      <li><span class="n">1</span><span class="cn">Singapore</span><span class="tr" aria-hidden="true"><i style="--w:1"></i></span><b>108</b></li>
+      <li><span class="n">2</span><span class="cn">Japan</span><span class="tr" aria-hidden="true"><i style="--w:.89"></i></span><b>106</b></li>
+      <li><span class="n">3</span><span class="cn">South Korea</span><span class="tr" aria-hidden="true"><i style="--w:.89"></i></span><b>106</b></li>
+      <li><span class="n">4</span><span class="cn">Netherlands</span><span class="tr" aria-hidden="true"><i style="--w:.78"></i></span><b>104</b></li>
+      <li><span class="n">5</span><span class="cn">Canada</span><span class="tr" aria-hidden="true"><i style="--w:.72"></i></span><b>103</b></li>
+      <li><span class="n">6</span><span class="cn">Germany</span><span class="tr" aria-hidden="true"><i style="--w:.72"></i></span><b>103</b></li>
+      <li><span class="n">7</span><span class="cn">Australia</span><span class="tr" aria-hidden="true"><i style="--w:.67"></i></span><b>102</b></li>
+    </ol>
   </div>
 </section>
 
-<section class="cta-band">
+<!-- 12. FAQ: every answer visible, two running columns -->
+<section class="sec" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2>Sixteen minutes. Twenty items. Start whenever you’re ready.</h2>
-    <button class="btn btn-primary js-start">Start the test <span class="arr" aria-hidden="true">→</span></button>
+    <h2 id="faq-h">Questions people ask first</h2>
+    <dl class="faq">
+      <div><dt>Is this a real IQ test?</dt><dd>It uses the same item types as recognised tests, but a proper IQ score needs a test normed on thousands of people and given under controlled conditions. Treat your result as a practice estimate.</dd></div>
+      <div><dt>Does it cost anything?</dt><dd>No. There is no sign-up, no payment and no paywall on your result or your certificate. Your answers stay in your browser tab and are not sent anywhere.</dd></div>
+      <div><dt>How long does it take?</dt><dd>Sixteen minutes at most, for 20 items. The clock pauses on the checkpoint screens, so reading them never costs you time.</dd></div>
+      <div><dt>Why six domains?</dt><dd>Modern batteries such as the WAIS report separate indexes for verbal comprehension, fluid reasoning, visual-spatial ability, working memory and processing speed. Brightfold adds number series as a quantitative strand.</dd></div>
+      <div><dt>How is the score calculated?</dt><dd>Your share of correct answers is mapped onto a mean-100, standard-deviation-15 scale. Because the items have not been normed on a sample population, the number is a rough guide, not a clinical result.</dd></div>
+      <div><dt>Can I go back and change answers?</dt><dd>Yes, for every item except the memory and speed tasks, which you only see once. Those depend on a single exposure to be meaningful.</dd></div>
+      <div><dt>Can I use a calculator or paper?</dt><dd>Paper is fine. A calculator gives you an advantage on the series items, so your score will read higher than it should.</dd></div>
+      <div><dt>What happens if time runs out?</dt><dd>The test ends and unanswered items count as wrong. You still get the full breakdown and every explanation.</dd></div>
+      <div><dt>What does the certificate say?</dt><dd>It shows your name, estimated score, date and the practice-scale disclaimer. It is a keepsake for finishing the test, not an official credential. Print it or save it as a PDF from the results page.</dd></div>
+      <div><dt>Is my data stored?</dt><dd>No. Everything runs in your browser. Close the tab and your answers are gone, so save your certificate before you leave.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 13. closing -->
+<section class="closing-cta" aria-labelledby="end-h">
+  <div class="wrap">
+    <h2 id="end-h">Sixteen minutes. Twenty items. Start whenever you’re ready</h2>
+    <button class="btn btn-primary btn-block-m js-start">Start the test <span class="arr" aria-hidden="true">→</span></button>
   </div>
 </section>
 </main>
-<footer><div class="wrap"><span>Brightfold · a practice reasoning test</span><span>Not a clinical or diagnostic assessment.</span></div></footer>
+<footer class="closing"><div class="wrap"><span>Brightfold · a practice reasoning test</span><span>Not a clinical or diagnostic assessment.</span></div></footer>
 </div>
 
-<div id="app" hidden>
-  <div class="t-top">
-    <div class="wrap">
-      <a class="logo" href="#top" id="exitLink" aria-label="Leave test">
-        <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3H14l5 5v9.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 3 17.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5z" fill="var(--accent)"/><circle cx="9" cy="13" r="2.2" fill="currentColor"/></svg>
-        Brightfold
-      </a>
-      <div class="meta"><span id="tCount" class="mono">1 / 20</span><span class="clock" id="tClock">16:00</span><button class="btn btn-line btn-sm" id="finishBtn">Finish</button></div>
-    </div>
-    <div class="prog"><i id="tProg"></i></div>
-  </div>
-  <div class="wrap t-main" id="tMain"></div>
-</div>
-
+<div id="shell"></div>
 <div class="cheer" id="cheer" role="status" aria-live="polite"></div>
-<script>
-document.documentElement.classList.add('m-enter');
-setTimeout(()=>document.documentElement.classList.add('m-enter-done'),1200);
-
-/* ---------- shape drawing ---------- */
-const POS={1:[[50,50]],2:[[30,50],[70,50]],3:[[50,29],[29,69],[71,69]],4:[[31,31],[69,31],[31,69],[69,69]]};
-function shape(s,cx,cy,r,fill,rot){
-  const f=fill==='solid'?'fill="currentColor"':fill==='hatch'?'fill="url(#gm-hatch)"':'fill="none"';
-  const a=`${f} stroke="currentColor" stroke-width="3" stroke-linejoin="round"`;
-  const t=rot?` transform="rotate(${rot} ${cx} ${cy})"`:'';
-  const p=(pts)=>`<polygon points="${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" ${a}${t}/>`;
-  if(s==='circle')return `<circle cx="${cx}" cy="${cy}" r="${r*.92}" ${a}/>`;
-  if(s==='square')return `<rect x="${cx-r*.8}" y="${cy-r*.8}" width="${r*1.6}" height="${r*1.6}" rx="2" ${a}${t}/>`;
-  if(s==='triangle')return p([[cx,cy-r],[cx+r*.95,cy+r*.75],[cx-r*.95,cy+r*.75]]);
-  if(s==='diamond')return p([[cx,cy-r],[cx+r*.78,cy],[cx,cy+r],[cx-r*.78,cy]]);
-  if(s==='arrow')return p([[cx,cy-r],[cx+r*.75,cy-r*.05],[cx+r*.28,cy-r*.05],[cx+r*.28,cy+r],[cx-r*.28,cy+r],[cx-r*.28,cy-r*.05],[cx-r*.75,cy-r*.05]]);
-  return '';
-}
-function cellSVG(c){
-  const n=c.count||1, sz=c.size||1, r=(n===1?24:13)*sz;
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">${POS[n].map(([x,y])=>shape(c.shape,x,y,r,c.fill||'outline',c.rot||0)).join('')}</svg>`;
-}
-/* polyomino helpers */
-const norm=cs=>{const mx=Math.min(...cs.map(c=>c[0])),my=Math.min(...cs.map(c=>c[1]));return cs.map(([x,y])=>[x-mx,y-my]);};
-const rot90=cs=>norm(cs.map(([x,y])=>[-y,x]));
-const mirror=cs=>norm(cs.map(([x,y])=>[-x,y]));
-const rotN=(cs,n)=>{let o=norm(cs);for(let i=0;i<n;i++)o=rot90(o);return o;};
-function polySVG(cs,box){
-  cs=norm(cs);const w=Math.max(...cs.map(c=>c[0]))+1,h=Math.max(...cs.map(c=>c[1]))+1;
-  const B=box||5,u=100/(B+1),ox=(100-w*u)/2,oy=(100-h*u)/2;
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">${cs.map(([x,y])=>`<rect x="${(ox+x*u).toFixed(1)}" y="${(oy+y*u).toFixed(1)}" width="${u.toFixed(1)}" height="${u.toFixed(1)}" fill="currentColor" fill-opacity=".9" stroke="var(--bg)" stroke-width="2"/>`).join('')}</svg>`;
-}
-function netSVG(cs){
-  cs=norm(cs);const w=Math.max(...cs.map(c=>c[0]))+1,h=Math.max(...cs.map(c=>c[1]))+1;
-  const u=Math.min(150/w,82/h),ox=(166-w*u)/2,oy=(100-h*u)/2;
-  return `<svg viewBox="0 0 166 100" aria-hidden="true">${cs.map(([x,y])=>`<rect x="${(ox+x*u).toFixed(1)}" y="${(oy+y*u).toFixed(1)}" width="${u.toFixed(1)}" height="${u.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`).join('')}</svg>`;
-}
-/* seeded rng */
-function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
-function shuffle(arr,seed){const r=rng(seed),a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-
-/* ---------- item bank ---------- */
-const S3=['circle','square','triangle'];
-const DOMAINS=[
-  {id:'fluid',name:'Fluid reasoning'},
-  {id:'quant',name:'Quantitative reasoning'},
-  {id:'verbal',name:'Verbal reasoning'},
-  {id:'spatial',name:'Visual-spatial'},
-  {id:'memory',name:'Working memory'},
-  {id:'speed',name:'Processing speed'}
-];
-const F_PENT=[[1,0],[2,0],[0,1],[1,1],[1,2]];
-const P_PENT=[[0,0],[1,0],[0,1],[1,1],[0,2]];
-const L_HEX=[[0,0],[0,1],[0,2],[1,2],[2,2],[2,3]];
-
-const RAW=[
- {id:'m1',d:'fluid',type:'matrix',q:'Which tile completes the grid?',
-  cell:(r,c)=>({shape:S3[r],count:c+1}),
-  ans:{shape:'triangle',count:3},
-  wrong:[{shape:'triangle',count:2},{shape:'square',count:3},{shape:'triangle',count:3,fill:'solid'},{shape:'circle',count:3},{shape:'triangle',count:4}],
-  why:'Each row keeps one shape, and the count rises by one from left to right. Row three is triangles, so the last tile holds three outlined triangles.'},
- {id:'m2',d:'fluid',type:'matrix',q:'Which tile completes the grid?',
-  cell:(r,c)=>({shape:S3[(r+c)%3],fill:['outline','solid','hatch'][(c-r+3)%3]}),
-  ans:{shape:'square',fill:'outline'},
-  wrong:[{shape:'square',fill:'solid'},{shape:'square',fill:'hatch'},{shape:'triangle',fill:'outline'},{shape:'circle',fill:'outline'},{shape:'diamond',fill:'outline'}],
-  why:'Every row and column contains each shape once and each fill once. Row three already has a solid triangle and a hatched circle, so it needs an outlined square.'},
- {id:'m3',d:'fluid',type:'matrix',q:'Which tile completes the grid?',
-  cell:(r,c)=>({shape:'arrow',fill:'solid',rot:r*90+c*45}),
-  ans:{shape:'arrow',fill:'solid',rot:270},
-  wrong:[{shape:'arrow',fill:'solid',rot:225},{shape:'arrow',fill:'solid',rot:90},{shape:'arrow',fill:'solid',rot:315},{shape:'arrow',fill:'solid',rot:0},{shape:'arrow',fill:'outline',rot:270}],
-  why:'The arrow turns 45° clockwise with each step right, and each row starts 90° further round than the row above. Row three starts pointing down (180°), so the third tile points left (270°).'},
- {id:'m4',d:'fluid',type:'matrix',q:'Which tile completes the grid?',
-  cell:(r,c)=>({shape:['circle','triangle','square'][r],fill:'solid',count:[[1,2,3],[2,2,4],[3,1,4]][r][c]}),
-  ans:{shape:'square',fill:'solid',count:4},
-  wrong:[{shape:'square',fill:'solid',count:3},{shape:'square',fill:'solid',count:2},{shape:'circle',fill:'solid',count:4},{shape:'triangle',fill:'solid',count:4},{shape:'square',fill:'outline',count:4}],
-  why:'In every row the third tile holds the sum of the first two. Three squares plus one square gives four solid squares.'},
- {id:'m5',d:'fluid',type:'matrix',q:'Which tile completes the grid?',
-  cell:(r,c)=>({shape:['diamond','circle','triangle'][r],size:[.62,.86,1.12][c],fill:(r+c)%2?'solid':'outline'}),
-  ans:{shape:'triangle',size:1.12,fill:'outline'},
-  wrong:[{shape:'triangle',size:1.12,fill:'solid'},{shape:'triangle',size:.86,fill:'outline'},{shape:'diamond',size:1.12,fill:'outline'},{shape:'triangle',size:.62,fill:'outline'},{shape:'circle',size:1.12,fill:'outline'}],
-  why:'Shape is set by the row, size grows across the columns, and fill alternates like a chessboard. The bottom-right square of a chessboard matches the top-left, so it is a large outlined triangle.'},
- {id:'odd',d:'fluid',type:'oddfig',q:'Which tile is the odd one out?',
-  figs:[{shape:'circle',count:2},{shape:'square',count:2},{shape:'triangle',count:3},{shape:'diamond',count:2}],a:2,
-  why:'Every other tile holds two shapes. The triangle tile holds three. Shape changes in every tile, so it cannot be the rule.'},
-
- {id:'q1',d:'quant',type:'series',q:'What number comes next?',seq:[3,6,12,24],opts:['48','36','42','96'],a:0,
-  why:'Each term doubles the one before: 24 × 2 = 48.'},
- {id:'q2',d:'quant',type:'series',q:'What number comes next?',seq:[2,5,10,17,26],opts:['35','36','37','39'],a:2,
-  why:'The terms are n² + 1 for n = 1 to 5. Next is 6² + 1 = 37. The gaps (3, 5, 7, 9, 11) show the same thing.'},
- {id:'q3',d:'quant',type:'series',q:'What number comes next?',seq:[4,9,7,12,10],opts:['8','13','15','17'],a:2,
-  why:'The rule alternates +5 and −2. After 10 comes +5, giving 15.'},
- {id:'q4',d:'quant',type:'series',q:'What number comes next?',seq:[2,6,3,9,6,18],opts:['54','12','15','21'],a:2,
-  why:'The rule alternates × 3 and − 3: 2→6→3→9→6→18, so the next step is 18 − 3 = 15.'},
- {id:'q5',d:'quant',type:'series',q:'What number comes next?',seq:[81,27,9,3],opts:['0','1','1/3','2'],a:1,
-  why:'Each term is divided by 3. 3 ÷ 3 = 1.'},
- {id:'q6',d:'quant',type:'series',q:'Which letter comes next?',seq:['A','C','F','J','O'],opts:['T','U','V','S'],a:1,
-  why:'The gaps grow by one each time: +2, +3, +4, +5. O is the 15th letter, and 15 + 6 = 21, which is U.'},
- {id:'q7',d:'quant',type:'choice',q:'Five printers take five minutes to print five posters. How long do 100 printers take to print 100 posters?',opts:['5 minutes','20 minutes','100 minutes','1 minute'],a:0,
-  why:'Each printer makes one poster in five minutes. A hundred printers working side by side make a hundred posters in the same five minutes.'},
- {id:'q8',d:'quant',type:'choice',q:'A jacket costs $40 after a 20% discount. What was the original price?',opts:['$48','$50','$52','$60'],a:1,
-  why:'After the discount you pay 80% of the original. $40 ÷ 0.8 = $50. Adding 20% of $40 back gives the tempting wrong answer of $48.'},
-
- {id:'v1',d:'verbal',type:'choice',q:'Seed is to tree as egg is to …',opts:['nest','bird','shell','yolk'],a:1,
-  why:'A seed grows into a tree; an egg grows into a bird. The other words are parts of or places for an egg.'},
- {id:'v2',d:'verbal',type:'choice',q:'Which word does not belong with the others?',opts:['violin','cello','trumpet','viola'],a:2,
-  why:'Violin, cello and viola are bowed string instruments. The trumpet is a brass instrument.'},
- {id:'v3',d:'verbal',type:'choice',q:'Telescope is to distant as microscope is to …',opts:['lens','small','laboratory','bright'],a:1,
-  why:'A telescope makes distant things visible; a microscope makes small things visible. The pairing is instrument to what it reveals.'},
- {id:'v4',d:'verbal',type:'choice',q:'Which word is most nearly the opposite of “ephemeral”?',opts:['fleeting','enduring','delicate','invisible'],a:1,
-  why:'Ephemeral means lasting a very short time. Enduring means lasting a long time. Fleeting is a synonym, not an opposite.'},
- {id:'v5',d:'verbal',type:'choice',q:'All glims are tops. Some tops are rells. Which statement must be true?',opts:['All glims are rells','Some glims are rells','No glims are rells','None of these must be true'],a:3,
-  why:'The rells might sit entirely in the part of “tops” that holds no glims, or they might overlap them. Nothing about glims and rells is forced, so none must be true.'},
- {id:'v6',d:'verbal',type:'choice',q:'Bea is taller than Ari. Ari is taller than Cy. Dev is shorter than Cy. Who is the second shortest?',opts:['Bea','Ari','Cy','Dev'],a:2,
-  why:'The order from tallest is Bea, Ari, Cy, Dev. Dev is shortest, so Cy is second shortest.'},
- {id:'v7',d:'verbal',type:'choice',q:'Which word completes both? FIRE ____ / ____ HOUSE',pre:'<div class="seq"><span>FIRE</span><span class="blank">?</span><span>HOUSE</span></div>',opts:['light','place','side','fly'],a:0,
-  why:'Firelight and lighthouse. Fireplace, fireside and firefly work on the left, but none of them make a word with house.'},
- {id:'v8',d:'verbal',type:'choice',q:'Which word uses exactly the letters of CARTHORSE?',opts:['orchestra','stretcher','chartreuse','cathedral'],a:0,
-  why:'ORCHESTRA uses the same nine letters, including both Rs. The others add or drop letters.'},
-
- {id:'s1',d:'spatial',type:'rotate',q:'Which option is the shape on the left rotated, not mirrored?',base:F_PENT,
-  build:b=>({ans:rotN(b,1),wrong:[mirror(b),rotN(mirror(b),1),rotN(mirror(b),2)]}),
-  why:'Only one option can be reached by turning the shape in the plane. The other three are its mirror image, which no rotation can produce.'},
- {id:'s2',d:'spatial',type:'net',q:'Which of these flat patterns folds into a closed cube?',
-  nets:[[[1,0],[0,1],[1,1],[2,1],[3,1],[1,2]],[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]],[[0,1],[1,1],[2,1],[3,1],[4,1],[1,0]],[[0,1],[1,1],[2,1],[3,1],[0,0],[1,0]]],a:0,
-  why:'The cross folds a band of four faces with one lid on each side. A 2 × 3 block and a row of five both overlap, and two lids above neighbouring squares land on the same face.'},
- {id:'s3',d:'spatial',type:'rotate',q:'Which option is the shape on the left rotated, not mirrored?',base:P_PENT,
-  build:b=>({ans:rotN(b,2),wrong:[mirror(b),rotN(mirror(b),1),rotN(mirror(b),3)]}),
-  why:'Turning the shape 180° gives the correct option. The others are reflections, so they cannot be matched by rotation alone.'},
- {id:'s4',d:'spatial',type:'choice',q:'A square sheet is folded in half, then in half again. One hole is punched through all layers near a corner. How many holes are there when it is unfolded?',opts:['1','2','4','8'],a:2,
-  why:'Two folds stack four layers. One punch passes through all four, giving four holes.'},
- {id:'s5',d:'spatial',type:'choice',q:'What is the smaller angle between the hands at 3:30?',pre:'<div class="target"><svg viewBox="0 0 100 100" aria-label="Clock showing 3:30"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="2"/>'+Array.from({length:12},(_,h)=>{const a=h*Math.PI/6;return `<line x1="${(50+36*Math.sin(a)).toFixed(1)}" y1="${(50-36*Math.cos(a)).toFixed(1)}" x2="${(50+41*Math.sin(a)).toFixed(1)}" y2="${(50-41*Math.cos(a)).toFixed(1)}" stroke="currentColor" stroke-width="${h%3?1.5:3}"/>`;}).join('')+'<line x1="50" y1="50" x2="71.3" y2="55.7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="50" x2="50" y2="84" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg></div>',opts:['60°','75°','90°','105°'],a:1,
-  why:'At 3:30 the hour hand has moved halfway from 3 to 4, so it sits at 105°. The minute hand points at 180°. The gap is 75°. Picking 90° forgets that the hour hand moves.'},
-
- {id:'fs1',d:'fluid',type:'figseq',q:'Which figure comes next in the sequence?',
-  seq:[{shape:'arrow',rot:0},{shape:'arrow',rot:90,fill:'solid'},{shape:'arrow',rot:180},{shape:'arrow',rot:270,fill:'solid'}],
-  ans:{shape:'arrow',rot:0},wrong:[{shape:'arrow',rot:0,fill:'solid'},{shape:'arrow',rot:90},{shape:'arrow',rot:270},{shape:'arrow',rot:45}],
-  why:'The arrow turns 90° clockwise each step, and the fill switches between outline and solid. After a solid arrow pointing left comes an outlined arrow pointing up.'},
- {id:'fs2',d:'fluid',type:'figseq',q:'Which figure comes next in the sequence?',
-  seq:[{shape:'circle',size:.6},{shape:'square',size:.85},{shape:'triangle',size:1.12},{shape:'circle',size:.6},{shape:'square',size:.85}],
-  ans:{shape:'triangle',size:1.12},wrong:[{shape:'triangle',size:.6},{shape:'circle',size:1.12},{shape:'square',size:1.12},{shape:'triangle',size:1.12,fill:'solid'}],
-  why:'Shape and size move together in a cycle of three: small circle, medium square, large triangle. The sixth figure repeats the third.'},
- {id:'bal',d:'quant',type:'choice',q:'The scales balance. How many triangles balance one circle?',
-  pre:'<div class="scales"><div><span>▲ ▲</span><i>=</i><span>■</span></div><div><span>■ ■</span><i>=</i><span>●</span></div><div><span>●</span><i>=</i><span class="blank">? ▲</span></div></div>',
-  opts:['3','4','6','8'],a:1,
-  why:'One square weighs two triangles, and one circle weighs two squares. Two squares × two triangles = four triangles.'},
- {id:'age',d:'quant',type:'choice',q:'In six years Mira will be twice as old as she was four years ago. How old is she now?',opts:['10','12','14','16'],a:2,
-  why:'Write it as a + 6 = 2(a − 4). That gives a + 6 = 2a − 8, so a = 14. Check: in six years she is 20, and four years ago she was 10.'},
- {id:'ciph',d:'verbal',type:'choice',q:'In a code, CAT is written DBU. How is DOG written?',
-  pre:'<div class="seq"><span>C→D</span><span>A→B</span><span>T→U</span></div>',opts:['EPH','CNF','EPI','FQI'],a:0,
-  why:'Each letter shifts one place forward in the alphabet. D→E, O→P, G→H gives EPH.'},
- {id:'hid',d:'verbal',type:'choice',q:'Which word hides an animal inside it, reading left to right?',opts:['planet','scatter','border','fringe'],a:1,
-  why:'sCATter holds the word cat. None of the other words contain an animal name in a row.'},
- {id:'dir',d:'spatial',type:'choice',q:'You face north. You turn right, right again, then left. Which way are you facing?',
-  pre:'<div class="compass" aria-hidden="true"><span>N</span><span>E</span><span>S</span><span>W</span></div>',opts:['North','East','South','West'],a:1,
-  why:'Right takes you from north to east, right again to south, then left brings you back to east.'},
- {id:'pair',d:'speed',type:'choice',q:'Quick: which pair is not identical?',opts:['7Q2X9 · 7Q2X9','84KM1 · 84KM1','H5TR0 · H5RT0','B3ZP6 · B3ZP6'],a:2,mono:true,
-  why:'In H5TR0 · H5RT0 the T and R swap places. Spotting transpositions fast is a classic clerical-speed task.'},
- {id:'w1',d:'memory',type:'memory',q:'Remember the digits in order',digits:'5829471',mode:'forward',
-  why:'Seven digits forward is close to the typical adult span, which sits around seven items.'},
- {id:'w2',d:'memory',type:'memory',q:'Remember the digits, then type them in reverse',digits:'39614',mode:'backward',
-  why:'Backward recall makes you hold and reorder the digits at once. The sequence 3 9 6 1 4 reversed is 4 1 6 9 3.'},
-
- {id:'p1',d:'speed',type:'scan',q:'Count every ◆ in the grid',target:'◆',pool:['◆','◇','●','○','▲','△'],seed:17,
-  why:'Scanning tasks measure how quickly you can tell near-identical symbols apart. The filled and hollow diamonds are the trap.'},
- {id:'p2',d:'speed',type:'scan',q:'Count every ▲ in the grid',target:'▲',pool:['▲','△','◆','◇','■','□'],seed:91,
-  why:'The hollow triangles look the same at a glance. Steady row-by-row scanning beats jumping around the grid.'},
- {id:'p3',d:'speed',type:'choice',q:'Use the key to decode the symbols',pre:'<div class="codekey"><span>◆<b>3</b></span><span>●<b>7</b></span><span>▲<b>1</b></span><span>■<b>5</b></span></div><div class="seq"><span>▲</span><span>◆</span><span>■</span><span>●</span></div>',opts:['1357','1375','3157','1537'],a:0,
-  why:'▲ is 1, ◆ is 3, ■ is 5 and ● is 7, which reads 1357. Coding tasks like this are a standard processing-speed measure.'}
-];
-/* mixed order: no two neighbours share a domain, a memory item lands third, and grid matrices are only 2 of 20 */
-const ORDER=['odd','q1','w1','v1','dir','fs1','bal','p1','v7','s2','m1','q7','ciph','w2','pair','s1','m4','age','p3','v5'];
-const CHECKPOINTS=[4,8,12,16];
-const FACTS=[
-  'Raven’s Progressive Matrices, the model for the grid items, were first published in 1938 and are still used today.',
-  'Average raw scores on IQ tests rose by about three points a decade across much of the 20th century. Researchers call it the Flynn effect.',
-  'Classic memory research put the adult digit span at around seven items. Grouping digits into chunks is how people stretch it.',
-  'Modern batteries score separate indices such as reasoning, memory and speed, then combine them into one composite.'
-];
-const WORDS=['Lantern','Compass','Meadow','Harbor','Cobalt','Ember','Orchard','Summit','Willow','Quartz','Thistle','Saffron'];
-const CHEERS=['Locked in.','Good instincts.','Nice rhythm.','Steady hands.','One more down.','Keep that focus.','Clean work.','You are in the groove.'];
-const GLYPH={
- bolt:'<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" d="M13.5 2 5 13.5h6L9.5 22 19 9.5h-6.2z"/></svg>',
- eye:'<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>',
- target:'<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>',
- flag:'<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4 2.5 4H5" fill="currentColor" fill-opacity=".18"/></svg>'
-};
-const moIco=g=>`<div class="mo-ico" aria-hidden="true"><span class="halo"></span><span class="ring"></span><svg class="orbit" viewBox="0 0 168 168"><circle cx="84" cy="84" r="82"/></svg>${GLYPH[g]}</div>`;
-
-/* build items */
-const ITEMS=ORDER.map((id,i)=>{
-  const it=RAW.find(x=>x.id===id);
-  const o={...it,idx:i};
-  if(it.type==='matrix'||it.type==='figseq'){
-    const all=[{k:'a',c:it.ans},...it.wrong.map((w,j)=>({k:'w'+j,c:w}))];
-    o.choices=shuffle(all,i*31+7);o.correct=o.choices.findIndex(x=>x.k==='a');
-  }else if(it.type==='oddfig'){
-    const all=it.figs.map((f,j)=>({k:j===it.a?'a':'w'+j,c:f}));
-    o.choices=shuffle(all,i*19+11);o.correct=o.choices.findIndex(x=>x.k==='a');
-  }else if(it.type==='rotate'){
-    const b=it.build(it.base);const all=[{k:'a',c:b.ans},...b.wrong.map((w,j)=>({k:'w'+j,c:w}))];
-    o.choices=shuffle(all,i*13+3);o.correct=o.choices.findIndex(x=>x.k==='a');
-  }else if(it.type==='net'){
-    const all=it.nets.map((n,j)=>({k:j===it.a?'a':'w'+j,c:n}));
-    o.choices=shuffle(all,i*17+5);o.correct=o.choices.findIndex(x=>x.k==='a');
-  }else if(it.type==='scan'){
-    const r=rng(it.seed);const g=[];for(let k=0;k<45;k++)g.push(it.pool[Math.floor(r()*it.pool.length)]);
-    o.grid=g;const n=g.filter(x=>x===it.target).length;o.count=n;
-    const opts=shuffle([n,n-1,n+1,n+2],it.seed);o.opts=opts.map(String);o.correct=opts.indexOf(n);
-    o.why=`There were ${n}. `+it.why;
-  }else if(it.type==='memory'){
-    o.answer=it.mode==='forward'?it.digits:it.digits.split('').reverse().join('');
-  }else{o.correct=it.a;}
-  return o;
-});
-const byId=id=>ITEMS.find(x=>x.id===id);
-
-/* ---------- landing visuals ---------- */
-const heroItem=byId('m1');
-function renderMatrix(el,item,showAns){
-  let h='';for(let r=0;r<3;r++)for(let c=0;c<3;c++){
-    if(r===2&&c===2)h+=`<div class="c q${showAns?' hit':''}" data-q>${showAns?cellSVG(item.ans):'?'}</div>`;
-    else h+=`<div class="c">${cellSVG(item.cell(r,c))}</div>`;}
-  el.innerHTML=h;
-}
-const heroMx=document.getElementById('heroMx'),heroOpts=document.getElementById('heroOpts');
-renderMatrix(heroMx,heroItem,false);
-heroOpts.innerHTML=heroItem.choices.map(ch=>`<div>${cellSVG(ch.c)}</div>`).join('');
-let motionOn=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-let heroStep=0;
-function heroTick(){
-  if(!motionOn)return;
-  const tiles=heroOpts.children,qc=heroMx.querySelector('[data-q]');
-  const n=tiles.length,phase=heroStep%(n+2);
-  [...tiles].forEach(t=>t.className='');
-  if(phase<n){tiles[phase].className=phase===heroItem.correct?'ok':'on';
-    qc.className='c q'+(phase===heroItem.correct?' hit':'');qc.innerHTML=cellSVG(heroItem.choices[phase].c);
-    if(phase===heroItem.correct)heroStep=n-1;}
-  else{qc.className='c q';qc.textContent='?';}
-  heroStep++;
-}
-setInterval(heroTick,620);
-
-/* domain demos */
-(function(){
-  const it=byId('m4');let h='';
-  for(let r=0;r<3;r++)for(let c=0;c<3;c++){
-    if(r===2&&c===2)h+=`<div class="qq"><span>?</span>${cellSVG(it.ans)}</div>`;
-    else h+=`<div>${cellSVG(it.cell(r,c))}</div>`;}
-  document.getElementById('dMx').innerHTML=h;
-  const seq=[2,5,10,17,26,37];const one=seq.map((n,i)=>`<span${i===5?' class="a"':''}>${n}</span>`).join('');
-  document.getElementById('dSeries').innerHTML=one+one;
-  document.getElementById('dShapeA').innerHTML=polySVG(F_PENT,4).replace(/<svg[^>]*>|<\/svg>/g,'').replace(/viewBox[^ ]*/,'');
-  document.getElementById('dShapeA').setAttribute('viewBox','0 0 100 100');
-  document.getElementById('dShapeB').setAttribute('viewBox','0 0 100 100');
-  document.getElementById('dShapeB').innerHTML=polySVG(rotN(F_PENT,1),4).replace(/<svg[^>]*>|<\/svg>/g,'');
-  const mem=document.getElementById('dMem');const digs='5829471';
-  mem.innerHTML=digs.split('').map(d=>`<span class="off">${d}</span>`).join('');
-  let mi=0;setInterval(()=>{if(!motionOn)return;const s=mem.children;
-    if(mi<s.length){s[mi].classList.remove('off');}else if(mi===s.length+2){[...s].forEach(x=>x.classList.add('off'));mi=-1;}mi++;},420);
-  const words=['nest','shell','yolk','bird'];let wi=0;const w=document.getElementById('dWord');
-  setInterval(()=>{if(!motionOn)return;wi=(wi+1)%words.length;w.textContent=words[wi];w.classList.toggle('ok',words[wi]==='bird');},800);
-  const sc=document.getElementById('dScan');const r=rng(4);const pool=['◆','◇','●','○','▲','△'];let sh='';
-  for(let k=0;k<32;k++){const g=pool[Math.floor(r()*6)];sh+=g==='◆'?`<b>${g}</b>`:`<span>${g}</span>`;}
-  sc.insertAdjacentHTML('beforeend',sh);
-  if(!motionOn){document.documentElement.dataset.motion='off';[...mem.children].forEach(x=>x.classList.remove('off'));w.textContent='bird';w.classList.add('ok');}
-})();
-const mBtn=document.getElementById('motionBtn');
-function setMotion(on){motionOn=on;document.documentElement.dataset.motion=on?'on':'off';mBtn.textContent=on?'Pause motion':'Play motion';mBtn.setAttribute('aria-pressed',String(!on));}
-mBtn.addEventListener('click',()=>setMotion(!motionOn));
-if(!motionOn)setMotion(false);
-
-/* bell curve */
-function bell(svg,mark){
-  const W=640,H=250,L=20,R=620,T=20,B=200,lo=55,hi=145;
-  const X=v=>L+(v-lo)/(hi-lo)*(R-L),pdf=v=>Math.exp(-((v-100)**2)/(2*225));const Y=v=>B-pdf(v)*(B-T);
-  let d='';for(let v=lo;v<=hi;v+=1)d+=(v===lo?'M':'L')+X(v).toFixed(1)+' '+Y(v).toFixed(1);
-  const band=(a,b,op)=>{let p=`M${X(a)} ${B}`;for(let v=a;v<=b;v+=1)p+=`L${X(v).toFixed(1)} ${Y(v).toFixed(1)}`;return `<path d="${p}L${X(b)} ${B}Z" fill="var(--accent)" fill-opacity="${op}"/>`;};
-  let s=band(85,115,.22)+band(70,85,.1)+band(115,130,.1)+`<path d="${d}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>`;
-  s+=`<line x1="${L}" y1="${B}" x2="${R}" y2="${B}" stroke="var(--line-2)"/>`;
-  [55,70,85,100,115,130,145].forEach(v=>{s+=`<line x1="${X(v)}" y1="${B}" x2="${X(v)}" y2="${B+6}" stroke="var(--line-2)"/><text x="${X(v)}" y="${B+24}" text-anchor="middle">${v}</text>`;});
-  s+=`<text x="${X(100)}" y="${Y(100)+44}" text-anchor="middle">68%</text>`;
-  if(mark!=null){const v=Math.max(lo,Math.min(hi,mark));s+=`<line x1="${X(v)}" y1="${T-6}" x2="${X(v)}" y2="${B}" stroke="var(--accent)" stroke-width="2"/><circle cx="${X(v)}" cy="${Y(v)}" r="5" fill="var(--accent)"/><text x="${X(v)}" y="${T-12}" text-anchor="middle" style="fill:var(--ink)">you · ${mark}</text>`;}
-  svg.innerHTML=s;
-}
-bell(document.getElementById('bellLanding'));
-
-/* ---------- test engine ---------- */
-const TOTAL=16*60;
-let autoTimer=null;
-let st=null,clockTimer=null,subTimer=null;
-const $=id=>document.getElementById(id);
-function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-
-function startTest(){
-  st={i:0,ans:Array(ITEMS.length).fill(null),seen:{},cp:{},left:TOTAL,done:false,hold:true,word:WORDS[Math.floor(Math.random()*WORDS.length)],recall:null};
-  $('landing').hidden=true;$('app').hidden=false;window.scrollTo(0,0);
-  clearInterval(clockTimer);
-  clockTimer=setInterval(()=>{if(st.done||st.hold)return;st.left--;$('tClock').textContent=fmt(st.left);$('tClock').classList.toggle('low',st.left<=60);if(st.left<=0)finish();},1000);
-  $('tClock').textContent=fmt(TOTAL);$('tClock').classList.remove('low');$('finishBtn').hidden=false;
-  wordScreen();
-}
-document.querySelectorAll('.js-start').forEach(b=>b.addEventListener('click',startTest));
-$('exitLink').addEventListener('click',e=>{e.preventDefault();leave();});
-function leave(){clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);if(st)st.done=true;$('app').hidden=true;$('landing').hidden=false;window.scrollTo(0,0);}
-$('finishBtn').addEventListener('click',()=>{
-  const un=st.ans.filter(a=>a===null).length;
-  if(un&&!st.confirmFinish){st.confirmFinish=true;$('finishBtn').textContent=`${un} unanswered · finish anyway`;setTimeout(()=>{if(st&&!st.done){st.confirmFinish=false;$('finishBtn').textContent='Finish';}},4000);return;}
-  finish();
-});
-
-function railHTML(){
-  const nm=id=>DOMAINS.find(d=>d.id===id).name;
-  return `<div class="d">Items</div><div class="row">${ITEMS.map(it=>`<button data-go="${it.idx}" class="${st.ans[it.idx]!==null?'done':''}${it.idx===st.i?' cur':''}" title="${nm(it.d)}" aria-label="Item ${it.idx+1}, ${nm(it.d)}">${it.idx+1}</button>`).join('')}</div>
-  <div class="legend">${DOMAINS.map(d=>{const its=ITEMS.filter(x=>x.d===d.id);return `<div><span>${d.name}</span><b>${its.filter(x=>st.ans[x.idx]!==null).length}/${its.length}</b></div>`;}).join('')}</div>`;
-}
-function render(){
-  clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
-  const it=ITEMS[st.i],dom=DOMAINS.find(d=>d.id===it.d);
-  $('tCount').textContent=`${st.i+1} / ${ITEMS.length}`;
-  $('tProg').style.transform=`scaleX(${st.ans.filter(a=>a!==null).length/ITEMS.length})`;
-  let body='';
-  if(it.type==='matrix'){
-    body=`<div class="mx" id="qMx"></div><div class="opts" role="radiogroup" aria-label="Answers">${it.choices.map((ch,j)=>optFig(j,cellSVG(ch.c))).join('')}</div>`;
-  }else if(it.type==='series'){
-    body=`<div class="seq">${it.seq.map(n=>`<span>${n}</span>`).join('')}<span class="blank">?</span></div>${optText(it.opts)}`;
-  }else if(it.type==='choice'){
-    body=(it.pre||'')+optText(it.opts,it.mono);
-  }else if(it.type==='figseq'){
-    body=`<div class="seq figs">${it.seq.map(c=>`<span>${cellSVG(c)}</span>`).join('')}<span class="blank">?</span></div><div class="opts" style="grid-template-columns:repeat(5,1fr)" role="radiogroup">${it.choices.map((ch,j)=>optFig(j,cellSVG(ch.c))).join('')}</div>`;
-  }else if(it.type==='oddfig'){
-    body=`<div class="opts" style="grid-template-columns:repeat(4,1fr)" role="radiogroup">${it.choices.map((ch,j)=>optFig(j,cellSVG(ch.c))).join('')}</div>`;
-  }else if(it.type==='rotate'){
-    body=`<div class="target"><svg viewBox="0 0 100 100" aria-label="Target shape">${polySVG(it.base,4).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><span class="label">Target shape</span></div><div class="opts" style="grid-template-columns:repeat(4,1fr)" role="radiogroup">${it.choices.map((ch,j)=>optFig(j,polySVG(ch.c,4))).join('')}</div>`;
-  }else if(it.type==='net'){
-    body=`<div class="opts" style="grid-template-columns:repeat(2,1fr)" role="radiogroup">${it.choices.map((ch,j)=>optFig(j,netSVG(ch.c),'wide')).join('')}</div>`;
-  }else if(it.type==='memory'){
-    body=memoryHTML(it);
-  }else if(it.type==='scan'){
-    body=scanHTML(it);
-  }
-  $('tMain').innerHTML=`<div class="t-grid"><aside class="rail" aria-label="Items">${railHTML()}</aside>
-    <div class="qcard"><div class="qhead"><span class="tag">${dom.name}</span><span class="num">Item ${String(st.i+1).padStart(2,'0')}</span></div>
-    <h2 class="qtitle">${it.q}</h2>${it.type==='memory'&&it.mode==='backward'?'<p class="qsub">Last digit first.</p>':''}
-    ${body}
-    <div class="qnav"><button class="btn btn-line" id="prevBtn"${st.i===0?' disabled':''}>← Back</button><span class="kbd">Keys 1–6 to answer · Enter after answering</span><button class="btn btn-primary" id="nextBtn">${st.i===ITEMS.length-1?'See results':'Next'} <span class="arr" aria-hidden="true">→</span></button></div></div></div>`;
-  if(it.type==='matrix')renderMatrix($('qMx'),it,false);
-  markSel();
-  $('prevBtn').onclick=()=>go(st.i-1);
-  $('nextBtn').onclick=next;
-  $('tMain').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
-  $('tMain').querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.j));
-  if(it.type==='memory')wireMemory(it);
-  if(it.type==='scan')wireScan(it);
-}
-const optFig=(j,svg,cls)=>`<button class="opt fig ${cls||''}" data-j="${j}" role="radio" aria-label="Option ${j+1}"><span class="k">${j+1}</span>${svg}</button>`;
-const optText=(opts,mono)=>`<div class="opts text" role="radiogroup">${opts.map((o,j)=>`<button class="opt${mono?' mono':''}" data-j="${j}" role="radio"><span class="k">${j+1}</span><span>${o}</span></button>`).join('')}</div>`;
-function markSel(){$('tMain').querySelectorAll('.opt').forEach(b=>{const on=+b.dataset.j===st.ans[st.i];b.classList.toggle('sel',on);b.setAttribute('aria-checked',on);});}
-let cheerN=0;function cheer(){const c=$('cheer');if(!c)return;c.textContent=CHEERS[cheerN++%CHEERS.length];c.classList.remove('on');void c.offsetWidth;c.classList.add('on');}
-function pick(j){const it=ITEMS[st.i];if(it.type==='scan'&&st.seen[st.i]==='closed')return;const first=st.ans[st.i]===null;st.ans[st.i]=j;markSel();if(first&&(st.ans.filter(a=>a!==null).length%3===2))cheer();
-  clearTimeout(autoTimer);if(first&&st.i<ITEMS.length-1){const at=st.i;autoTimer=setTimeout(()=>{if(st&&!st.done&&st.i===at)next();},480);}
-  const lg=$('tMain').querySelector('.legend');if(lg)lg.outerHTML=railHTML().slice(railHTML().indexOf('<div class="legend">'));
-  $('tMain').querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('done',st.ans[+b.dataset.go]!==null));
-  $('tProg').style.transform=`scaleX(${st.ans.filter(a=>a!==null).length/ITEMS.length})`;}
-function go(i){if(i<0||i>=ITEMS.length)return;st.i=i;render();window.scrollTo({top:0});}
-function next(){const it=ITEMS[st.i];if(it.type==='memory'){const v=($('memIn')||{}).value;if(v!=null&&v!=='')st.ans[st.i]=v.replace(/\D/g,'');}
-  if(st.i===ITEMS.length-1){recallScreen();return;}
-  const n=st.i+1;if(CHECKPOINTS.includes(n)&&!st.cp[n]){st.cp[n]=1;checkpoint(n);return;}
-  go(st.i+1);}
-function segsHTML(k){return `<div class="segs" aria-hidden="true">${CHECKPOINTS.map((_,x)=>`<i class="${x<=k?'on':''}"></i>`).join('')}</div>`;}
-function wordScreen(){
-  st.hold=true;$('tCount').textContent='Before you start';$('tProg').style.transform='scaleX(0)';
-  $('tMain').innerHTML=`<div class="mo" role="status"><span class="label">One quick thing first</span><h2>Memorize this <span class="hl">word</span></h2>
-   <p>You will be asked about it after the last question.</p><div class="wordcard">${st.word}</div>
-   <div class="hold">The clock starts when you continue</div><button class="btn btn-primary" id="moGo">I’ve memorized it <span class="arr" aria-hidden="true">→</span></button></div>`;
-  $('moGo').onclick=()=>{st.hold=false;render();window.scrollTo({top:0});};$('moGo').focus();
-}
-function recallScreen(){
-  clearTimeout(autoTimer);st.hold=true;$('tCount').textContent='Bonus question';
-  const opts=[st.word,...WORDS.filter(w=>w!==st.word).sort(()=>Math.random()-.5).slice(0,4)].sort(()=>Math.random()-.5);
-  $('tMain').innerHTML=`<div class="mo" role="status"><span class="label">Last one</span><h2>Which word did you <span class="hl">memorize</span>?</h2>
-   <p>From the very start of the test.</p><div class="opts-w" role="radiogroup">${opts.map(w=>`<button class="opt" role="radio" data-w="${w}"><span>${w}</span></button>`).join('')}</div></div>`;
-  $('tMain').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.recall=b.dataset.w===st.word;st.hold=false;finish();});
-  window.scrollTo({top:0});
-}
-function checkpoint(n){
-  clearTimeout(autoTimer);clearTimeout(subTimer);clearInterval(subTimer);st.hold=true;
-  const k=CHECKPOINTS.indexOf(n),used=TOTAL-st.left,left=ITEMS.length-n,budget=TOTAL/ITEMS.length,pace=used/n;
-  let ico='bolt',h,body='',lead;
-  if(k===0){
-    const faster=pace<budget,pct=Math.min(95,Math.max(1,Math.round((1-pace/budget)*100)));
-    h=faster?`You are doing <span class="hl">faster than 99%</span> of all test participants!`:`Steady and careful. <span class="hl">You have time</span> to think.`;
-    lead=`<span class="ph-tag">Placeholder claim</span> Real pace: ${pct}% under budget. The budget is ${fmt(Math.round(budget))} an item and you are averaging ${fmt(Math.round(pace))}. Quick reactions help people adapt and decide under pressure.`;
-  }else if(k===1){
-    ico='eye';const seen=new Set(ITEMS.slice(0,n).map(x=>x.d));
-    h=`A pattern is starting to show in <span class="hl">how you think</span>`;
-    body=`<div class="chips">${DOMAINS.map(d=>`<span class="${seen.has(d.id)?'on':''}">${d.name}</span>`).join('')}</div>`;
-    lead=`Every answer adds detail to your profile. ${seen.size} of ${DOMAINS.length} domains covered so far.`;
-  }else if(k===2){
-    ico='target';
-    h=`Past the halfway mark. <span class="hl">Keep that rhythm.</span>`;
-    body=`<div class="big"><span id="moNum">0</span><small> / ${ITEMS.length}</small></div><div class="meter" aria-hidden="true"><i id="moMeter"></i></div>`;
-    lead=`${n} items done and ${fmt(st.left)} left on the clock.`;
-  }else{
-    ico='flag';
-    h=`Almost there. <span class="hl">Only ${left} questions left!</span>`;
-    body=`<div class="reel" aria-hidden="true"><div class="reel-col" id="moReel">${Array.from({length:ITEMS.length+1},(_,i)=>`<b>${i}</b>`).join('')}</div></div>`;
-    lead=`A few more answers complete your profile. Take them one at a time.`;
-  }
-  const showIco=k<2||k===undefined;
-  $('tMain').innerHTML=`<div class="mo" role="status">${segsHTML(k)}${k<2?moIco(ico):''}<h2>${h}</h2>${body}<p>${lead}</p>
-   <p class="fact"><b>Did you know?</b> ${FACTS[k]}</p><div class="hold">Clock paused</div>
-   <button class="btn btn-primary" id="cpGo">Continue <span class="arr" aria-hidden="true">→</span></button></div>`;
-  const calm=matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.dataset.motion==='off';
-  if(k===2){const num=$('moNum'),m=$('moMeter');if(calm){num.textContent=n;m.style.transform=`scaleX(${n/ITEMS.length})`;}else{const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1100);num.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);requestAnimationFrame(()=>requestAnimationFrame(()=>m.style.transform=`scaleX(${n/ITEMS.length})`));}}
-  if(k===3){const r=$('moReel');if(calm)r.style.transition='none';requestAnimationFrame(()=>requestAnimationFrame(()=>r.style.transform=`translateY(${-left*1.1}em)`));}
-  $('cpGo').onclick=()=>{st.hold=false;go(n);};$('cpGo').focus();window.scrollTo({top:0});
-}
-
-/* memory */
-function memoryHTML(it){
-  const s=st.seen[st.i];
-  if(!s)return `<div class="memo" id="memo"><div style="display:grid;gap:14px;justify-items:center"><span class="hint">After a 3-2-1 countdown, ${it.digits.length} digits will appear one at a time, ${(it.digits.length*0.9).toFixed(1)} seconds in total. You see them once.</span><button class="btn btn-primary" id="memGo">Show the digits</button></div></div>`;
-  return `<div class="memo"><span class="hint">The digits have been shown.</span></div><div class="field"><label for="memIn">${it.mode==='forward'?'Type the digits in order':'Type the digits in reverse order'}</label><input id="memIn" inputmode="numeric" autocomplete="off" maxlength="12" value="${st.ans[st.i]||''}"></div>`;
-}
-function wireMemory(it){
-  const g=$('memGo');
-  if(g)g.onclick=()=>{
-    const memo=$('memo');let k=0;let cd=3;memo.innerHTML='<span class="count" id="memD">3</span>';
-    const show=()=>{if(k<it.digits.length){$('memD').textContent=it.digits[k];k++;subTimer=setTimeout(()=>{$('memD').textContent='';subTimer=setTimeout(show,150);},750);}
-      else{st.seen[st.i]='shown';render();setTimeout(()=>$('memIn')&&$('memIn').focus(),30);}};
-    const count=()=>{cd--;if(cd>0){$('memD').textContent=cd;subTimer=setTimeout(count,600);}else{$('memD').className='big';$('memD').textContent='';subTimer=setTimeout(show,250);}};
-    subTimer=setTimeout(count,600);
-  };
-  const inp=$('memIn');
-  if(inp)inp.addEventListener('input',()=>{const v=inp.value.replace(/\D/g,'');inp.value=v;st.ans[st.i]=v||null;
-    $('tMain').querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('done',st.ans[+b.dataset.go]!==null));});
-}
-/* scan */
-function scanHTML(it){
-  const s=st.seen[st.i];
-  if(!s)return `<div class="memo"><div style="display:grid;gap:14px;justify-items:center"><span class="hint">A grid of 45 symbols appears for 20 seconds. Count the targets, then choose your answer.</span><button class="btn btn-primary" id="scanGo">Show the grid</button></div></div>`;
-  return `<div class="tbar" id="tbar"><span id="tleft">${s==='closed'?'Time is up':'20 s'}</span><div class="tb"><i id="tbi"></i></div></div>
-    <div class="scan-grid${s==='closed'?' hide':''}" aria-label="Symbol grid">${it.grid.map(g=>`<span>${g}</span>`).join('')}</div>${optText(it.opts)}`;
-}
-function wireScan(it){
-  const g=$('scanGo');
-  if(g){g.onclick=()=>{st.seen[st.i]='open';st.scanEnd=Date.now()+20000;render();};return;}
-  if(st.seen[st.i]==='open'){
-    const bi=$('tbi');const tick=()=>{const left=Math.ceil((st.scanEnd-Date.now())/1000);
-      if(left<=0){clearInterval(subTimer);st.seen[st.i]='closed';render();return;}
-      $('tleft').textContent=left+' s';bi.style.transform=`scaleX(${left/20})`;};
-    bi.style.transform='scaleX(1)';tick();subTimer=setInterval(tick,250);
-  }else{$('tbi').style.transform='scaleX(0)';}
-}
-document.addEventListener('keydown',e=>{
-  if($('app').hidden||!st||st.done)return;if(e.target.tagName==='INPUT'){if(e.key==='Enter'&&e.target.value.trim()!=='')next();return;}
-  if($('cpGo'))return;
-  const n=parseInt(e.key,10);const opts=$('tMain').querySelectorAll('.opt');
-  if(n>=1&&n<=opts.length){pick(n-1);}else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){if(st.ans[st.i]!==null)next();}
-  else if(e.key==='ArrowRight'){if(st.ans[st.i]!==null)go(st.i+1);}else if(e.key==='ArrowLeft')go(st.i-1);
-});
-
-/* results */
-function isRight(it,a){if(a===null||a===undefined)return false;return it.type==='memory'?a===it.answer:a===it.correct;}
-function erf(x){const t=1/(1+.3275911*Math.abs(x));const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}
-function answerText(it,a){
-  if(a===null||a===undefined)return 'No answer';
-  if(it.type==='memory')return a;
-  if(it.opts)return it.opts[a];return 'Option '+(a+1);
-}
-function correctText(it){
-  if(it.type==='memory')return it.answer;
-  if(it.opts)return it.opts[it.correct];return 'Option '+(it.correct+1);
-}
-
-/* MOCK paywall (proof of concept). No payment is collected; the button simply reveals the results. */
-let gateTimer;
-function finish(){
-  if(st.done&&st.finished)return;st.done=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
-  $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';$('tCount').textContent='Almost done';
-  let left=600;
-  $('tMain').innerHTML=`<div class="gate" role="region" aria-label="Unlock your results">
-   <span class="mockbar">Mock paywall · no payment is taken</span>
-   <h2>Your results are ready</h2><div class="blur" aria-hidden="true">•••</div>
-   <p class="timer">Your result is reserved for <b id="gateT">10:00</b></p>
-   <fieldset class="plans"><legend class="sr" style="position:absolute;left:-9999px">Choose a plan</legend>
-    <label class="plan"><input type="radio" name="plan" value="trial" checked><span class="dot"></span><span class="t"><b>7-day trial</b><span>Then billed weekly</span></span><span class="pr">$0.99</span></label>
-    <label class="plan"><span class="best">Best value</span><input type="radio" name="plan" value="month"><span class="dot"></span><span class="t"><b>1 month</b><span>Billed monthly</span></span><span class="pr">$9.99</span></label>
-    <label class="plan"><input type="radio" name="plan" value="year"><span class="dot"></span><span class="t"><b>12 months</b><span>Billed yearly</span></span><span class="pr">$29.99</span></label>
-   </fieldset>
-   <ul class="inc"><li>✓ Full score and percentile</li><li>✓ Domain breakdown and radar profile</li><li>✓ Every item explained</li><li>✓ Printable certificate</li></ul>
-   <button class="btn btn-primary" id="gateGo">Unlock my results <span class="arr" aria-hidden="true">→</span></button>
-   <p class="fine">Placeholder flow for the proof of concept. Nothing is charged and no card details are asked for.</p></div>`;
-  const t=$('gateT');gateTimer=setInterval(()=>{left=Math.max(0,left-1);t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');},1000);
-  $('gateGo').onclick=()=>{clearInterval(gateTimer);st.done=false;showResults();};
-  $('gateGo').focus();window.scrollTo(0,0);
-}
-
-function showResults(){
-  if(st.done&&st.finished)return;st.done=true;st.finished=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);
-  $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';
-  const right=ITEMS.map(it=>isRight(it,st.ans[it.idx]));const raw=right.filter(Boolean).length;const pct=raw/ITEMS.length;
-  const iq=Math.round(Math.max(62,Math.min(145,100+15*(pct-.5)/.2)));
-  const percentile=Math.round(50*(1+erf((iq-100)/15/Math.SQRT2))*10)/10;
-  const cls=iq>=130?'Very high':iq>=115?'Above average':iq>=85?'Average':iq>=70?'Below average':'Low';
-  const used=TOTAL-st.left;
-  const dom=DOMAINS.map(d=>{const its=ITEMS.filter(it=>it.d===d.id);const ok=its.filter(it=>right[it.idx]).length;return{...d,ok,n:its.length};});
-  const ranked=dom.slice().sort((x,y)=>y.ok/y.n-x.ok/x.n);const best=ranked[0],worst=ranked[ranked.length-1];
-  $('tCount').textContent='Results';
-  $('tMain').innerHTML=`
-   <div class="res-hero"><div class="res-num" id="resNum">${iq}</div><div class="res-meta"><span class="label">Estimated score · practice scale</span><span class="cls">${cls}</span>
-    <p>You answered ${raw} of ${ITEMS.length} items correctly in ${fmt(used)}.${st.recall===null?'':st.recall?' You also remembered the opening word.':' The opening word slipped away, which happens to everyone.'} On a mean-100, σ-15 scale that sits near the ${percentile}th percentile. This test is not normed, so read the number as a rough guide.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" id="againBtn">Take it again</button><button class="btn btn-line" id="copyBtn">Copy result</button><button class="btn btn-line" id="homeBtn">Back to Brightfold</button></div></div></div>
-   <div class="res-cols"><div><h3>Where your estimate falls</h3><svg class="bell" id="bellRes" viewBox="0 0 640 250" role="img" aria-label="Your estimate on the normal curve"></svg></div>
-    <div><h3>By domain</h3><div class="dbars">${dom.map(d=>`<div class="dbar"><div class="top"><span>${d.name}</span><span>${d.ok} / ${d.n}</span></div><div class="track"><i data-w="${d.ok/d.n}"></i></div></div>`).join('')}</div>
-    <div class="callouts"><div><span>Strongest domain</span><b>${best.name}</b></div><div><span>Most room to grow</span><b>${best.ok/best.n===worst.ok/worst.n?"Even across all six":worst.name}</b></div></div></div></div>
-   <div class="res-cert"><h3>Your certificate</h3><div class="cert-form"><input id="certIn" type="text" maxlength="40" placeholder="Type your name" aria-label="Name on certificate" autocomplete="name"><button class="btn btn-primary" id="certPrint">Print or save as PDF</button></div>${certHTML({name:'Brightfold participant',nameId:'certName',score:iq,cls,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),items:ITEMS.length})}</div>
-   <div class="review"><h3 style="font-size:17px;margin:0 0 8px">Every item, explained</h3>${ITEMS.map(it=>{const ok=right[it.idx];return `<div class="rv"><span class="n">${String(it.idx+1).padStart(2,'0')}</span><div><div class="q">${it.q}</div><div class="x">Your answer: ${answerText(it,st.ans[it.idx])}${ok?'':` · Correct: ${correctText(it)}`}</div><div class="x">${it.why}</div></div><span class="pill ${ok?'ok':'no'}">${ok?'Correct':'Missed'}</span></div>`;}).join('')}</div>`;
-  bell($('bellRes'),iq);
-  requestAnimationFrame(()=>requestAnimationFrame(()=>$('tMain').querySelectorAll('.dbar i').forEach(i=>i.style.transform=`scaleX(${i.dataset.w})`)));
-  $('certIn').oninput=e=>{$('certName').textContent=e.target.value.trim()||'Brightfold participant';};$('certPrint').onclick=()=>window.print();$('againBtn').onclick=startTest;$('homeBtn').onclick=leave;window.scrollTo(0,0);
-  $('copyBtn').onclick=async()=>{const t=`I scored ${iq} on the Brightfold reasoning test (${raw}/${ITEMS.length} correct). Strongest domain: ${best.name}.`;
-    try{await navigator.clipboard.writeText(t);$('copyBtn').textContent='Copied';}catch(e){$('copyBtn').textContent='Copy not available';}
-    setTimeout(()=>{const c=$('copyBtn');if(c)c.textContent='Copy result';},2000);};
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const el=$('resNum'),t0=performance.now(),from=70;
-    const step=t=>{const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(iq-from)*e);if(p<1)requestAnimationFrame(step);};
-    el.textContent=from;requestAnimationFrame(step);}
-}
-
-/* press marquee: repeat logos until one track is wider than the viewport, then clone it so the loop never shows a gap */
-(function(){const m=document.getElementById('marq'),src=document.getElementById('marqSrc');if(!m||!src)return;const base=[...src.children].map(n=>n.cloneNode(true));
-function build(){const w=Math.max(m.clientWidth,window.innerWidth||0);src.replaceChildren(...base.map(n=>n.cloneNode(true)));let guard=0;while(src.scrollWidth<w&&guard++<12)base.forEach(n=>{const c=n.cloneNode(true);c.querySelector('img').setAttribute('aria-hidden','true');c.querySelector('img').alt='';src.appendChild(c)});
-[...m.querySelectorAll('.marq-track')].forEach(t=>{if(t!==src)t.remove()});const twin=src.cloneNode(true);twin.removeAttribute('id');twin.setAttribute('aria-hidden','true');m.appendChild(twin);m.style.setProperty('--marq-dur',Math.max(24,Math.round(src.scrollWidth/55))+'s');}
-build();let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(build,200)});})();
-/* stats count-up */
-(function(){const bs=[...document.querySelectorAll('.stat b')];const fin=b=>b.textContent=(+b.dataset.to).toLocaleString('en-US')+b.dataset.suf;if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window)){bs.forEach(fin);return;}
-const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(!e.isIntersecting)return;io.unobserve(e.target);const b=e.target,to=+b.dataset.to,t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400),v=1-Math.pow(1-p,3);b.textContent=Math.round(to*v).toLocaleString('en-US')+(p<1?'':b.dataset.suf);if(p<1)requestAnimationFrame(f)})(t0)})},{threshold:.4});bs.forEach(b=>io.observe(b));})();
-
-/* certificate */
-function certHTML(o){const e=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
- return `<div class="cert-sheet" ${o.id?`id="${o.id}"`:''}>${o.sample?'<span class="c-stamp">Sample</span>':''}<span class="c-brand"><i></i>Brightfold</span><p class="c-kicker">Certificate of completion</p><h3>Reasoning Test</h3><p class="c-line">This certifies that</p><div class="c-name" ${o.nameId?`id="${o.nameId}"`:''}>${e(o.name)}</div><p class="c-line">completed the Brightfold reasoning test with an estimated score of</p><div class="c-score">${o.score}</div><div class="c-cls">${o.cls}</div><div class="c-foot"><span>${o.date}</span><span>${o.items} items · 6 domains</span></div><p class="c-fine">Practice estimate on a mean-100, σ-15 scale. Not normed and not a clinical or diagnostic assessment.</p></div>`;}
-(function(){const h=document.querySelector('.cert-grid .rise:last-child');if(!h)return;h.innerHTML=certHTML({sample:1,name:'Your name here',score:112,cls:'Above average',date:'Date of test',items:20});})();
-/* radar */
-(function(){const svg=document.getElementById('radar');if(!svg)return;const L=['Fluid','Quantitative','Verbal','Spatial','Memory','Speed'],V=[.82,.62,.9,.55,.72,.66],cx=180,cy=160,R=98;
-const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/6;return[cx+Math.cos(a)*r,cy+Math.sin(a)*r];};
-let h='';[.33,.66,1].forEach(k=>h+=`<polygon class="ring" points="${L.map((_,i)=>pt(i,R*k).join(',')).join(' ')}"/>`);
-L.forEach((l,i)=>{const[x,y]=pt(i,R),[tx,ty]=pt(i,R+20);h+=`<line class="ax" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/><text x="${tx}" y="${ty+4}" text-anchor="${Math.abs(tx-cx)<8?'middle':tx>cx?'start':'end'}">${l}</text>`;});
-h+=`<g class="shape"><polygon points="${V.map((v,i)=>pt(i,R*v).join(',')).join(' ')}" fill="inherit"/>${V.map((v,i)=>{const[x,y]=pt(i,R*v);return `<circle class="dot" cx="${x}" cy="${y}" r="3.5"/>`}).join('')}</g>`;
-svg.innerHTML=h;
-const g=svg.querySelector('.shape');g.style.cssText='';const poly=g.querySelector('polygon');poly.style.cssText='fill:var(--accent-soft);stroke:var(--accent);stroke-width:2;stroke-linejoin:round';})();
-/* reveal on scroll */
-(function(){const els=[...document.querySelectorAll('.rise,.mind,.radar,.rank')];const calm=matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.dataset.motion==='off';
-if(calm||!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('nomo'));return;}
-els.forEach(e=>{if(e.classList.contains('rise'))e.classList.add('pre')});
-const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;io.unobserve(en.target);en.target.classList.remove('pre');en.target.classList.add('in');}),{threshold:.15,rootMargin:'0px 0px -6% 0px'});
-els.forEach(e=>io.observe(e));
-setTimeout(()=>els.forEach(e=>{const r=e.getBoundingClientRect();if(r.top<innerHeight){e.classList.remove('pre');e.classList.add('in')}}),600);})();
-</script>
-
-</html>
+<script src="data.js"></script>
+<script src="engine.js"></script>
+<script src="landing.js"></script>
