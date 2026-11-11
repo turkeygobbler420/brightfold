@@ -514,6 +514,28 @@ html[data-motion="off"] .radar .shape,.radar.nomo .shape{transform:none;opacity:
 .rank b{font-family:var(--f-mono);text-align:right;font-weight:600}
 @media (max-width:980px){.revs{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:560px){.rank li{grid-template-columns:22px minmax(0,1fr) 40px}.rank .tr{grid-column:2/-1;grid-row:2}}
+
+.gate{max-width:560px;margin:0 auto;text-align:center;display:grid;gap:18px;justify-items:center;padding-block:16px}
+.gate .mockbar{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line-2);border-radius:8px;padding:6px 12px}
+.gate h2{margin:0;font-size:clamp(24px,5vw,34px);letter-spacing:-.025em;line-height:1.1;text-wrap:balance}
+.gate .blur{font-family:var(--f-mono);font-size:clamp(64px,18vw,104px);font-weight:600;letter-spacing:-.05em;line-height:1;color:var(--accent);filter:blur(10px);user-select:none}
+.gate .timer{font-family:var(--f-mono);color:var(--muted);font-size:14px}
+.gate .timer b{color:var(--ink)}
+.plans{display:grid;gap:10px;width:100%;text-align:left;border:0;padding:0;margin:0}
+.plan{position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);cursor:pointer;min-height:64px}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan .dot{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center}
+.plan .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);transform:scale(0);transition:transform .2s var(--ease-in,ease)}
+.plan:has(input:checked){border-color:var(--accent)}
+.plan:has(input:checked) .dot{border-color:var(--accent)}
+.plan:has(input:checked) .dot::after{transform:scale(1)}
+.plan:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.plan .t{flex:1;min-width:0}.plan .t b{display:block;font-size:15.5px}.plan .t span{color:var(--muted);font-size:13px}
+.plan .pr{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+.plan .best{position:absolute;right:14px;top:-9px;background:var(--accent);color:#fff;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border-radius:6px;padding:2px 8px}
+.gate ul.inc{list-style:none;margin:0;padding:0;display:grid;gap:6px;color:var(--muted);font-size:14px;text-align:left}
+.gate .btn{width:100%}
+.gate .fine{margin:0;text-align:center}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1233,7 +1255,31 @@ function correctText(it){
   if(it.type==='memory')return it.answer;
   if(it.opts)return it.opts[it.correct];return 'Option '+(it.correct+1);
 }
+
+/* MOCK paywall (proof of concept). No payment is collected; the button simply reveals the results. */
+let gateTimer;
 function finish(){
+  if(st.done&&st.finished)return;st.done=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
+  $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';$('tCount').textContent='Almost done';
+  let left=600;
+  $('tMain').innerHTML=`<div class="gate" role="region" aria-label="Unlock your results">
+   <span class="mockbar">Mock paywall · no payment is taken</span>
+   <h2>Your results are ready</h2><div class="blur" aria-hidden="true">•••</div>
+   <p class="timer">Your result is reserved for <b id="gateT">10:00</b></p>
+   <fieldset class="plans"><legend class="sr" style="position:absolute;left:-9999px">Choose a plan</legend>
+    <label class="plan"><input type="radio" name="plan" value="trial" checked><span class="dot"></span><span class="t"><b>7-day trial</b><span>Then billed weekly</span></span><span class="pr">$0.99</span></label>
+    <label class="plan"><span class="best">Best value</span><input type="radio" name="plan" value="month"><span class="dot"></span><span class="t"><b>1 month</b><span>Billed monthly</span></span><span class="pr">$9.99</span></label>
+    <label class="plan"><input type="radio" name="plan" value="year"><span class="dot"></span><span class="t"><b>12 months</b><span>Billed yearly</span></span><span class="pr">$29.99</span></label>
+   </fieldset>
+   <ul class="inc"><li>✓ Full score and percentile</li><li>✓ Domain breakdown and radar profile</li><li>✓ Every item explained</li><li>✓ Printable certificate</li></ul>
+   <button class="btn btn-primary" id="gateGo">Unlock my results <span class="arr" aria-hidden="true">→</span></button>
+   <p class="fine">Placeholder flow for the proof of concept. Nothing is charged and no card details are asked for.</p></div>`;
+  const t=$('gateT');gateTimer=setInterval(()=>{left=Math.max(0,left-1);t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');},1000);
+  $('gateGo').onclick=()=>{clearInterval(gateTimer);st.done=false;showResults();};
+  $('gateGo').focus();window.scrollTo(0,0);
+}
+
+function showResults(){
   if(st.done&&st.finished)return;st.done=true;st.finished=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);
   $('finishBtn').hidden=true;$('tProg').style.transform='scaleX(1)';
   const right=ITEMS.map(it=>isRight(it,st.ans[it.idx]));const raw=right.filter(Boolean).length;const pct=raw/ITEMS.length;
