@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Brightfold Reasoning Test</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Brightfold: a free 32-question reasoning test across six cognitive domains, with a full breakdown of your answers.">
+<meta name="description" content="Brightfold: a free 20-question reasoning test across six cognitive domains, with a full breakdown of your answers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
@@ -206,7 +206,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .t-top .wrap{height:64px;display:flex;align-items:center;gap:20px}
 .t-top .meta{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:14px;color:var(--muted)}
 #tCount{white-space:nowrap}
-@media (max-width:560px){.t-top .wrap{gap:12px}.t-top .logo{font-size:0;gap:0}.t-top .meta{gap:10px}.opts[style*="repeat(5"]{grid-template-columns:repeat(3,1fr)!important}}
+@media (max-width:560px){.t-top .wrap{gap:12px}.t-top .logo{font-size:0;gap:0;min-width:44px;min-height:44px;justify-content:flex-start;align-items:center}.t-top .meta{gap:10px}.opts[style*="repeat(5"]{grid-template-columns:repeat(3,1fr)!important}}
 .t-top .clock{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 10px}
 .t-top .clock.low{color:var(--bad);border-color:var(--bad)}
 .prog{height:2px;background:var(--line);position:relative;overflow:hidden}
@@ -222,7 +222,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .rail button{width:30px;height:30px;border-radius:7px;border:1px solid var(--line);background:var(--surface);font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer;transition:border-color .15s var(--ease)}
 .rail button.done{color:var(--ink);border-color:var(--line-2);background:var(--surface-2)}
 .rail button.cur{border-color:var(--accent);color:var(--ink)}
-.qcard{max-width:760px;display:grid;gap:28px}
+.qcard{max-width:760px;display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.t-grid>*{min-width:0}
+.qcard>*{min-width:0}
 .qhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .qhead .num{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 .qtitle{font-size:clamp(22px,2.6vw,30px);line-height:1.25;letter-spacing:-.025em;font-weight:600;margin:0;text-wrap:balance}
@@ -331,6 +333,25 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .callouts span{font-size:13px;color:var(--muted);display:block}
 .callouts b{font-weight:600;font-size:16px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* mobile polish */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,.opt{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (max-width:560px){
+  .t-main{padding-block:28px 64px}
+  .qcard{gap:22px}
+  .qtitle{font-size:21px}
+  .opt{min-height:56px}
+  .seq{gap:8px}.seq span{min-width:48px;height:52px;font-size:20px;padding:0 8px}
+  .memo{padding:20px 16px}.memo .big{font-size:clamp(40px,14vw,64px)}
+  .field input{font-size:18px;letter-spacing:.08em}
+  .scan-grid{font-size:clamp(14px,4.6vw,22px);gap:3px}
+  .target svg{width:120px;height:120px}
+  .qnav .btn{min-height:48px}
+  .btn-sm{min-height:44px}
+  .nav .btn,.t-top .btn{min-height:44px}
+  .nav .logo{min-height:44px}
+}
+@media (max-width:340px){.t-top .logo{display:none}.t-top .meta{margin-left:0;width:100%;justify-content:space-between}.t-top .clock{padding:3px 8px}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -359,16 +380,16 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <section class="hero" data-enter aria-labelledby="hero-h">
   <div class="wrap">
     <div>
-      <span class="chip" data-up="1"><i></i>32 original items · 20+ question formats</span>
+      <span class="chip" data-up="1"><i></i>20 original items · 6 domains</span>
       <h1 id="hero-h"><span class="ln"><span>Measure how you</span></span><span class="ln"><span>reason, <em>not what</em></span></span><span class="ln"><span><em>you memorised.</em></span></span></h1>
       <p class="lead" data-up="2">Brightfold is a free reasoning test built on the six domains clinical IQ batteries use. Expect balance scales, codes, clock faces, hidden words, memory flashes and pattern puzzles, shuffled so no two items in a row feel alike.</p>
       <div class="hero-ctas" data-up="3">
-        <button class="btn btn-primary js-start">Start the 25-minute test <span class="arr" aria-hidden="true">→</span></button>
+        <button class="btn btn-primary js-start">Start the 16-minute test <span class="arr" aria-hidden="true">→</span></button>
         <a class="btn btn-line" href="#domains">See the six domains</a>
       </div>
       <div class="facts" data-up="4">
-        <div><b>32</b><span>questions</span></div>
-        <div><b>25:00</b><span>time limit</span></div>
+        <div><b>20</b><span>questions</span></div>
+        <div><b>16:00</b><span>time limit</span></div>
         <div><b>6</b><span>cognitive domains</span></div>
         <div><b>σ 15</b><span>scale, mean 100</span></div>
       </div>
@@ -381,7 +402,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <div class="tabs"><span class="on">Preview</span><span>Rule</span></div>
       </div>
       <div class="pbody">
-        <div class="pq"><span><b>Which tile completes the grid?</b></span><span class="mono">14 / 32</span></div>
+        <div class="pq"><span><b>Which tile completes the grid?</b></span><span class="mono">11 / 20</span></div>
         <div class="mx" id="heroMx"></div>
         <div class="opts-mini" id="heroOpts"></div>
       </div>
@@ -401,19 +422,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="grid">
       <article class="card">
         <div class="stage"><div class="d-mx" id="dMx"></div></div>
-        <div class="card-body"><div class="card-top"><h3>Fluid reasoning</h3><span class="tag">6 items</span></div><p>Missing-tile matrices, figure sequences and odd-one-out sets. Find the rule hiding in the pattern.</p></div>
+        <div class="card-body"><div class="card-top"><h3>Fluid reasoning</h3><span class="tag">4 items</span></div><p>Missing-tile matrices, figure sequences and odd-one-out sets. Find the rule hiding in the pattern.</p></div>
       </article>
       <article class="card">
         <div class="stage"><div class="d-series"><div class="track" id="dSeries"></div></div></div>
-        <div class="card-body"><div class="card-top"><h3>Quantitative reasoning</h3><span class="tag">8 items</span></div><p>Number and letter series, balance scales and short word problems with a tempting wrong answer.</p></div>
+        <div class="card-body"><div class="card-top"><h3>Quantitative reasoning</h3><span class="tag">4 items</span></div><p>Number and letter series, balance scales and short word problems with a tempting wrong answer.</p></div>
       </article>
       <article class="card">
         <div class="stage"><div class="d-verbal">seed<span class="sep">:</span>tree<span class="sep">::</span>egg<span class="sep">:</span><span class="slot" id="dWord">nest</span></div></div>
-        <div class="card-body"><div class="card-top"><h3>Verbal reasoning</h3><span class="tag">8 items</span></div><p>Analogies, letter codes, hidden words, anagrams, compound words and syllogisms.</p></div>
+        <div class="card-body"><div class="card-top"><h3>Verbal reasoning</h3><span class="tag">4 items</span></div><p>Analogies, letter codes, hidden words, anagrams, compound words and syllogisms.</p></div>
       </article>
       <article class="card">
         <div class="stage"><div class="d-spatial"><svg viewBox="0 0 60 60" id="dShapeA"></svg><svg viewBox="0 0 60 60" class="spin" id="dShapeB"></svg></div></div>
-        <div class="card-body"><div class="card-top"><h3>Visual-spatial</h3><span class="tag">5 items</span></div><p>Mental rotation, cube nets, folded paper, clock angles and compass turns.</p></div>
+        <div class="card-body"><div class="card-top"><h3>Visual-spatial</h3><span class="tag">3 items</span></div><p>Mental rotation, cube nets, folded paper, clock angles and compass turns.</p></div>
       </article>
       <article class="card">
         <div class="stage"><div class="d-mem" id="dMem"></div></div>
@@ -431,8 +452,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="wrap">
     <div class="sec-head"><div><span class="label">Process</span><h2 id="how-h">From first item to full breakdown</h2></div></div>
     <div class="steps">
-      <div class="step"><span class="n">Step 1</span><h3>Answer 32 items</h3><p>The domains are shuffled together. Pick an answer and the next item slides in. Jump back to any item from the side rail, or use keys 1 to 6.</p></div>
-      <div class="step"><span class="n">Step 2</span><h3>Beat the clock</h3><p>You have 25 minutes in total. Checkpoints every eight items show your pace and a fact about how these tests work.</p></div>
+      <div class="step"><span class="n">Step 1</span><h3>Answer 20 items</h3><p>The domains are shuffled together. Pick an answer and the next item slides in. Jump back to any item from the side rail, or use keys 1 to 6.</p></div>
+      <div class="step"><span class="n">Step 2</span><h3>Beat the clock</h3><p>You have 16 minutes in total. Checkpoints every five items show your pace and a fact about how these tests work.</p></div>
       <div class="step"><span class="n">Step 3</span><h3>Read your breakdown</h3><p>See an estimated score on the mean-100 scale, a bar for each domain and the reasoning behind every answer.</p></div>
     </div>
   </div>
@@ -473,7 +494,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>Twenty-five minutes. Thirty-two items. Start whenever you’re ready.</h2>
+    <h2>Sixteen minutes. Twenty items. Start whenever you’re ready.</h2>
     <button class="btn btn-primary js-start">Start the test <span class="arr" aria-hidden="true">→</span></button>
   </div>
 </section>
@@ -488,7 +509,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3H14l5 5v9.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 3 17.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5z" fill="var(--accent)"/><circle cx="9" cy="13" r="2.2" fill="currentColor"/></svg>
         Brightfold
       </a>
-      <div class="meta"><span id="tCount" class="mono">1 / 32</span><span class="clock" id="tClock">20:00</span><button class="btn btn-line btn-sm" id="finishBtn">Finish</button></div>
+      <div class="meta"><span id="tCount" class="mono">1 / 20</span><span class="clock" id="tClock">16:00</span><button class="btn btn-line btn-sm" id="finishBtn">Finish</button></div>
     </div>
     <div class="prog"><i id="tProg"></i></div>
   </div>
@@ -664,9 +685,9 @@ const RAW=[
  {id:'p3',d:'speed',type:'choice',q:'Use the key to decode the symbols',pre:'<div class="codekey"><span>◆<b>3</b></span><span>●<b>7</b></span><span>▲<b>1</b></span><span>■<b>5</b></span></div><div class="seq"><span>▲</span><span>◆</span><span>■</span><span>●</span></div>',opts:['1357','1375','3157','1537'],a:0,
   why:'▲ is 1, ◆ is 3, ■ is 5 and ● is 7, which reads 1357. Coding tasks like this are a standard processing-speed measure.'}
 ];
-/* mixed order: no two neighbours share a domain, a memory item lands third, and grid matrices are only 3 of 32 */
-const ORDER=['odd','q1','w1','v1','m1','dir','bal','v7','p1','fs1','ciph','s5','q7','m2','v3','s2','q6','p3','v4','m4','w2','q2','s4','v8','age','s1','v5','fs2','pair','q4','hid','q8'];
-const CHECKPOINTS=[8,16,24];
+/* mixed order: no two neighbours share a domain, a memory item lands third, and grid matrices are only 2 of 20 */
+const ORDER=['odd','q1','w1','v1','dir','fs1','bal','p1','v7','s2','m1','q7','ciph','w2','pair','s1','m4','age','p3','v5'];
+const CHECKPOINTS=[5,10,15];
 const FACTS=[
   'Raven’s Progressive Matrices, the model for the grid items, were first published in 1938 and are still used today.',
   'Average raw scores on IQ tests rose by about three points a decade across much of the 20th century. Researchers call it the Flynn effect.',
@@ -702,7 +723,7 @@ const ITEMS=ORDER.map((id,i)=>{
 const byId=id=>ITEMS.find(x=>x.id===id);
 
 /* ---------- landing visuals ---------- */
-const heroItem=byId('m2');
+const heroItem=byId('m1');
 function renderMatrix(el,item,showAns){
   let h='';for(let r=0;r<3;r++)for(let c=0;c<3;c++){
     if(r===2&&c===2)h+=`<div class="c q${showAns?' hit':''}" data-q>${showAns?cellSVG(item.ans):'?'}</div>`;
@@ -772,7 +793,7 @@ function bell(svg,mark){
 bell(document.getElementById('bellLanding'));
 
 /* ---------- test engine ---------- */
-const TOTAL=25*60;
+const TOTAL=16*60;
 let autoTimer=null;
 let st=null,clockTimer=null,subTimer=null;
 const $=id=>document.getElementById(id);
