@@ -132,7 +132,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const run=el=>{
     const m=el.textContent.trim().match(/^(\d+)(.*)$/);if(!m)return;
-    const end=+m[1],suf=m[2],t0=performance.now(),dur=1600;
+    const end=+m[1],suf=m[2],t0=performance.now(),dur=800;
     el.style.minWidth=el.offsetWidth+'px';
     const step=t=>{const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
       el.textContent=Math.round(end*e)+(p<1?'':suf);
