@@ -324,3 +324,26 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .card-art .board{padding:14px;max-width:236px}
 #landing .card-art .sc-well{background:var(--bg-alt)}
 #landing .card-art .mini-bars{margin:2px 0 4px}
+
+/* hero dashboard: card of cards */
+#landing .dash{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;align-items:stretch}
+#landing .dcard{background:#fff;border-radius:16px;box-shadow:0 0 0 1px rgba(0,0,0,.04),0 12px 30px -14px rgba(18,18,18,.28);padding:20px;min-width:0}
+#landing .dt{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--ink-2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#landing .d-main{display:flex;flex-direction:column}
+#landing .d-iq{margin:6px 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#landing .d-iq b{font-family:var(--f-display);font-size:64px;line-height:1;font-weight:700;letter-spacing:-.03em}
+#landing .d-iq span{color:var(--muted);font-size:14px}
+#landing .d-main svg{width:100%;height:auto;display:block;margin-top:auto}
+#landing .d-foot{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:14px;line-height:1.5}
+#landing .d-side{display:grid;gap:14px;grid-template-rows:auto 1fr;min-width:0}
+#landing .d-ring{display:flex;align-items:center;gap:14px}
+#landing .d-ring svg{width:52px;height:52px;flex:none}
+#landing .d-ring p{margin:0;display:grid}
+#landing .d-ring b{font-family:var(--f-display);font-size:26px;line-height:1.1}
+#landing .d-ring span{font-size:13px;color:var(--muted)}
+#landing .pr{display:grid;grid-template-columns:1fr 56px 24px;gap:10px;align-items:center;font-size:13px;line-height:1.25;margin-bottom:12px}
+#landing .pr:last-child{margin-bottom:0}
+#landing .pr .trk{height:6px;background:#eceae3;border-radius:6px;overflow:hidden}
+#landing .pr .trk i{display:block;height:100%;border-radius:6px}
+#landing .pr em{font-style:normal;font-weight:600;text-align:right}
+@media (max-width:560px){#landing .dash{grid-template-columns:1fr}}

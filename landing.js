@@ -32,6 +32,12 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   if(sb){let d='';for(let x=0;x<=300;x+=5){const y=94-82*Math.exp(-Math.pow((x-150)/62,2)/2);d+=(x?'L':'M')+x+' '+y.toFixed(1);}
     const mx=206,my=94-82*Math.exp(-Math.pow((mx-150)/62,2)/2);
     sb.innerHTML='<path d="'+d+'L300 94L0 94Z" fill="rgba(18,18,18,.07)"/><path d="'+d+'" fill="none" stroke="#121212" stroke-width="2"/><line x1="'+mx+'" y1="'+my.toFixed(1)+'" x2="'+mx+'" y2="94" stroke="#121212" stroke-width="2"/><circle cx="'+mx+'" cy="'+my.toFixed(1)+'" r="6" fill="#f9df6d" stroke="#121212" stroke-width="2"/>';}
+  const hb=document.getElementById('heroBell');
+  if(hb){let d='';for(let x=0;x<=300;x+=5){const y=94-82*Math.exp(-Math.pow((x-150)/62,2)/2);d+=(x?'L':'M')+x+' '+y.toFixed(1);}
+    const mx=206,my=94-82*Math.exp(-Math.pow((mx-150)/62,2)/2);
+    hb.innerHTML='<path d="'+d+'L300 94L0 94Z" fill="rgba(249,223,109,.35)"/><path d="'+d+'" fill="none" stroke="#121212" stroke-width="2"/><line x1="0" y1="94" x2="300" y2="94" stroke="rgba(18,18,18,.15)"/><line x1="'+mx+'" y1="'+my.toFixed(1)+'" x2="'+mx+'" y2="94" stroke="#121212" stroke-width="2"/><circle cx="'+mx+'" cy="'+my.toFixed(1)+'" r="6" fill="#f9df6d" stroke="#121212" stroke-width="2"/>';}
+  const hp=document.getElementById('heroProf');
+  if(hp)hp.innerHTML=[['Fluid reasoning',82,'yellow'],['Visual processing',55,'purple'],['Working memory',72,'blue']].map(p=>`<div class="pr"><span>${p[0]}</span><div class="trk"><i style="width:${p[1]}%;background:var(--${p[2]})"></i></div><em>${p[1]}</em></div>`).join('');
   const b=document.getElementById('stepBars');
   if(b)b.innerHTML=[['Verbal',76,'blue'],['Quant',64,'yellow'],['Spatial',79,'purple']].map(p=>barRow(...p)).join('');
 })();
