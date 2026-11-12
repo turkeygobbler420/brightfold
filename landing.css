@@ -381,7 +381,7 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .d-prof .pr .trk{height:8px}
 #landing .d-prof .pr{grid-template-columns:minmax(0,1fr) auto;gap:5px 10px}
 #landing .d-prof .pr .trk{grid-column:1/-1;grid-row:2}
-#landing .d-prof .pr span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#landing .d-prof .pr span{overflow-wrap:anywhere;hyphens:auto}
 
 /* certificate: gradient panel + click-to-enlarge */
 #landing .frame .cert-wrap{position:relative;padding:clamp(14px,3vw,28px);background:radial-gradient(60% 60% at 15% 10%,rgba(176,196,239,.75),transparent 70%),radial-gradient(55% 55% at 90% 90%,rgba(249,223,109,.65),transparent 70%),radial-gradient(45% 45% at 85% 12%,rgba(186,129,197,.4),transparent 70%),#f3f4f8;cursor:zoom-in;overflow:hidden}
@@ -413,3 +413,14 @@ html.cert-lock{overflow:hidden}
 @media (prefers-reduced-motion:reduce){#landing .marquee .mq-track{animation:none}#landing .marquee .mq-track[aria-hidden]{display:none}#landing .marquee{overflow-x:auto}}
 #landing .marquee li{display:flex;align-items:center;padding-inline:32px}
 #landing .marquee li img{display:block;height:24px;width:auto;max-width:none;filter:grayscale(1) opacity(.55)}
+
+/* hero dashboard: robust at every width */
+#landing .d-ring{flex-wrap:wrap;gap:10px 14px}
+#landing .d-ring p{min-width:0;flex:1 1 90px}
+#landing .d-ring b{font-size:clamp(22px,2.4vw,26px);white-space:nowrap}
+#landing .d-ring span{overflow-wrap:anywhere}
+#landing .d-foot{display:grid;gap:2px}
+#landing .d-iq b{font-size:clamp(48px,5.2vw,64px)}
+#landing .dcard{padding:clamp(14px,2vw,20px)}
+@media (max-width:1100px) and (min-width:901px){#landing .dash{grid-template-columns:1fr}}
+@media (max-width:420px){#landing .dash{gap:10px}#landing .d-side{gap:10px}}
