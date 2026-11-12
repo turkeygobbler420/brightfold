@@ -82,9 +82,9 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const root=document.getElementById('figs');if(!root)return;
   const me=+root.dataset.iq||120;
   const FIGS=[
-    ['Abraham Lincoln','newton','1809–1865','Estimated from Cox (1926).',123],
-    ['Napoleon Bonaparte','einstein','1769–1821','Estimated from Cox (1926).',118],
-    ['George Washington','curie','1732–1799','Estimated from Cox (1926).',113]
+    ['Abraham Lincoln','newton','1809–1865','',123],
+    ['Napoleon Bonaparte','einstein','1769–1821','',118],
+    ['George Washington','curie','1732–1799','',113]
   ];
   const list=document.getElementById('figList'),meta=document.getElementById('figMeta'),stage=document.getElementById('pStage'),nm=document.getElementById('pName');
   list.innerHTML=FIGS.map((f,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="fb" aria-hidden="true"><img src="figs/${f[1]}.webp" alt="" width="24" height="24" loading="lazy"></span>${f[0]}</button>`).join('');
@@ -95,7 +95,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
     cuts.forEach((c,k)=>c.classList.toggle('on',k===i));
     list.querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===i?'true':'false'));
     nm.textContent=f[0]+' · '+f[2];
-    meta.innerHTML=`<p>${f[3]}</p><div class="fm-row"><div class="stile"><span>Estimated score</span><b>~${f[4]}</b></div><div class="stile"><span>Your score</span><b>${me}</b></div></div><p class="fm-diff">${Math.abs(d)} points ${d>=0?'above':'below'} your ${me}</p>`;
+    meta.innerHTML=`<div class="fm-row"><div class="stile"><span>Estimated score</span><b>~${f[4]}</b></div><div class="stile"><span>Your score</span><b>${me}</b></div></div><p class="fm-diff">${Math.abs(d)} points ${d>=0?'above':'below'} your ${me}</p>`;
     if(user&&timer){clearInterval(timer);timer=null;}
   }
   list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i,true);});
@@ -103,18 +103,21 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show((cur+1)%FIGS.length),4200);
 })();
 
-/* certificate sample + QR-like code */
+/* certificate sample: click to pop out (native modal dialog) */
 (function(){
-  const h=document.getElementById('certSample');
-  if(h)h.innerHTML=certHTML({sample:1,name:'James Anderson',score:120,cls:'Above average',date:'June 1, 2026',items:40});
-  const q=document.getElementById('qrSvg');if(!q)return;
-  const r=rng(11),N=21;let s='';
-  const fin=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="currentColor"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="currentColor"/>`;
-  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
-    const inF=(x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12);
-    if(!inF&&r()>.5)s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="currentColor"/>`;
-  }
-  q.innerHTML=s+fin(0,0)+fin(14,0)+fin(0,14);
+  const h=document.getElementById('certSample');if(!h)return;
+  const data={name:'James Anderson',score:120,cls:'Above average',date:'June 1, 2026',id:'4829 1375',items:20};
+  h.innerHTML=certHTML(data)+'<button type="button" class="cert-zoom" aria-haspopup="dialog" aria-label="Enlarge certificate"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.6 12.6L17 17M8.5 6v5M6 8.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>';
+  const dlg=document.createElement('dialog');dlg.className='cert-dlg';dlg.setAttribute('aria-label','Certificate');
+  dlg.innerHTML='<button type="button" class="cert-x" aria-label="Close certificate"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="cert-dlg-body">'+certHTML(data)+'</div>';
+  document.body.appendChild(dlg);
+  let opener=null;
+  const open=()=>{opener=document.activeElement;if(!dlg.open)dlg.showModal();document.documentElement.classList.add('cert-lock');};
+  const close=()=>{dlg.classList.add('out');setTimeout(()=>{dlg.classList.remove('out');dlg.close();},matchMedia('(prefers-reduced-motion: reduce)').matches?0:160);};
+  h.addEventListener('click',e=>{if(e.target.closest('a'))return;open();});
+  dlg.addEventListener('click',e=>{if(e.target===dlg||e.target.closest('.cert-x'))close();});
+  dlg.addEventListener('cancel',e=>{e.preventDefault();close();});
+  dlg.addEventListener('close',()=>{document.documentElement.classList.remove('cert-lock');if(opener&&opener.focus)opener.focus();});
 })();
 
 /* review stars */
