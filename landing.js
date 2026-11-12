@@ -37,9 +37,9 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
     const mx=206,my=94-82*Math.exp(-Math.pow((mx-150)/62,2)/2);
     hb.innerHTML='<path d="'+d+'L300 94L0 94Z" fill="rgba(249,223,109,.35)"/><path d="'+d+'" fill="none" stroke="#121212" stroke-width="2"/><line x1="0" y1="94" x2="300" y2="94" stroke="rgba(18,18,18,.15)"/><line x1="'+mx+'" y1="'+my.toFixed(1)+'" x2="'+mx+'" y2="94" stroke="#121212" stroke-width="2"/><circle cx="'+mx+'" cy="'+my.toFixed(1)+'" r="6" fill="#f9df6d" stroke="#121212" stroke-width="2"/>';}
   const hp=document.getElementById('heroProf');
-  if(hp)hp.innerHTML=[['Fluid reasoning',82,'yellow'],['Visual processing',55,'purple'],['Working memory',72,'blue']].map(p=>`<div class="pr"><span>${p[0]}</span><div class="trk"><i style="width:${p[1]}%;background:var(--${p[2]})"></i></div><em>${p[1]}</em></div>`).join('');
+  if(hp)hp.innerHTML=[['Fluid reasoning',44,'yellow'],['Visual processing',62,'purple'],['Working memory',87,'blue']].map(p=>`<div class="pr"><span>${p[0]}</span><div class="trk"><i style="width:${p[1]}%;background:var(--${p[2]})"></i></div><em>${p[1]}</em></div>`).join('');
   const b=document.getElementById('stepBars');
-  if(b)b.innerHTML=[['Verbal',76,'blue'],['Quant',64,'yellow'],['Spatial',79,'purple']].map(p=>barRow(...p)).join('');
+  if(b)b.innerHTML=[['Fluid',44,'yellow'],['Visual',62,'purple'],['Memory',87,'blue']].map(p=>barRow(...p)).join('');
 })();
 
 /* domain specimens + rings */
@@ -67,26 +67,24 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
 /* scoring curve, with sample marker */
 (function(){
   const svg=document.getElementById('bellLanding');if(!svg)return;
-  try{bell(svg,114);}catch(e){bell(svg);}
+  try{bell(svg,120);}catch(e){bell(svg);}
 })();
 
 /* group of 100 */
 (function(){
   const r=document.getElementById('room');if(!r)return;
-  let h='';for(let i=0;i<100;i++){h+=`<i class="${i===81?'me':i<82?'':'up'}"></i>`;}
+  let h='';for(let i=0;i<100;i++){h+=`<i class="${i===90?'me':i<91?'':'up'}"></i>`;}
   r.innerHTML=h;
 })();
 
 /* famous minds: full-body cutouts */
 (function(){
   const root=document.getElementById('figs');if(!root)return;
-  const me=+root.dataset.iq||114;
+  const me=+root.dataset.iq||120;
   const FIGS=[
-    ['Isaac Newton','newton','1643–1727','Physicist and mathematician who formulated the laws of motion and gravitation.',190],
-    ['Albert Einstein','einstein','1879–1955','Physicist behind the theory of relativity.',160],
-    ['Marie Curie','curie','1867–1934','Chemist and physicist who pioneered research on radioactivity.',180],
-    ['Aristotle','aristotle','384–322 BC','Greek philosopher who studied logic, biology and ethics.',170],
-    ['Plato','plato','c.428–348 BC','Greek philosopher and founder of the Academy in Athens.',170]
+    ['Abraham Lincoln','newton','1809–1865','Estimated from Cox (1926).',123],
+    ['Napoleon Bonaparte','einstein','1769–1821','Estimated from Cox (1926).',118],
+    ['George Washington','curie','1732–1799','Estimated from Cox (1926).',113]
   ];
   const list=document.getElementById('figList'),meta=document.getElementById('figMeta'),stage=document.getElementById('pStage'),nm=document.getElementById('pName');
   list.innerHTML=FIGS.map((f,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="fb" aria-hidden="true"><img src="figs/${f[1]}.webp" alt="" width="24" height="24" loading="lazy"></span>${f[0]}</button>`).join('');
@@ -97,7 +95,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
     cuts.forEach((c,k)=>c.classList.toggle('on',k===i));
     list.querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===i?'true':'false'));
     nm.textContent=f[0]+' · '+f[2];
-    meta.innerHTML=`<p>${f[3]}</p><div class="fm-row"><div class="stile"><span>Placeholder estimate</span><b>~${f[4]}</b></div><div class="stile"><span>Sample taker</span><b>${me}</b></div></div><p class="fm-diff">${Math.abs(d)} points ${d>=0?'above':'below'} your ${me}</p>`;
+    meta.innerHTML=`<p>${f[3]}</p><div class="fm-row"><div class="stile"><span>Estimated score</span><b>~${f[4]}</b></div><div class="stile"><span>Your score</span><b>${me}</b></div></div><p class="fm-diff">${Math.abs(d)} points ${d>=0?'above':'below'} your ${me}</p>`;
     if(user&&timer){clearInterval(timer);timer=null;}
   }
   list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i,true);});
@@ -108,7 +106,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
 /* certificate sample + QR-like code */
 (function(){
   const h=document.getElementById('certSample');
-  if(h)h.innerHTML=certHTML({sample:1,name:'Your name here',score:112,cls:'Above average',date:'Date of test',items:20});
+  if(h)h.innerHTML=certHTML({sample:1,name:'James Anderson',score:120,cls:'Above average',date:'June 1, 2026',items:40});
   const q=document.getElementById('qrSvg');if(!q)return;
   const r=rng(11),N=21;let s='';
   const fin=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="currentColor"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="currentColor"/>`;
