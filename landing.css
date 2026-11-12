@@ -299,3 +299,5 @@ html[data-motion="off"] #landing *{animation:none!important}
 @media (max-width:800px){#landing .steps li{grid-template-rows:none}}
 @media (min-width:801px){#landing .steps li{display:flex;flex-direction:column;gap:10px}#landing .steps li .art{flex:1}}
 @media (min-width:801px){#landing .steps li .art{flex:none;height:372px}}
+#landing mark.hl{background:var(--yellow);color:var(--ink);padding:0 .18em;margin:0 -.04em;border-radius:8px;-webkit-box-decoration-break:clone;box-decoration-break:clone;white-space:normal}
+#landing mark.hl{background:linear-gradient(transparent 14%,var(--yellow) 14%,var(--yellow) 92%,transparent 92%);border-radius:0;padding:0 .14em}
