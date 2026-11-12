@@ -106,8 +106,8 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
 /* certificate sample: click to pop out (native modal dialog) */
 (function(){
   const h=document.getElementById('certSample');if(!h)return;
-  const data={name:'James Anderson',score:120,cls:'Above average',date:'June 1, 2026',id:'4829 1375',items:20};
-  h.innerHTML=certHTML(data)+'<button type="button" class="cert-zoom" aria-haspopup="dialog" aria-label="Enlarge certificate"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.6 12.6L17 17M8.5 6v5M6 8.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>';
+  const data={name:'Alex Morgan',score:120,cls:'Above average',date:'November 12, 2026',id:'4829 1375',items:20};
+  h.innerHTML=certHTML(data)+'';
   const dlg=document.createElement('dialog');dlg.className='cert-dlg';dlg.setAttribute('aria-label','Certificate');
   dlg.innerHTML='<button type="button" class="cert-x" aria-label="Close certificate"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="cert-dlg-body">'+certHTML(data)+'</div>';
   document.body.appendChild(dlg);
