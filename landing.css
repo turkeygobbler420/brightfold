@@ -411,3 +411,5 @@ html.cert-lock{overflow:hidden}
 @keyframes mq{to{transform:translateX(-100%)}}
 @media (max-width:760px){#landing .press .press-row{flex-wrap:wrap}#landing .marquee{flex-basis:100%}}
 @media (prefers-reduced-motion:reduce){#landing .marquee .mq-track{animation:none}#landing .marquee .mq-track[aria-hidden]{display:none}#landing .marquee{overflow-x:auto}}
+#landing .marquee li{display:flex;align-items:center;padding-inline:32px}
+#landing .marquee li img{display:block;height:24px;width:auto;max-width:none;filter:grayscale(1) opacity(.55)}
