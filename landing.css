@@ -297,3 +297,5 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .steps li{grid-template-rows:1fr auto auto auto;justify-items:stretch}
 #landing .steps li .step-n{justify-self:start}
 @media (max-width:800px){#landing .steps li{grid-template-rows:none}}
+@media (min-width:801px){#landing .steps li{display:flex;flex-direction:column;gap:10px}#landing .steps li .art{flex:1}}
+@media (min-width:801px){#landing .steps li .art{flex:none;height:372px}}
