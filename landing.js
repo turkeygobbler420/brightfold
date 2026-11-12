@@ -125,3 +125,21 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const star=on=>`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L10 14.2 5 17l1.2-5.6L2 7.6l5.6-.6z" fill="${on?'var(--ink)':'none'}" stroke="var(--ink)" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
   document.querySelectorAll('#landing .stars').forEach(el=>{const n=+el.dataset.n||5;el.innerHTML=[0,1,2,3,4].map(i=>star(i<n)).join('');});
 })();
+
+/* stats: count up when scrolled into view */
+(function(){
+  const els=document.querySelectorAll('#landing .stat-row .big');if(!els.length)return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const run=el=>{
+    const m=el.textContent.trim().match(/^(\d+)(.*)$/);if(!m)return;
+    const end=+m[1],suf=m[2],t0=performance.now(),dur=1600;
+    el.style.minWidth=el.offsetWidth+'px';
+    const step=t=>{const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(end*e)+(p<1?'':suf);
+      if(p<1)requestAnimationFrame(step);else el.textContent=end+suf;};
+    el.textContent='0'+suf;requestAnimationFrame(step);
+  };
+  if(reduce||!('IntersectionObserver' in window))return;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);run(e.target);}}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
