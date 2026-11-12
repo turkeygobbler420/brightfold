@@ -347,3 +347,25 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .pr .trk i{display:block;height:100%;border-radius:6px}
 #landing .pr em{font-style:normal;font-weight:600;text-align:right}
 @media (max-width:560px){#landing .dash{grid-template-columns:1fr}}
+
+/* start card: portrait cutouts on ink, our palette */
+#landing .start-grid{display:grid;gap:28px;align-items:center}
+@media (min-width:900px){#landing .start-grid{grid-template-columns:1fr 1fr;gap:56px}}
+#landing .start-copy h2{margin:8px 0 12px}
+#landing .start-card{position:relative;background:#121212;color:#fff;border-radius:24px;overflow:hidden;max-width:520px;width:100%;margin:0 auto;box-shadow:0 24px 50px -24px rgba(18,18,18,.55)}
+#landing .cut-stage{position:relative;aspect-ratio:1/1;margin:28px 28px 0;overflow:hidden}
+#landing .cut-stage::before{content:"";position:absolute;left:50%;top:46%;width:78%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--glow,#f9df6d);opacity:.9;transition:background .7s}
+#landing .cut{position:absolute;inset:0;opacity:0;transition:opacity .7s}
+#landing .cut.on{opacity:1}
+#landing .cut svg{width:100%;height:100%;display:block;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 -2px 0 #fff)}
+#landing .cut-fade{position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(to top,#121212 4%,rgba(18,18,18,.85) 40%,transparent)}
+#landing .cut-name{position:absolute;top:18px;left:18px;margin:0;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:13px;font-weight:600;backdrop-filter:blur(6px)}
+#landing .start-ctl{padding:0 24px 24px;margin-top:-6px;position:relative}
+#landing .start-ctl p{margin:0 0 12px;text-align:center;font-size:14px;color:rgba(255,255,255,.8)}
+#landing .start-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#landing .start-btns .btn{width:100%;justify-content:center}
+#landing .btn-yellow{background:var(--yellow);color:#121212;border-color:var(--yellow)}
+#landing .btn-white{background:#fff;color:#121212;border-color:#fff}
+#landing .cut{inset:10% 14% 0}
+#landing .cut-stage::before{top:50%;width:84%}
+#landing .cut-fade{height:22%}#landing .cut{inset:6% 16% 0}

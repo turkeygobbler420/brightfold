@@ -117,6 +117,17 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i);});
   let best=0;FIGS.forEach((f,i)=>{if(Math.abs(f[1]-me)<Math.abs(FIGS[best][1]-me))best=i;});
   show(best);
+  /* start card: cycling portrait cutouts */
+  const stage=document.getElementById('cutStage'),nm=document.getElementById('cutName');
+  if(stage){
+    const CUT=['Einstein','Newton','Darwin','Marie Curie','Mozart'];
+    stage.innerHTML=CUT.map((n,i)=>{const f=FACE[n];
+      return `<div class="cut${i?'':' on'}" style="--c:${f.bg}"><svg viewBox="4 4 72 76" preserveAspectRatio="xMidYMax meet"><path d="M6 80c2-14 14-20 34-20s32 6 34 20z" fill="${f.coat}"/><rect x="35" y="52" width="10" height="12" fill="${f.skin}"/><ellipse cx="40" cy="40" rx="16" ry="19" fill="${f.skin}"/>${f.hair}<circle cx="34" cy="40" r="1.8" fill="#222"/><circle cx="46" cy="40" r="1.8" fill="#222"/><path d="M35 50q5 3 10 0" stroke="#7a3b2e" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>`;}).join('')+'<span class="cut-fade"></span>';
+    const cuts=stage.querySelectorAll('.cut');let ci=0;
+    const label=i=>{const f=FIGS.find(x=>x[0]===CUT[i]);nm.textContent=CUT[i]+(f?' · est. ~'+f[1]:'');stage.style.setProperty('--glow',FACE[CUT[i]].bg);};
+    label(0);
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(()=>{cuts[ci].classList.remove('on');ci=(ci+1)%cuts.length;cuts[ci].classList.add('on');label(ci);},3200);
+  }
 })();
 
 /* certificate sample + QR-like code */
