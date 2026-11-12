@@ -424,3 +424,9 @@ html.cert-lock{overflow:hidden}
 #landing .dcard{padding:clamp(14px,2vw,20px)}
 @media (max-width:1100px) and (min-width:901px){#landing .dash{grid-template-columns:1fr}}
 @media (max-width:420px){#landing .dash{gap:10px}#landing .d-side{gap:10px}}
+
+/* stat cards: full-width accent bar + steady numbers */
+#landing .stat-row>div{overflow:hidden}
+#landing .stat-row>div::after{left:0;right:0;bottom:0;width:auto;margin:0;height:4px}
+#landing .stat-row .big{font-variant-numeric:tabular-nums}
+#landing .stat-row dt{max-width:22ch}
