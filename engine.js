@@ -198,25 +198,34 @@ function correctText(it){
 }
 
 /* MOCK paywall (proof of concept). No payment is collected; the button simply reveals the results. */
-let gateTimer;
+const PLANS={trial:['7-day trial','$0.99','Then $4.99 per week until you cancel'],month:['1 month','$9.99','Renews monthly at $9.99 until you cancel'],year:['12 months','$29.99','Renews yearly at $29.99 until you cancel']};
 function finish(){
   if(st.done&&st.finished)return;st.done=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   $('finishBtn').hidden=true;pips(true);$('tCount').textContent='Almost done';
-  let left=600;
+  const answered=ITEMS.filter(it=>st.ans[it.idx]!==null&&st.ans[it.idx]!==undefined).length;
+  const peer=(src,nm,iq)=>`<div class="peer"><span class="pl">${iq}</span><div class="pc"><img src="${src}" alt="" loading="lazy"></div><span class="pn">${nm}</span></div>`;
   $('tMain').innerHTML=`<div class="gate" role="region" aria-label="Unlock your results">
-   <div class="g-l"><span class="mockbar">Mock paywall, no payment is taken</span>
-   <h2>Your results are ready</h2><div class="blur" aria-hidden="true">104</div>
-   <p class="timer">Your result is reserved for <b id="gateT">10:00</b></p></div>
-   <div class="g-r"><fieldset class="plans"><legend class="sr">Choose a plan</legend>
-    <label class="plan"><input type="radio" name="plan" value="trial" checked><span class="dot"></span><span class="t"><b>7-day trial</b><span>Then billed weekly</span></span><span class="pr">$0.99</span></label>
-    <label class="plan"><input type="radio" name="plan" value="month"><span class="dot"></span><span class="t"><b>1 month<span class="best">Best value</span></b><span>Billed monthly</span></span><span class="pr">$9.99</span></label>
-    <label class="plan"><input type="radio" name="plan" value="year"><span class="dot"></span><span class="t"><b>12 months</b><span>Billed yearly</span></span><span class="pr">$29.99</span></label>
-   </fieldset>
-   <ul class="inc"><li>Full score and percentile</li><li>Domain breakdown</li><li>Every item explained</li><li>Printable certificate</li></ul>
-   <button class="btn btn-primary" id="gateGo">Show my results</button>
-   <p class="fine">Placeholder flow for the proof of concept. Nothing is charged and no card details are asked for.</p></div></div>`;
-  const t=$('gateT');gateTimer=setInterval(()=>{left=Math.max(0,left-1);t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');},1000);
-  $('gateGo').onclick=()=>{clearInterval(gateTimer);st.done=false;showResults();};
+   <span class="mockbar">Mock paywall, no payment is taken</span>
+   <h2>Your results are ready</h2>
+   <div class="g-grid">
+    <div class="g-l"><div class="g-card">
+     <div class="peers">${peer('figs/ford.webp','Henry Ford','~140')}<div class="peer you"><span class="pl">You</span><div class="pc"><b>???</b><svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="34" r="19"/><path d="M8 110c0-30 14-46 42-46s42 16 42 46z"/></svg></div><span class="pn">Your score</span></div>${peer('figs/roosevelt.webp','Theodore Roosevelt','~155')}</div>
+     <p class="g-note">Famous-person scores are placeholder estimates. None of them sat a modern IQ test.</p>
+     <div class="g-stats"><div><b>${answered}/${ITEMS.length}</b><span>Answered</span></div><div><b>${fmt(TOTAL-st.left)}</b><span>Time used</span></div><div><b>6</b><span>Domains</span></div></div>
+    </div></div>
+    <div class="g-r">
+     <p class="g-k">Your summary</p>
+     <ul class="sum"><li><span>Your score and percentile</span><i>Included</i></li><li><span>Domain breakdown</span><i>Included</i></li><li><span>Every item explained</span><i>Included</i></li><li><span>Printable certificate</span><i>Included</i></li></ul>
+     <fieldset class="plans"><legend class="sr">Choose a plan</legend>
+      ${Object.entries(PLANS).map(([k,v],i)=>`<label class="plan"><input type="radio" name="plan" value="${k}"${i?'':' checked'}><span class="dot"></span><span class="t"><b>${v[0]}${k==='month'?'<span class="best">Best value</span>':''}</b><span>${v[2]}</span></span><span class="pr">${v[1]}</span></label>`).join('')}
+     </fieldset>
+     <div class="total"><span>Total due today</span><b id="gateTot">${PLANS.trial[1]}</b></div>
+     <button class="btn btn-primary" id="gateGo">Show my results</button>
+     <p class="fine" id="gateFine">${PLANS.trial[2]}. Cancel any time.</p>
+     <p class="fine">Placeholder flow for the proof of concept. Nothing is charged, no card details are asked for, and your result stays on this page for this visit.</p>
+    </div></div></div>`;
+  document.querySelectorAll('#app input[name="plan"]').forEach(r=>r.addEventListener('change',()=>{const p=PLANS[r.value];$('gateTot').textContent=p[1];$('gateFine').textContent=p[2]+'. Cancel any time.';}));
+  $('gateGo').onclick=()=>{st.done=false;showResults();};
   $('gateGo').focus();window.scrollTo(0,0);
 }
 
