@@ -105,8 +105,29 @@ function recallScreen(){
   const opts=[st.word,...WORDS.filter(w=>w!==st.word).sort(()=>Math.random()-.5).slice(0,4)].sort(()=>Math.random()-.5);
   $('tMain').innerHTML=`<div class="mo" role="status"><p class="label">Last one</p><h2>Which word did you memorize?</h2>
    <p>From the very start of the test.</p><div class="opts text" role="radiogroup">${opts.map((w,j)=>`<button class="opt" role="radio" data-w="${w}"><span class="k">${j+1}</span><span>${w}</span></button>`).join('')}</div></div>`;
-  $('tMain').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.recall=b.dataset.w===st.word;st.hold=false;finish();});
+  $('tMain').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.recall=b.dataset.w===st.word;guessScreen();});
   window.scrollTo({top:0});
+}
+/* optional self-report questions: never scored, shown beside the real result */
+function guessScreen(){
+  st.hold=true;$('tCount').textContent='Two quick questions';
+  const row=(k,q,opts)=>`<fieldset class="gq"><legend>${q}</legend><div class="opts text short" role="radiogroup">${opts.map((o,j)=>`<button type="button" class="opt" role="radio" aria-checked="false" data-k="${k}" data-v="${o}"><span>${o}</span></button>`).join('')}</div></fieldset>`;
+  $('tMain').innerHTML=`<div class="mo gs"><p class="label">Optional, not scored</p><h2>Before we review your answers</h2>
+   <p>Your guesses are shown next to your real result. They never change your score.</p>
+   ${row('guess','Do you think you scored above average?',['Yes','No','Not sure'])}
+   ${row('first','Is this your first reasoning test?',['Yes','No'])}
+   <button class="btn btn-primary" id="gsGo">Review my answers</button><button class="link-btn" id="gsSkip">Skip</button></div>`;
+  st.self={};
+  $('tMain').querySelectorAll('.gq .opt').forEach(b=>b.onclick=()=>{st.self[b.dataset.k]=b.dataset.v;b.parentNode.querySelectorAll('.opt').forEach(o=>{const on=o===b;o.classList.toggle('sel',on);o.setAttribute('aria-checked',on);});});
+  $('gsGo').onclick=reviewScreen;$('gsSkip').onclick=()=>{st.self={};reviewScreen();};
+  window.scrollTo({top:0});
+}
+function reviewScreen(){
+  const n=st.ans.filter(a=>a!==null).length;
+  $('tCount').textContent='Reviewing';
+  $('tMain').innerHTML=`<div class="mo" role="status"><p class="label">Scoring</p><h2>Checking ${n} answers</h2><p>Marking each item against the key and tallying the six domains. This takes a moment.</p><div class="cp-bar" aria-hidden="true"><i id="rvBar"></i></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const m=$('rvBar');if(m)m.style.transform='scaleX(1)';}));
+  subTimer=setTimeout(()=>{st.hold=false;finish();},1400);
 }
 function checkpoint(n){
   clearTimeout(autoTimer);clearTimeout(subTimer);clearInterval(subTimer);st.hold=true;
@@ -209,7 +230,7 @@ function finish(){
    <h2>Your results are ready</h2>
    <div class="g-grid">
     <div class="g-l"><div class="g-card">
-     <div class="peers">${peer('figs/ford.webp','Henry Ford','~140')}<div class="peer you"><span class="pl">You</span><div class="pc"><b>???</b><svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="34" r="19"/><path d="M8 110c0-30 14-46 42-46s42 16 42 46z"/></svg></div><span class="pn">Your score</span></div>${peer('figs/roosevelt.webp','Theodore Roosevelt','~155')}</div>
+     <div class="peers">${peer('figs/newton.webp','Isaac Newton','~190')}<div class="peer you"><span class="pl">You</span><div class="pc"><b>???</b><svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="34" r="19"/><path d="M8 110c0-30 14-46 42-46s42 16 42 46z"/></svg></div><span class="pn">Your score</span></div>${peer('figs/einstein.webp','Albert Einstein','~160')}</div>
      <p class="g-note">Famous-person scores are placeholder estimates. None of them sat a modern IQ test.</p>
      <div class="g-stats"><div><b>${answered}/${ITEMS.length}</b><span>Answered</span></div><div><b>${fmt(TOTAL-st.left)}</b><span>Time used</span></div><div><b>6</b><span>Domains</span></div></div>
     </div></div>
@@ -244,7 +265,7 @@ function showResults(){
    <section class="res-sec res-hero"><p class="label">Estimated score, practice scale</p><div class="res-num" id="resNum">${iq}</div><h2 class="cls">${cls}</h2>
     <div class="share" role="list" aria-label="Score by domain">${dom.map(d=>`<div class="sq c-${DCOL[d.id]}${d===best?' best':''}" role="listitem"><i style="transform:scaleY(${d.ok/d.n})"></i><span class="nm">${d.name}</span><b>${d.ok}/${d.n}</b></div>`).join('')}</div>
     <div class="stats" aria-label="Statistics"><div><b>${raw}</b><span>Correct</span></div><div><b>${Math.round(pct*100)}</b><span>Percent</span></div><div><b>${fmt(used)}</b><span>Time used</span></div><div><b>${Math.round(percentile)}</b><span>Percentile</span></div></div>
-    <p class="res-txt">You answered ${raw} of ${ITEMS.length} items correctly in ${fmt(used)}.${st.recall===null?'':st.recall?' You also remembered the opening word.':' The opening word slipped away, which happens to everyone.'} On a mean-100, σ-15 scale that sits near the ${percentile}th percentile. This test is not normed, so read the number as a rough guide.</p>
+    <p class="res-txt">You answered ${raw} of ${ITEMS.length} items correctly in ${fmt(used)}.${st.recall===null?'':st.recall?' You also remembered the opening word.':' The opening word slipped away, which happens to everyone.'} On a mean-100, σ-15 scale that sits near the ${percentile}th percentile. This test is not normed, so read the number as a rough guide.${st.self&&st.self.guess?` You guessed ${st.self.guess==='Yes'?'above average':st.self.guess==='No'?'not above average':'you were not sure'}; your estimate is ${iq>=100?'at or above':'below'} 100.`:''}</p>
     <p class="dnote"><b>Strongest:</b> ${best.name}. <b>Most room to grow:</b> ${best.ok/best.n===worst.ok/worst.n?"even across all six":worst.name}.</p>
     <div class="res-acts"><button class="btn btn-primary" id="copyBtn">Copy result</button><button class="btn btn-line" id="againBtn">Take it again</button><button class="link-btn" id="homeBtn">Back to Brightfold</button></div></section>
    <section class="res-sec"><h3>Where your estimate falls</h3><p class="sub">The curve shows how scores spread on a mean-100 scale. About two in three people land in the middle band.</p><svg class="bell" id="bellRes" viewBox="0 0 640 250" role="img" aria-label="Your estimate on the normal curve"></svg></section>

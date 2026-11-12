@@ -82,14 +82,15 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const root=document.getElementById('figs');if(!root)return;
   const me=+root.dataset.iq||114;
   const FIGS=[
-    ['Mark Twain','twain','1835–1910','Author of Tom Sawyer and Huckleberry Finn.',150],
-    ['Theodore Roosevelt','roosevelt','1858–1919','26th US president, naturalist and prolific author.',155],
-    ['George Washington Carver','carver','c.1864–1943','Agricultural scientist who studied crop rotation and uses for peanuts.',145],
-    ['Henry Ford','ford','1863–1947','Industrialist who put the moving assembly line to work.',140]
+    ['Isaac Newton','newton','1643–1727','Physicist and mathematician who formulated the laws of motion and gravitation.',190],
+    ['Albert Einstein','einstein','1879–1955','Physicist behind the theory of relativity.',160],
+    ['Marie Curie','curie','1867–1934','Chemist and physicist who pioneered research on radioactivity.',180],
+    ['Aristotle','aristotle','384–322 BC','Greek philosopher who studied logic, biology and ethics.',170],
+    ['Plato','plato','c.428–348 BC','Greek philosopher and founder of the Academy in Athens.',170]
   ];
   const list=document.getElementById('figList'),meta=document.getElementById('figMeta'),stage=document.getElementById('pStage'),nm=document.getElementById('pName');
   list.innerHTML=FIGS.map((f,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="fb" aria-hidden="true"><img src="figs/${f[1]}.webp" alt="" width="24" height="24" loading="lazy"></span>${f[0]}</button>`).join('');
-  stage.innerHTML=FIGS.map(f=>`<img class="cut" src="figs/${f[1]}.webp" alt="" loading="lazy" decoding="async">`).join('')+'<span class="p-fade"></span>';
+  stage.innerHTML=FIGS.map(f=>`<img class="cut" src="figs/${f[1]}.webp" alt="" decoding="async">`).join('')+'<span class="p-fade"></span>';
   const cuts=stage.querySelectorAll('.cut');let cur=-1,timer=null;
   function show(i,user){
     const f=FIGS[i],d=f[4]-me;cur=i;

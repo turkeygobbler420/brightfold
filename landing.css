@@ -375,3 +375,14 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .p-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 #landing .p-btns .btn{width:100%}
 #landing .btn-white{background:#fff;color:#121212}
+#landing .p-ctl .btn{width:100%}
+#landing .p-ctl .p-sub{margin:10px 0 0;font-size:13px;color:var(--ink-2);text-align:center}
+
+/* hero dash fixes: profile card fills its row, bars get room */
+#landing .d-prof{display:flex;flex-direction:column}
+#landing .d-prof #heroProf{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:12px}
+#landing .d-prof .pr{margin:0;grid-template-columns:minmax(0,1fr) minmax(64px,38%) 28px}
+#landing .d-prof .pr .trk{height:8px}
+#landing .d-prof .pr{grid-template-columns:minmax(0,1fr) auto;gap:5px 10px}
+#landing .d-prof .pr .trk{grid-column:1/-1;grid-row:2}
+#landing .d-prof .pr span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
