@@ -82,9 +82,11 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const root=document.getElementById('figs');if(!root)return;
   const me=+root.dataset.iq||120;
   const FIGS=[
-    ['Abraham Lincoln','newton','1809–1865','',123],
-    ['Napoleon Bonaparte','einstein','1769–1821','',118],
-    ['George Washington','curie','1732–1799','',113]
+    ['Isaac Newton','newton','1643–1727','',190],
+    ['Albert Einstein','einstein','1879–1955','',160],
+    ['Marie Curie','curie','1867–1934','',180],
+    ['Plato','plato','c. 428–348 BC','',170],
+    ['Aristotle','aristotle','384–322 BC','',165]
   ];
   const list=document.getElementById('figList'),meta=document.getElementById('figMeta'),stage=document.getElementById('pStage'),nm=document.getElementById('pName');
   list.innerHTML=FIGS.map((f,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="fb" aria-hidden="true"><img src="figs/${f[1]}.webp" alt="" width="24" height="24" loading="lazy"></span>${f[0]}</button>`).join('');
@@ -99,7 +101,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
     if(user&&timer){clearInterval(timer);timer=null;}
   }
   list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i,true);});
-  show(1);
+  show(0);
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show((cur+1)%FIGS.length),4200);
 })();
 
