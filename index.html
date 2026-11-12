@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Brightfold Reasoning Test</title>
-<meta name="description" content="Brightfold: a free 20-question reasoning test across six cognitive domains, with a full breakdown of your answers.">
+<meta name="description" content="Brightfold: a 20-question reasoning test across six cognitive domains, with a full breakdown of your answers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Libre+Franklin:wght@400;500;600;700&display=swap">
@@ -26,7 +26,7 @@
       Brightfold
     </a>
     <nav class="nav-links" aria-label="Sections">
-      <a href="#domains">Domains</a><a href="#how">How it works</a><a href="#scoring">Scoring</a><a href="#faq">FAQ</a>
+      <a href="#how">The process</a><a href="#reviews">Feedback</a><a href="#plans">Plans</a>
     </nav>
     <button class="btn btn-primary btn-sm js-start" type="button">Start test</button>
   </div>
@@ -34,130 +34,284 @@
 
 <main id="top">
 
-<!-- 1. splash -->
-<section class="splash" aria-labelledby="hero-h">
-  <div class="wrap splash-in">
-    <div class="board" role="group" aria-label="Sample puzzle: pick the tile that completes the grid">
-      <div class="mx" id="heroMx"></div>
-      <div class="opts" id="heroOpts"></div>
+<!-- 1. hero -->
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="label">Reasoning test · 20 puzzles</p>
+      <h1 id="hero-h">How do you reason?</h1>
+      <p class="lead">Twenty original puzzles across six kinds of thinking. Finish the test and see your estimated score, where you rank, and what you do best.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary js-start" type="button">Start the test</button>
+        <a class="btn btn-line" href="#how">How it works</a>
+      </div>
+      <ul class="facts">
+        <li><b>Free</b><span>headline score</span></li>
+        <li><b>No account</b><span>needed to begin</span></li>
+        <li><b>~16 min</b><span>start to finish</span></li>
+      </ul>
     </div>
-    <p class="hint" id="heroMsg" role="status" aria-live="polite">Pick the tile that completes the grid.</p>
-    <h1 id="hero-h">How do you reason?</h1>
-    <p class="lead">Twenty original puzzles across six kinds of thinking. Finish the test and see exactly where you are strong.</p>
-    <div class="splash-btns">
-      <button class="btn btn-primary js-start" type="button">Start the test</button>
-      <a class="btn btn-line" href="#how">How it works</a>
+    <div class="snap" role="group" aria-label="Sample score snapshot">
+      <p class="label">Score snapshot <span class="ph-tag">Sample</span></p>
+      <div class="snap-top">
+        <div class="stile t-yellow"><span>Estimated IQ</span><b>114</b></div>
+        <div class="stile t-green"><span>Percentile</span><b>82nd</b></div>
+      </div>
+      <div class="stile t-neutral bars" id="snapBars"><span>Ability breakdown</span></div>
     </div>
-    <p class="dateline">Free · 16 minutes · 20 questions</p>
   </div>
 </section>
 
-<!-- 2. domains: coloured tile board -->
-<section class="sec" id="domains" aria-labelledby="dom-h">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="label">Six kinds of questions</p>
-      <h2 id="dom-h">Six groups. One score.</h2>
-      <p class="lead">Each colour is a domain that clinical batteries also measure. Every puzzle was written for Brightfold.</p>
-    </div>
-    <ul class="tiles" id="domTiles">
-      <li class="tile t-yellow"><div class="spec" aria-hidden="true"><div class="mx mx-s" id="sFluid"></div></div><h3>Fluid reasoning</h3><p class="label">4 questions</p><p>Missing-tile matrices, figure sequences and odd-one-out sets. Find the rule hiding in the pattern.</p></li>
-      <li class="tile t-green"><div class="spec" aria-hidden="true"><div class="seq" id="sQuant"></div></div><h3>Quantitative reasoning</h3><p class="label">4 questions</p><p>Number and letter series, balance scales and short word problems with a tempting wrong answer.</p></li>
-      <li class="tile t-blue"><div class="spec" aria-hidden="true"><div class="ana">seed : tree<br>egg : <b>?</b></div></div><h3>Verbal reasoning</h3><p class="label">4 questions</p><p>Analogies, letter codes, hidden words, anagrams, compound words and syllogisms.</p></li>
-      <li class="tile t-purple"><div class="spec" aria-hidden="true"><div class="shapes" id="sSpatial"></div></div><h3>Visual-spatial</h3><p class="label">3 questions</p><p>Mental rotation, cube nets, folded paper, clock angles and compass turns.</p></li>
-      <li class="tile t-orange"><div class="spec" aria-hidden="true"><div class="digits">5 8 2 9 4</div></div><h3>Working memory</h3><p class="label">2 questions</p><p>Digits appear one at a time, then disappear. Type them back in order, or reversed.</p></li>
-      <li class="tile t-pink"><div class="spec" aria-hidden="true"><div class="scan" id="sSpeed"></div></div><h3>Processing speed</h3><p class="label">3 questions</p><p>Count symbols against the clock, decode a symbol key and spot the one pair that differs.</p></li>
+<!-- 2. press strip, placeholders -->
+<section class="press" aria-label="Press">
+  <div class="wrap press-row">
+    <p class="label">As seen in <span class="ph-tag">Placeholder</span></p>
+    <ul>
+      <li>Press logo</li><li>Publication</li><li>Media outlet</li><li>Magazine</li><li>News site</li><li>Podcast</li>
     </ul>
   </div>
 </section>
 
-<!-- 3. how it works -->
-<section class="sec alt" id="how" aria-labelledby="how-h">
+<!-- 3. stats -->
+<section class="stats" aria-labelledby="stats-h">
   <div class="wrap">
-    <div class="sec-head"><p class="label">How it works</p><h2 id="how-h">Three steps, no sign-up</h2></div>
+    <h2 id="stats-h">Find out what your brain can do</h2>
+    <dl class="stat-row">
+      <div><dt>puzzles to solve</dt><dd class="big">20</dd></div>
+      <div><dt>minutes, start to finish</dt><dd class="big">16</dd></div>
+      <div><dt>ability areas scored</dt><dd class="big">6</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 4. three steps -->
+<section class="sec" id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="label">The process</p><h2 id="how-h">Three easy steps to your estimate</h2><p class="lead">Sit the test, read your score, and discover what you do best.</p></div>
     <ol class="steps">
-      <li><span class="step-n">1</span><h3>Answer twenty questions</h3><p>The domains are shuffled together. Pick an answer and the next question appears. Jump back to any question from the side rail, or use keys 1 to 6.</p></li>
-      <li><span class="step-n">2</span><h3>Beat the clock</h3><p>You have sixteen minutes in total. Four short checkpoints show your pace and where your profile is taking shape. The clock pauses while you read them.</p></li>
-      <li><span class="step-n">3</span><h3>Read your breakdown</h3><p>See an estimated score on the mean-100 scale, a tile for each domain and the reasoning behind every answer.</p></li>
+      <li>
+        <div class="art a-blue">
+          <div class="board" role="group" aria-label="Try a sample puzzle: pick the tile that completes the grid">
+            <div class="mx" id="heroMx"></div>
+            <div class="opts" id="heroOpts"></div>
+          </div>
+        </div>
+        <span class="step-n">1</span><h3>Take the quiz</h3>
+        <p id="heroMsg" class="step-try" role="status" aria-live="polite">Try one: pick the tile that completes the grid.</p>
+        <p>Twenty puzzles cover word meaning, number patterns, shapes and memory, and they get tougher as you go.</p>
+      </li>
+      <li>
+        <div class="art a-yellow"><div class="mini-score"><div class="stile t-white"><span>Estimated IQ</span><b>114</b></div><div class="stile t-white"><span>Ahead of</span><b>82%</b></div></div></div>
+        <span class="step-n">2</span><h3>Read your score</h3>
+        <p>Receive your estimated IQ, where you rank among other takers, and a walkthrough of every answer.</p>
+      </li>
+      <li>
+        <div class="art a-green"><div class="mini-bars" id="stepBars"></div></div>
+        <span class="step-n">3</span><h3>Learn where you shine</h3>
+        <p>Browse your ability breakdown, keep a certificate, and practise the areas that could use the most work.</p>
+      </li>
     </ol>
   </div>
 </section>
 
-<!-- 4. scoring -->
-<section class="sec" id="scoring" aria-labelledby="sc-h">
-  <div class="wrap">
-    <div class="sec-head"><p class="label">Scoring</p><h2 id="sc-h">Where scores fall on the curve</h2><p class="lead">IQ scales are normed so the population mean is 100 and one standard deviation is 15 points. About two thirds of people land between 85 and 115.</p></div>
-    <div class="bell-card">
-      <svg class="bell" id="bellLanding" viewBox="0 0 640 250" role="img" aria-label="Normal distribution with mean 100 and standard deviation 15"></svg>
+<!-- 5. bell -->
+<section class="sec alt" id="scoring" aria-labelledby="sc-h">
+  <div class="wrap split">
+    <div class="split-txt">
+      <p class="label">Scoring</p>
+      <h2 id="sc-h">Learn what your number actually says</h2>
+      <p class="lead">Find your position, compare yourself with others, and read a clear interpretation of the outcome.</p>
+      <ul class="checks"><li>Where you land on the bell curve</li><li>Your standing relative to everyone else</li><li>A jargon-free interpretation</li><li>An answer-by-answer walkthrough</li></ul>
     </div>
-    <dl class="bands">
-      <div><dt>130 and above</dt><dd>Very high</dd><dd class="p">about 2.3%</dd></div>
-      <div><dt>115 to 129</dt><dd>Above average</dd><dd class="p">about 13.6%</dd></div>
-      <div><dt>85 to 114</dt><dd>Average</dd><dd class="p">about 68.2%</dd></div>
-      <div><dt>70 to 84</dt><dd>Below average</dd><dd class="p">about 13.6%</dd></div>
-      <div><dt>Under 70</dt><dd>Low</dd><dd class="p">about 2.3%</dd></div>
-    </dl>
-    <p class="note muted">Brightfold’s number is a practice estimate mapped onto this scale. It has not been normed on a sample population and is not a clinical assessment.</p>
-  </div>
-</section>
-
-<!-- 5. stats, Wordle-style. PLACEHOLDER figures -->
-<section class="stats" aria-labelledby="stats-h">
-  <div class="wrap">
-    <h2 id="stats-h">Statistics <span class="ph-tag">Placeholder</span></h2>
-    <dl class="stat-row">
-      <div><dd class="big">80M+</dd><dt>Tests taken</dt></div>
-      <div><dd class="big">107</dd><dt>Average score</dt></div>
-      <div><dd class="big">16</dd><dt>Minutes, start to finish</dt></div>
-      <div><dd class="big">150+</dd><dt>Training exercises</dt></div>
-    </dl>
-    <p class="muted fine">Figures are for layout only. Replace before launch.</p>
-  </div>
-</section>
-
-<!-- 6. certificate -->
-<section class="sec" id="certificate" aria-labelledby="cert-h">
-  <div class="wrap cert-grid">
-    <div class="cert-note">
-      <p class="label">Certificate</p>
-      <h2 id="cert-h">Finish the test, keep a certificate</h2>
-      <p class="lead">Add your name on the results page, then print it or save it as a PDF. No email, no upsell.</p>
-      <button class="btn btn-primary btn-block-m js-start" type="button">Start the test</button>
+    <div class="panel">
+      <p class="label">Report preview <span class="ph-tag">Sample</span></p>
+      <div class="bell-card"><svg class="bell" id="bellLanding" viewBox="0 0 640 250" role="img" aria-label="Normal distribution with mean 100 and standard deviation 15, sample score 114 marked"></svg></div>
+      <div class="trio3">
+        <div class="stile t-blue"><span>Ahead of</span><b>82%</b></div>
+        <div class="stile t-yellow"><span>Estimated IQ</span><b>114</b></div>
+        <div class="stile t-green"><span>Above the mean</span><b>+14</b></div>
+      </div>
+      <p class="fine">Scores sit on a bell curve centred at 100 with a spread of 15 points. Brightfold’s number is a practice estimate, not a clinical assessment.</p>
     </div>
-    <div class="cert-wrap" id="certSample"></div>
   </div>
 </section>
 
-<!-- 7. FAQ -->
-<section class="sec alt" id="faq" aria-labelledby="faq-h">
-  <div class="wrap faq-wrap">
-    <h2 id="faq-h">Questions people ask first</h2>
+<!-- 6. abilities -->
+<section class="sec" id="domains" aria-labelledby="dom-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="label">Six kinds of questions</p><h2 id="dom-h">Your abilities, mapped out</h2><p class="lead">Each ability explained in terms of everyday life. Scores shown are a sample profile.</p></div>
+    <ul class="tiles" id="domTiles">
+      <li class="tile t-yellow" data-v="82" data-tag="Standout"><div class="spec" aria-hidden="true"><div class="mx mx-s" id="sFluid"></div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Fluid reasoning</h3><p class="label">4 questions</p></div></div><p>Spotting the rule behind a pattern, like working out the next move in a puzzle you have never seen.</p></li>
+      <li class="tile t-green" data-v="64" data-tag="Steady"><div class="spec" aria-hidden="true"><div class="seq" id="sQuant"></div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Quantitative reasoning</h3><p class="label">4 questions</p></div></div><p>Handling figures and sequences, from splitting a bill to checking whether a discount is really a deal.</p></li>
+      <li class="tile t-blue" data-v="90" data-tag="Standout"><div class="spec" aria-hidden="true"><div class="ana">seed : tree<br>egg : <b>?</b></div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Verbal reasoning</h3><p class="label">4 questions</p></div></div><p>Grasping what words mean and how ideas connect, whether you are reading, writing or debating.</p></li>
+      <li class="tile t-purple" data-v="55" data-tag="Steady"><div class="spec" aria-hidden="true"><div class="shapes" id="sSpatial"></div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Visual-spatial</h3><p class="label">3 questions</p></div></div><p>Picturing shapes turning and folding, useful for maps, packing the car and assembling furniture.</p></li>
+      <li class="tile t-orange" data-v="72" data-tag="Steady"><div class="spec" aria-hidden="true"><div class="digits">5 8 2 9 4</div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Working memory</h3><p class="label">2 questions</p></div></div><p>Keeping details in mind while you work with them, like holding a phone number until you dial it.</p></li>
+      <li class="tile t-pink" data-v="66" data-tag="Steady"><div class="spec" aria-hidden="true"><div class="scan" id="sSpeed"></div></div><div class="tile-row"><div class="ring-slot"></div><div><h3>Processing speed</h3><p class="label">3 questions</p></div></div><p>Taking in simple information quickly and accurately, such as scanning a page for one detail.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 7. rank -->
+<section class="sec alt" id="rank" aria-labelledby="rank-h">
+  <div class="wrap split flip">
+    <div class="split-txt">
+      <p class="label">Your place among others <span class="ph-tag">Placeholder</span></p>
+      <h2 id="rank-h">Find out how you stack up</h2>
+      <p class="lead">See how you compare with everyone else who sits the test.</p>
+      <ul class="checks"><li>Your rank expressed as the share of takers you outscored</li><li>A picture of where that lands you in a group of 100</li><li>The same score viewed globally and within your own country</li></ul>
+    </div>
+    <div class="panel">
+      <div class="duo">
+        <div class="stile t-blue"><span>Global</span><b>Top 18%</b></div>
+        <div class="stile t-purple"><span>Your country</span><b>Top 15%</b></div>
+      </div>
+      <p class="rankline">A sample score beat 82 of 100 Brightfold participants.</p>
+      <div class="room" id="room" role="img" aria-label="A group of 100 people: 82 outscored by the sample score, one marked as the sample taker, 17 ahead"></div>
+      <ul class="legend"><li><i class="k1"></i>Outscored</li><li><i class="k2"></i>You</li><li><i class="k3"></i>Ahead</li></ul>
+      <p class="fine">Measured against people who took this test, not the wider public. Sample figures.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. famous minds, dark tile -->
+<section class="sec" id="minds" aria-labelledby="minds-h">
+  <div class="wrap">
+    <div class="dark-tile" id="figs" data-iq="114">
+      <div class="fig-card" id="figCard" aria-live="polite"></div>
+      <div class="fig-body">
+        <p class="label">Bonus in your report <span class="ph-tag">Placeholder</span></p>
+        <h2 id="minds-h">Famous minds near your number</h2>
+        <p class="fig-p">Scientists, artists and thinkers whose estimated scores sit near yours. Pick a name to see how you compare.</p>
+        <div class="fig-list" id="figList"></div>
+        <p class="fig-note">Retrospective estimates; sources vary widely. None of these people sat a modern IQ test.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. certificate -->
+<section class="sec" id="certificate" aria-labelledby="cert-h" style="padding-top:0">
+  <div class="wrap split flip">
+    <div class="split-txt">
+      <p class="label">Checkable credential</p>
+      <h2 id="cert-h">A certificate you can show off</h2>
+      <p class="lead">Save it, verify it and share it any time.</p>
+      <ul class="checks"><li>Carries your name, score and the date you finished</li><li>A lasting ID plus a scannable code that proves it is real</li><li>Save the certificate as an image and the full report as a PDF</li><li>One tap to add it to LinkedIn or post it anywhere</li></ul>
+      <div class="cta-row"><a class="btn btn-line" href="#verify">Look up a result</a><button class="btn btn-primary js-start" type="button">Start the test</button></div>
+    </div>
+    <div class="cert-col">
+      <div class="cert-wrap" id="certSample"></div>
+      <div class="qr-chip"><svg id="qrSvg" viewBox="0 0 21 21" role="img" aria-label="Sample scannable code"></svg><div><b>Scan to verify</b><span>Sample code <span class="ph-tag">Placeholder</span></span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. practice + courses -->
+<section class="sec alt" id="practice" aria-labelledby="pr-h">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-txt">
+        <p class="label">Practice</p>
+        <h2 id="pr-h">Practice tailored to your results</h2>
+        <p class="lead">Brief exercises for language, numbers, memory and speed, chosen to fit your ability breakdown.</p>
+        <ul class="checks"><li>Three exercises daily, around ten minutes in total</li><li>Brain games plus a growing bank of practice questions</li><li>Re-sit the test whenever you like</li></ul>
+      </div>
+      <div class="panel">
+        <p class="label">Opening session <span class="ph-tag">Sample</span></p>
+        <ul class="sess">
+          <li class="t-blue"><i>W</i><div><b>Word Power</b><span>Verbal reasoning</span></div><em>5 min</em></li>
+          <li class="t-green"><i>N</i><div><b>Number Drill</b><span>Quantitative reasoning</span></div><em>4 min</em></li>
+          <li class="t-orange"><i>M</i><div><b>Memory Recall</b><span>Working memory</span></div><em>3 min</em></li>
+          <li class="t-pink"><i>F</i><div><b>Focus Sprint</b><span>Processing speed</span></div><em>2 min</em></li>
+        </ul>
+        <p class="fine">Sample only; real sessions adapt to your breakdown.</p>
+      </div>
+    </div>
+    <div class="shelf-head">
+      <div><h2>Keep sharpening your skills</h2><p class="lead">Hands-on short courses in clear thinking, memory and decision-making. Study in bite-sized bursts and carry on from any device.</p></div>
+      <p class="shelf-sum"><b>3</b> courses · <b>14</b> lessons · <b>1h 55m</b></p>
+    </div>
+    <ul class="courses">
+      <li class="t-yellow"><span class="label">5 lessons · 40 minutes</span><h3>Clear Thinking Foundations</h3><p>Separate facts from assumptions and build arguments that hold up.</p></li>
+      <li class="t-purple"><span class="label">4 lessons · 30 minutes</span><h3>Memory Techniques</h3><p>Simple methods for remembering names, lists and numbers.</p></li>
+      <li class="t-green"><span class="label">5 lessons · 45 minutes</span><h3>Decisions Under Uncertainty</h3><p>Weigh options when you do not have all the facts.</p><div class="prog" role="img" aria-label="2 of 5 lessons complete"><i style="width:40%"></i></div><p class="prog-t"><b>2 of 5 lessons</b> · Up next: Pre-mortems</p></li>
+    </ul>
+    <p class="fine center">Sample course shelf, shown for layout.</p>
+  </div>
+</section>
+
+<!-- 11. reviews -->
+<section class="sec" id="reviews" aria-labelledby="rev-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="label">Feedback</p><h2 id="rev-h">Reviews from people who tried it</h2><p class="lead">What participants had to say after finishing the test.</p></div>
+    <div class="revs">
+      <article><div class="rev-top"><span class="stars" data-n="5" role="img" aria-label="5 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>Clear and quick</h3><p>The puzzles were varied, and the explanation of my score made sense.</p><p class="who">Daniela M. · Portugal</p></article>
+      <article><div class="rev-top"><span class="stars" data-n="5" role="img" aria-label="5 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>More than just shapes</h3><p>I liked that it mixed words and numbers in, and every question felt fair.</p><p class="who">Kofi A. · Ghana</p></article>
+      <article><div class="rev-top"><span class="stars" data-n="4" role="img" aria-label="4 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>A decent challenge</h3><p>Short enough for one sitting, tough enough to make me think.</p><p class="who">Priya S. · India</p></article>
+      <article><div class="rev-top"><span class="stars" data-n="5" role="img" aria-label="5 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>Simple to follow</h3><p>Plain instructions and a results page that explained itself.</p><p class="who">Lukas B. · Austria</p></article>
+      <article><div class="rev-top"><span class="stars" data-n="4" role="img" aria-label="4 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>Focused and fast</h3><p>Done in one go, and the breakdown gave me something to work on.</p><p class="who">Mei Ling T. · Singapore</p></article>
+      <article><div class="rev-top"><span class="stars" data-n="5" role="img" aria-label="5 out of 5 stars"></span><span class="ph-tag">Sample</span></div><h3>Good variety</h3><p>A nice spread of styles, from vocabulary to number sequences to logic.</p><p class="who">Tomás R. · Chile</p></article>
+    </div>
+    <p class="fine center">Sample feedback shown for layout. Replace it with real reviews before launch.</p>
+  </div>
+</section>
+
+<!-- 12. plan -->
+<section class="sec alt" id="plans" aria-labelledby="plan-h">
+  <div class="wrap split">
+    <div class="split-txt">
+      <p class="label">Plans</p>
+      <h2 id="plan-h">One plan covers it all</h2>
+      <p class="lead">Try it for 7 days with full access, and leave whenever you like.</p>
+      <ul class="checks"><li>Your IQ score with a full breakdown of results</li><li>Your whole abilities profile</li><li>Extra assessments for deeper self-insight</li><li>Short courses and a bank of practice questions</li><li>Daily brain-training games</li><li>A certificate to share</li></ul>
+    </div>
+    <div class="panel">
+      <p class="label">Membership</p>
+      <div class="duo">
+        <div class="stile t-yellow"><span>Today</span><b>$0.99</b><small>7-day trial</small></div>
+        <div class="stile t-neutral"><span>After that</span><b>$19.99</b><small>every 4 weeks</small></div>
+      </div>
+      <button class="btn btn-primary btn-block js-start" type="button">Begin my trial</button>
+      <p class="fine">Your $0.99 trial runs for 7 days. If you do not cancel before it finishes, the plan renews at $19.99 every 4 weeks. You can leave any time from the cancellation page or by emailing help@example.com. Design demo: nothing is charged.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13. FAQ -->
+<section class="sec" id="faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="label">FAQ</p><h2 id="faq-h">Answers to common questions</h2></div>
     <dl class="faq">
-      <div><dt>Is this a real IQ test?</dt><dd>It uses the same item types as recognised tests, but a proper IQ score needs a test normed on thousands of people and given under controlled conditions. Treat your result as a practice estimate.</dd></div>
-      <div><dt>Does it cost anything?</dt><dd>No. There is no sign-up, no payment and no paywall on your result or your certificate. Your answers stay in your browser tab and are not sent anywhere.</dd></div>
-      <div><dt>How long does it take?</dt><dd>Sixteen minutes at most, for 20 questions. The clock pauses on the checkpoint screens, so reading them never costs you time.</dd></div>
-      <div><dt>Why six domains?</dt><dd>Modern batteries such as the WAIS report separate indexes for verbal comprehension, fluid reasoning, visual-spatial ability, working memory and processing speed. Brightfold adds number series as a quantitative strand.</dd></div>
-      <div><dt>How is the score calculated?</dt><dd>Your share of correct answers is mapped onto a mean-100, standard-deviation-15 scale. Because the items have not been normed on a sample population, the number is a rough guide, not a clinical result.</dd></div>
-      <div><dt>Can I go back and change answers?</dt><dd>Yes, for every question except the memory and speed tasks, which you only see once. Those depend on a single exposure to be meaningful.</dd></div>
-      <div><dt>Can I use a calculator or paper?</dt><dd>Paper is fine. A calculator gives you an advantage on the series questions, so your score will read higher than it should.</dd></div>
-      <div><dt>What happens if time runs out?</dt><dd>The test ends and unanswered questions count as wrong. You still get the full breakdown and every explanation.</dd></div>
-      <div><dt>What does the certificate say?</dt><dd>It shows your name, estimated score, date and the practice-scale disclaimer. It is a keepsake for finishing the test, not an official credential.</dd></div>
-      <div><dt>Is my data stored?</dt><dd>No. Everything runs in your browser. Close the tab and your answers are gone, so save your certificate before you leave.</dd></div>
+      <div><dt>What is included in the membership?</dt><dd>A personal IQ report with a certificate, every assessment, brain games, short courses and progress tracking. Everything syncs between devices when you sign in.</dd></div>
+      <div><dt>How do I end my membership?</dt><dd>Open the cancellation page (footer, under Support), enter your email, type the six-digit code and confirm. You keep access until the period you paid for runs out.</dd></div>
+      <div><dt>Who can see my results?</dt><dd>Only you, unless you decide to share them. Rankings are anonymous, and you can erase your data whenever you like.</dd></div>
+      <div><dt>What counts as a strong score?</dt><dd>100 is the average and most people land between 85 and 115. A score of 130 or more puts you in roughly the top 2%.</dd></div>
+      <div><dt>Can my score go up?</dt><dd>It can, through schooling, regular mental exercise, enough sleep and good health. Practice also builds memory, focus and pattern spotting.</dd></div>
+      <div><dt>Where do I find my results afterwards?</dt><dd>In your account, under Report and Certificate. Once unlocked, you can save the full report as a PDF.</dd></div>
+      <div><dt>Does IQ shift as people get older?</dt><dd>It tends to stay fairly steady but can drift. Thinking speed may slow with age, while vocabulary and knowledge often keep growing.</dd></div>
+      <div><dt>Is intelligence passed down from parents?</dt><dd>Genes contribute, but they do not decide everything. Schooling, health, surroundings and life experience shape thinking too.</dd></div>
     </dl>
   </div>
 </section>
 
-<!-- 8. closing -->
+<!-- 14. closing -->
 <section class="closing-cta" aria-labelledby="end-h">
   <div class="wrap">
     <div class="mini" id="endTiles" aria-hidden="true"></div>
-    <h2 id="end-h">Ready when you are</h2>
-    <p class="lead">Sixteen minutes. Twenty questions.</p>
-    <button class="btn btn-primary btn-block-m js-start" type="button">Start the test</button>
+    <h2 id="end-h">Curious about your score?</h2>
+    <p class="lead">20 puzzles. Roughly 16 minutes. A full profile waiting at the finish.</p>
+    <button class="btn btn-primary btn-block-m js-start" type="button">Take the 20-question test</button>
   </div>
 </section>
 </main>
-<footer class="closing"><div class="wrap"><span>Brightfold · a practice reasoning test</span><span>Not a clinical or diagnostic assessment.</span></div></footer>
+<footer class="closing">
+  <div class="wrap foot">
+    <div class="foot-brand"><a class="logo" href="#top">Brightfold</a><p>A practice reasoning test. Not a clinical or diagnostic assessment.</p></div>
+    <nav aria-label="Product"><h3>Product</h3><a href="#how">The process</a><a href="#domains">Abilities</a><a href="#practice">Practice</a><a href="#plans">Plans</a></nav>
+    <nav aria-label="Support"><h3>Support</h3><a href="#faq">FAQ</a><a href="#top">Help centre</a><a href="#top">Cancel membership</a><a href="#top" id="verify">Verify a certificate</a></nav>
+    <nav aria-label="Company"><h3>Company</h3><a href="#top">About</a><a href="#top">Privacy</a><a href="#top">Terms</a></nav>
+  </div>
+</footer>
 </div>
 
 <div id="shell"></div>
