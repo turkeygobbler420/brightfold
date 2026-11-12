@@ -279,3 +279,21 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .cert-wrap .cert-sheet{border:1px solid #d7dbe0;border-radius:var(--r-m)}
 #landing .faq{border:0;display:grid;gap:12px}
 #landing .faq>div{border:1px solid var(--line);border-radius:var(--r-m);padding:20px 24px;background:#fff;box-shadow:var(--card-shadow)}
+
+/* step cards: Mindgauge-style product mockups */
+#landing .art.card-art{background:#fff;border:1px solid var(--line);box-shadow:var(--card-shadow);padding:22px;place-items:stretch;align-content:center;min-height:0}
+#landing .card-art .board{width:100%;max-width:240px;margin:0 auto}
+#landing .sc{display:grid;gap:14px;min-width:0}
+#landing .sc-t{margin:0;font-size:14px;color:var(--ink-2);font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#landing .sc-iq{margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#landing .sc-iq b{font-family:var(--f-display);font-size:56px;line-height:1;font-weight:700;letter-spacing:-.02em}
+#landing .sc-iq span{color:var(--muted);font-size:14px}
+#landing .sc svg{width:100%;height:auto;display:block}
+#landing .sc-well{background:var(--bg-alt);border-radius:var(--r-m);padding:16px;display:grid;gap:4px;min-width:0}
+#landing .sc-well>span{font-size:13px;color:var(--ink-2);font-weight:600}
+#landing .sc-well>b{font-family:var(--f-display);font-size:30px;line-height:1.1}
+#landing .sc-well>small{font-size:13px;color:var(--muted)}
+#landing .sc-well .mini-bars{width:100%;margin-top:8px}
+#landing .steps li{grid-template-rows:1fr auto auto auto;justify-items:stretch}
+#landing .steps li .step-n{justify-self:start}
+@media (max-width:800px){#landing .steps li{grid-template-rows:none}}
