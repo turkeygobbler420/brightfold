@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Libre+Franklin:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="base.css?v=20261113">
-<link rel="stylesheet" href="landing.css?v=20261113">
-<link rel="stylesheet" href="app.css?v=20261113">
+<link rel="stylesheet" href="base.css?v=20261114">
+<link rel="stylesheet" href="landing.css?v=20261114">
+<link rel="stylesheet" href="app.css?v=20261114">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <pattern id="gm-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -51,14 +51,14 @@
         <li><b>16 min</b><span>to your result</span></li>
       </ul>
     </div>
-    <div class="snap" role="group" aria-label="Sample score snapshot">
+    <div class="frame"><div class="snap" role="group" aria-label="Sample score snapshot">
       <p class="label">Score snapshot <span class="ph-tag">Sample</span></p>
       <div class="snap-top">
         <div class="stile t-yellow"><span>Estimated IQ</span><b>114</b></div>
         <div class="stile t-green"><span>Percentile</span><b>82nd</b></div>
       </div>
       <div class="stile t-neutral bars" id="snapBars"><span>Ability breakdown</span></div>
-    </div>
+    </div></div>
   </div>
 </section>
 
@@ -104,7 +104,7 @@
         <p>The moment you finish question 20, your estimated IQ, your rank among other takers and a walkthrough of every answer are ready.</p>
       </li>
       <li>
-        <div class="art card-art"><div class="sc"><div class="sc-well"><span>Ability breakdown</span><div class="mini-bars" id="stepBars"></div></div></div></div>
+        <div class="art card-art"><div class="sc"><p class="sc-t">Ability breakdown <span class="ph-tag">Sample</span></p><div class="mini-bars" id="stepBars"></div><div class="sc-well"><span>Strongest skill</span><b>Spatial</b><small>79 out of 100</small></div></div></div>
         <span class="step-n">3</span><h3>See what you are best at</h3>
         <p>Your ability breakdown shows your strongest skill and the one worth sharpening first. Save your certificate and show it off.</p>
       </li>
@@ -121,7 +121,7 @@
       <p class="lead">Your score lands on the bell curve the second you finish, next to everyone else who has taken the test.</p>
       <ul class="checks"><li>Your exact spot on the bell curve</li><li>How you compare with every other taker</li><li>A plain-English reading of your number</li><li>An answer-by-answer walkthrough of what you got right</li></ul>
     </div>
-    <div class="panel">
+    <div class="frame"><div class="panel">
       <p class="label">Report preview <span class="ph-tag">Sample</span></p>
       <div class="bell-card"><svg class="bell" id="bellLanding" viewBox="0 0 640 250" role="img" aria-label="Normal distribution with mean 100 and standard deviation 15, sample score 114 marked"></svg></div>
       <div class="trio3">
@@ -130,7 +130,7 @@
         <div class="stile t-green"><span>Above the mean</span><b>+14</b></div>
       </div>
       <p class="fine">Scores sit on a bell curve centred at 100 with a spread of 15 points. Brightfold’s number is a practice estimate, not a clinical assessment.</p>
-    </div>
+    </div></div>
   </div>
 </section>
 
@@ -198,7 +198,7 @@
       <div class="cta-row"><a class="btn btn-line" href="#verify">Look up a result</a><button class="btn btn-primary js-start" type="button">Check my mind</button></div>
     </div>
     <div class="cert-col">
-      <div class="cert-wrap" id="certSample"></div>
+      <div class="frame"><div class="cert-wrap" id="certSample"></div></div>
       <div class="qr-chip"><svg id="qrSvg" viewBox="0 0 21 21" role="img" aria-label="Sample scannable code"></svg><div><b>Scan to verify</b><span>Sample code <span class="ph-tag">Placeholder</span></span></div></div>
     </div>
   </div>
@@ -214,7 +214,7 @@
         <p class="lead">Short exercises for language, numbers, memory and speed, picked to fit your own ability breakdown.</p>
         <ul class="checks"><li>Three exercises daily, around ten minutes in total</li><li>Brain games plus a growing bank of practice questions</li><li>Re-sit the test whenever you like</li></ul>
       </div>
-      <div class="panel">
+      <div class="frame"><div class="panel">
         <p class="label">Opening session <span class="ph-tag">Sample</span></p>
         <ul class="sess">
           <li class="t-blue"><i><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M5 6h6a3 3 0 013 3v10a2 2 0 00-2-2H5zM23 6h-6a3 3 0 00-3 3v10a2 2 0 012-2h7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></i><div><b>Word Power</b><span>Verbal reasoning</span></div><em>5 min</em></li>
@@ -223,17 +223,17 @@
           <li class="t-pink"><i><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M16 3L6 16h7l-2 9 11-14h-7z" fill="currentColor"/></svg></i><div><b>Focus Sprint</b><span>Processing speed</span></div><em>2 min</em></li>
         </ul>
         <p class="fine">Sample only; real sessions adapt to your breakdown.</p>
-      </div>
+      </div></div>
     </div>
     <div class="shelf-head">
       <div><h2>Keep getting sharper</h2><p class="lead">Short courses in clear thinking, memory and decision-making. Study in small bursts on any device.</p></div>
       <p class="shelf-sum"><b>3</b> courses · <b>14</b> lessons · <b>1h 55m</b></p>
     </div>
-    <ul class="courses">
+    <div class="frame frame-wide"><ul class="courses">
       <li class="t-yellow"><span class="label">5 lessons · 40 minutes</span><h3>Clear Thinking Foundations</h3><p>Separate facts from assumptions and build arguments that hold up.</p></li>
       <li class="t-purple"><span class="label">4 lessons · 30 minutes</span><h3>Memory Techniques</h3><p>Simple methods for remembering names, lists and numbers.</p></li>
       <li class="t-green"><span class="label">5 lessons · 45 minutes</span><h3>Decisions Under Uncertainty</h3><p>Weigh options when you do not have all the facts.</p><div class="prog" role="img" aria-label="2 of 5 lessons complete"><i style="width:40%"></i></div><p class="prog-t"><b>2 of 5 lessons</b> · Up next: Pre-mortems</p></li>
-    </ul>
+    </ul></div>
     <p class="fine center">Sample course shelf, shown for layout.</p>
   </div>
 </section>
@@ -316,6 +316,6 @@
 
 <div id="shell"></div>
 <div class="cheer" id="cheer" role="status" aria-live="polite"></div>
-<script src="data.js?v=20261113"></script>
-<script src="engine.js?v=20261113"></script>
-<script src="landing.js?v=20261113"></script>
+<script src="data.js?v=20261114"></script>
+<script src="engine.js?v=20261114"></script>
+<script src="landing.js?v=20261114"></script>

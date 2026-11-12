@@ -301,3 +301,26 @@ html[data-motion="off"] #landing *{animation:none!important}
 @media (min-width:801px){#landing .steps li .art{flex:none;height:372px}}
 #landing mark.hl{background:var(--yellow);color:var(--ink);padding:0 .18em;margin:0 -.04em;border-radius:8px;-webkit-box-decoration-break:clone;box-decoration-break:clone;white-space:normal}
 #landing mark.hl{background:linear-gradient(transparent 14%,var(--yellow) 14%,var(--yellow) 92%,transparent 92%);border-radius:0;padding:0 .14em}
+
+/* card of cards: tinted frame > white card > soft wells (Mindgauge/MyIQ pattern, in the Brightfold pastel palette) */
+#landing .frame{position:relative;isolation:isolate;overflow:hidden;border-radius:24px;padding:18px;background:linear-gradient(135deg,#fdf6d8 0%,#eef5e3 48%,#e2ebfa 100%);-webkit-mask-image:radial-gradient(white,black);mask-image:radial-gradient(white,black);min-width:0}
+#landing .frame::before,#landing .frame::after{content:"";position:absolute;z-index:-1;width:280px;height:280px;border-radius:50%;filter:blur(56px);pointer-events:none}
+#landing .frame::before{right:-80px;top:-96px;background:#f9df6d;opacity:.45}
+#landing .frame::after{left:-96px;bottom:-110px;background:#a7c4f2;opacity:.55}
+@media (min-width:800px){#landing .frame{padding:28px}}
+#landing .frame>.snap,#landing .frame>.panel,#landing .frame .sc,#landing .frame .board{background:#fff;border:0;border-radius:16px;box-shadow:0 0 0 1px rgba(0,0,0,.04),0 12px 30px -14px rgba(18,18,18,.28)}
+#landing .frame>.snap,#landing .frame>.panel{padding:22px}
+#landing .frame .cert-wrap{box-shadow:0 0 0 1px rgba(0,0,0,.04),0 12px 30px -14px rgba(18,18,18,.28)}
+#landing .frame .snap .stile,#landing .frame .panel .stile{border-radius:12px}
+#landing .frame-wide{padding:18px}
+@media (min-width:800px){#landing .frame-wide{padding:32px}}
+#landing .frame .courses{margin:0}
+/* step mockups use the same frame */
+#landing .art.card-art{background:linear-gradient(135deg,#fdf6d8 0%,#eef5e3 48%,#e2ebfa 100%);border:0;box-shadow:none;position:relative;isolation:isolate;overflow:hidden;padding:20px;place-items:center;-webkit-mask-image:radial-gradient(white,black);mask-image:radial-gradient(white,black)}
+#landing .art.card-art::before,#landing .art.card-art::after{content:"";position:absolute;z-index:-1;width:200px;height:200px;border-radius:50%;filter:blur(44px)}
+#landing .art.card-art::before{right:-60px;top:-70px;background:#f9df6d;opacity:.45}
+#landing .art.card-art::after{left:-70px;bottom:-80px;background:#a7c4f2;opacity:.55}
+#landing .card-art .sc{width:100%;padding:18px}
+#landing .card-art .board{padding:14px;max-width:236px}
+#landing .card-art .sc-well{background:var(--bg-alt)}
+#landing .card-art .mini-bars{margin:2px 0 4px}
