@@ -28,8 +28,14 @@ Nothing here is live until this branch is merged to `main` and deployed.
 - `.github/workflows/vercel-deploy.yml` deploys `main` to Vercel once the `VERCEL_TOKEN` repo secret is added.
   (Vercel Hobby allows 100 deployments/day; a deploy that hits the limit can be re-run via Actions -> Run workflow.)
 
+## Paid-unlock flow
+1. Checkout modal opens the provider in a pop-out; our click id travels as `sub4` (the tracker overwrites sub1; sub2 feeds the checkout's email field).
+2. Network postback (set `click_id={sub4}` once the network confirms the macro): `https://brightfold-nine.vercel.app/api/postback?click_id={sub4}&payout={payout_amount}&token=<POSTBACK_TOKEN>` -> upserts into Supabase `paid_clicks` (`supabase/paid_clicks.sql`).
+3. `flow.js` polls `/api/status?click_id=` every 3s and unlocks on `{paid:true}` (cosmetic unlock; server holds the truth).
+Vercel env: SUPABASE_URL, SUPABASE_SERVICE_KEY, POSTBACK_TOKEN, optional STATUS_ORIGIN.
+
 ## Open items
-- Meta pixel ID: network said "sub3", but every offer lists sub3 = first_name and sub15 = FB_PIXEL. Using sub15; confirm with the network.
-- Set `POSTBACK_TOKEN` (and optional Meta env vars) in Vercel, and add `&token=` to the postback URL.
-- Vercel project `brightfold` is not Git-connected (deploys are via CLI).
-- No unlock verification yet: results are not gated on the postback.
+- Confirm with the network that `{sub4}` is a valid postback macro (or use their click-id macro).
+- Meta pixel ID: sub3 vs sub15 still unconfirmed.
+- Offer wording ($1 trial / "not charged" on the checkout vs $0.99 + $4.99/week in our modal) must match.
+- Run supabase/paid_clicks.sql, set env vars, then deploy main to Vercel.

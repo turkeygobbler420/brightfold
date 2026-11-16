@@ -1,10 +1,11 @@
 // Affiliate network server-to-server postback.
 //
 // Network postback URL (set in the network dashboard):
-//   https://<your-domain>/api/postback?click_id={sub1}&payout={payout_amount}&token=<POSTBACK_TOKEN>
+//   https://<your-domain>/api/postback?click_id={sub4}&payout={payout_amount}&token=<POSTBACK_TOKEN>
 //
 // Env vars (Vercel -> Settings -> Environment Variables):
 //   POSTBACK_TOKEN    optional but recommended; requests without a matching ?token= are rejected
+//   SUPABASE_URL, SUPABASE_SERVICE_KEY  store paid click ids so /api/status can unlock the buyer's page
 //   META_PIXEL_ID     optional; with META_ACCESS_TOKEN, forwards the conversion to Meta Conversions API
 //   META_ACCESS_TOKEN optional
 //   META_TEST_CODE    optional; Meta "Test Events" code while testing
@@ -71,8 +72,21 @@ module.exports = async function handler(req, res) {
     meta = { error: String(e && e.message) };
   }
 
+  let stored = { skipped: true };
+  const sbUrl = process.env.SUPABASE_URL, sbKey = process.env.SUPABASE_SERVICE_KEY;
+  if (sbUrl && sbKey) {
+    try {
+      const r = await fetch(sbUrl.replace(/\/$/, '') + '/rest/v1/paid_clicks', {
+        method: 'POST',
+        headers: { apikey: sbKey, Authorization: 'Bearer ' + sbKey, 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify({ click_id: clickId, payout }),
+      });
+      stored = { status: r.status, ok: r.ok };
+    } catch (e) { stored = { error: String(e && e.message) }; }
+  }
+
   // Structured log: visible in Vercel -> project -> Logs (filter "postback").
-  console.log(JSON.stringify({ evt: 'postback', click_id: clickId, payout, meta, ts: new Date().toISOString() }));
+  console.log(JSON.stringify({ evt: 'postback', click_id: clickId, payout, meta, stored, ts: new Date().toISOString() }));
 
   return res.status(200).send('OK');
 };

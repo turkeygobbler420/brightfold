@@ -134,6 +134,34 @@
   /* Payment screen: Whop-style on-page checkout modal (order summary + secure pay button).
      The provider's page sends X-Frame-Options: DENY so it cannot be framed; the pay button opens it in a
      pop-out window sized like a card form (falls back to this tab if pop-ups are blocked). */
+  /* Polls the server (filled by the network's postback) and unlocks the results once the click is marked paid.
+     Closing the pop-out never unlocks; polling continues 45s after it closes, 15 min max. */
+  const STATUS_API='https://brightfold-nine.vercel.app/api/status';
+  let payPoll=null;
+  function watchPayment(win,msg){
+    clearInterval(payPoll);
+    const id=window.bfTrack&&window.bfTrack.clickId;if(!id)return;
+    const t0=Date.now();let closedAt=0,busy=false;
+    payPoll=setInterval(async()=>{
+      if(busy)return;
+      let closed=false;try{closed=!win||win.closed;}catch(e){}
+      if(closed&&!closedAt)closedAt=Date.now();
+      if(Date.now()-t0>15*60e3||(closedAt&&Date.now()-closedAt>45e3)){clearInterval(payPoll);
+        const m=document.getElementById('bfPayMsg');if(m)m.textContent='We have not received your payment yet. If you completed it, this page will unlock shortly.';return;}
+      busy=true;
+      try{
+        const r=await fetch(STATUS_API+'?click_id='+encodeURIComponent(id),{cache:'no-store'});
+        const j=r.ok?await r.json():null;
+        if(j&&j.paid){
+          clearInterval(payPoll);clearInterval(sellT);clearInterval(offerT);
+          try{win&&!win.closed&&win.close();}catch(e){}
+          const em=document.getElementById('bfEmbed');if(em)em.remove();
+          S.unlock();st.done=false;showResults();
+        }
+      }catch(e){}
+      busy=false;
+    },3000);
+  }
   function embedCheckout(url){
     let m=document.getElementById('bfEmbed');if(m)m.remove();
     m=document.createElement('div');m.id='bfEmbed';
@@ -158,6 +186,7 @@
       const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
       if(!win){location.href=url;return;}
       try{win.focus();}catch(e){}
+      watchPayment(win,msg);
       msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window did not open?</a>';
     };
   }
@@ -203,13 +232,21 @@
   /* take over the end of the test */
   window.guessScreen=analyze;window.reviewScreen=analyze;
   window.finish=function(){analyze();};
+  /* TEMP DEV: skips the calculating screen and email step, runs the score calculation, lands on checkout. */
+  window.devSkipToCheckout=function(){
+    st.flow=1;halt();close();
+    st.email=st.email||DEMO.email;
+    const r=calc();st.result=r;
+    try{S.saveResult(r);}catch(e){}
+    checkout();
+  };
 })();
 
 /* TEMP DEV: "Skip quiz" button, jumps straight to the calculating screen. REMOVE before launch. */
 (function(){
   var b=document.createElement('button');b.type='button';b.id='devSkip';b.textContent='Skip quiz (dev)';
   b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99999;padding:8px 12px;border-radius:8px;border:2px dashed #121212;background:#fff;color:#121212;font:700 13px system-ui;cursor:pointer;display:none';
-  b.onclick=function(){if(window.guessScreen)window.guessScreen();};
+  b.onclick=function(){if(window.devSkipToCheckout)window.devSkipToCheckout();};
   document.body.appendChild(b);
   setInterval(function(){var t=document.getElementById('tMain');b.style.display=(t&&!t.querySelector('.an,.em,.co,.gate')&&document.getElementById('tCount')&&/of/.test(document.getElementById('tCount').textContent))?'block':'none';},400);
 })();

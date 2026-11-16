@@ -6,7 +6,7 @@
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
     ENABLE_REDIRECT: true,
-    // Network tracking links. sub1 = our click_id (returned in the postback), sub15 = Meta pixel ID.
+    // Network tracking links. sub4 = our click_id (returned in the postback as {sub4}), sub15 = Meta pixel ID.
     OFFERS: {
       '25388': { name: 'US DailyOffer Shop Pay Only Shipping Prefill (CC), 24 USD CPA', base: 'https://vadvpl.com/clickout/25388/361471/' },
       '26114': { name: 'US Green Checkout VOD (CC), 24 USD CPA',                        base: 'https://avdiupt.com/clickout/26114/361472/' },
@@ -45,7 +45,7 @@
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
     event: function (name, data) { if (window.fbq) fbq('trackCustom', name, data || {}); },
-    // Builds <OFFER_BASE>?sub1=<click_id>&sub15=<pixel_id>. Only the click ID and pixel ID are sent, no personal data.
+    // Builds <OFFER_BASE>?sub4=<click_id>&sub15=<pixel_id> (the tracker overwrites sub1; sub2 feeds the checkout's email field). Only the click ID and pixel ID are sent, no personal data.
     offerUrl: function (offerKey) {
       var enabled = CONFIG.ENABLE_REDIRECT;
       try { if (new URLSearchParams(location.search).get('checkout') === '1') sessionStorage.setItem('bf_checkout', '1'); } catch (e) {}
@@ -54,7 +54,7 @@
       var offer = CONFIG.OFFERS[offerKey || CONFIG.ACTIVE_OFFER];
       if (!offer) return null;
       var u = new URL(offer.base);
-      u.searchParams.set('sub1', clickId);
+      u.searchParams.set('sub4', clickId);
       if (CONFIG.PIXEL_ID) u.searchParams.set('sub15', CONFIG.PIXEL_ID);
       return u.toString();
     }
