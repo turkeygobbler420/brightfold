@@ -275,7 +275,6 @@
          <button class="btn btn-primary co-b" data-m="express" type="button">Express checkout</button>
          <button class="btn btn-line co-b" data-m="card" type="button">Credit or debit card</button>
          <p class="co-demo" id="coDemo">Demo mode: no payment is taken.</p></div>
-        <p class="fine">You pay <b>$0.00 today</b> for your IQ score report. <b>Your plan then renews at $4.99 every week until you cancel.</b> Cancel anytime, and you keep access until the end of the period you have paid for.</p>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
