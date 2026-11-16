@@ -1,9 +1,11 @@
 // GET /api/status?click_id=...  ->  {paid:boolean}. Read by the checkout page while the buyer pays in the pop-out.
-// Env: SUPABASE_URL, SUPABASE_SERVICE_KEY, STATUS_ORIGIN (default https://turkeygobbler420.github.io)
+// Env: SUPABASE_URL, SUPABASE_SERVICE_KEY, STATUS_ORIGIN (comma-separated; default github.io + mindmetric.info + www)
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 
 module.exports = async function handler(req, res) {
-  const origin = process.env.STATUS_ORIGIN || 'https://turkeygobbler420.github.io';
+  const allowed = (process.env.STATUS_ORIGIN || 'https://turkeygobbler420.github.io,https://mindmetric.info,https://www.mindmetric.info').split(',').map(s => s.trim());
+  const reqOrigin = req.headers.origin || '';
+  const origin = allowed.includes(reqOrigin) ? reqOrigin : allowed[0];
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Cache-Control', 'no-store');

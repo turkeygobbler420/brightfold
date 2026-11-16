@@ -3,7 +3,8 @@
 //   GET  ?email=...&t=<hmac>           one-click link for emails: t = hex HMAC-SHA256(lowercase email, UNSUB_SECRET)
 // Table: unsubscribes (see supabase/paid_clicks.sql). Secrets: UNSUB_SECRET (needed for GET links), optional STATUS_ORIGIN.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ORIGIN = Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io";
+const ALLOWED = (Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io,https://mindmetric.info,https://www.mindmetric.info").split(",").map((s) => s.trim());
+const ORIGIN = ALLOWED[0];
 const H = { "Access-Control-Allow-Origin": ORIGIN, "Vary": "Origin", "Cache-Control": "no-store", "content-type": "application/json" };
 const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: H });
 const url = Deno.env.get("SUPABASE_URL")!.replace(/\/$/, ""), key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -24,6 +25,7 @@ async function set(email: string, subscribe: boolean) {
 }
 
 Deno.serve(async (req) => {
+  { const o = req.headers.get("origin") ?? ""; H["Access-Control-Allow-Origin"] = ALLOWED.includes(o) ? o : ORIGIN; }
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: { ...H, "Access-Control-Allow-Methods": "POST", "Access-Control-Allow-Headers": "content-type" } });
   try {
     if (req.method === "GET") {

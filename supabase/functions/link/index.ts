@@ -3,11 +3,13 @@
 // can be matched to an email / account. Table: click_links (see supabase/paid_clicks.sql).
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ORIGIN = Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io";
+const ALLOWED = (Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io,https://mindmetric.info,https://www.mindmetric.info").split(",").map((s) => s.trim());
+const ORIGIN = ALLOWED[0];
 const H = { "Access-Control-Allow-Origin": ORIGIN, "Vary": "Origin", "Cache-Control": "no-store", "content-type": "application/json" };
 const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: H });
 
 Deno.serve(async (req) => {
+  { const o = req.headers.get("origin") ?? ""; H["Access-Control-Allow-Origin"] = ALLOWED.includes(o) ? o : ORIGIN; }
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: { ...H, "Access-Control-Allow-Methods": "POST", "Access-Control-Allow-Headers": "content-type" } });
   if (req.method !== "POST") return json({ error: "method" }, 405);
   let b: { click_id?: string; email?: string };
