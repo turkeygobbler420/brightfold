@@ -158,7 +158,7 @@
       const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
       if(!win){location.href=url;return;}
       try{win.focus();}catch(e){}
-      msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window didn't open?</a>';
+      msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window did not open?</a>';
     };
   }
   function checkout(){
