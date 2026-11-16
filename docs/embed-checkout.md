@@ -29,15 +29,12 @@ Security: sandbox `allow-scripts allow-same-origin allow-forms allow-popups` (no
 ENABLED, DEMO, PROVIDER_URL, AMOUNT, TRIAL_DAYS, INTERVAL (bold "Then" amount; the "every 28 days" note is part of the iframe template).
 
 ## Gating (who sees the embed)
-The embed is the only checkout path — every visitor gets it. The `DEMO` flag selects Pay behavior, not audience:
-- `DEMO:true` (current transitional default): Pay completes the handshake locally and unlocks; no payment is taken and no processor is involved yet.
-- `DEMO:false` + `PROVIDER_URL` set: Pay navigates the iframe to the provider-hosted checkout and unlock comes from `/api/status` postback truth (`watchPayment`).
-
-The former CPA pop-out flow (`offerUrl()`, `embedCheckout()`, the OFFERS clickout map) has been removed from the codebase.
+- `DEMO:false` + `PROVIDER_URL` set → the embed is the primary checkout for everyone.
+- `DEMO:true` (current default) → only tester sessions (opened with `?checkout=1`, remembered as `sessionStorage.bf_checkout`) see the embed demo; all other visitors take the existing CPA pop-out path. This keeps the revenue path live while the embed is tested.
 
 ## Demo vs real
-DEMO=true (transitional): Pay completes the handshake locally and unlocks (no payment taken, no card inputs anywhere, no processor involved).
-REAL: set DEMO=false + PROVIDER_URL (provider-hosted checkout URL). Pay navigates inside the iframe to the provider (provider collects card data in its own hosted form) with the network attribution contract: `sub4=<click_id>` (+ `sub15=<pixel_id>` when configured). The provider returns to `checkout/embed.html?checkout=return&payment=...&status=...` (this iframe document, not the parent page); a fresh boot→init cycle runs and the iframe relays `complete`. Provider-hosted form = Whop/Stripe PCI model.
+DEMO=true: iframe shows demo notice; Pay completes the handshake locally and unlocks (explicitly labelled demo, no payment taken, no card inputs anywhere).
+REAL: set DEMO=false + PROVIDER_URL (provider-hosted checkout URL). Pay navigates inside the iframe to the provider (provider collects card data in its own hosted form) with the same attribution contract as `offerUrl()`: `sub4=<click_id>` (+ `sub15=<pixel_id>` when configured). The provider returns to `checkout/embed.html?checkout=return&payment=...&status=...` (this iframe document, not the parent page); a fresh boot→init cycle runs and the iframe relays `complete`. Provider-hosted form = Whop/Stripe PCI model.
 
 ## Invariants & go-live requirements
 - **Same-origin invariant:** `checkout/embed.html` must stay same-origin with the parent page. With `allow-same-origin`, the iframe script can read parent DOM, localStorage (`bf_click_id`, Supabase session) and cookies — acceptable only because the content is first-party. If the embed ever moves to another host/subdomain, drop `allow-same-origin`, re-review the sandbox, and treat `init` as a cross-origin channel.
@@ -46,7 +43,7 @@ REAL: set DEMO=false + PROVIDER_URL (provider-hosted checkout URL). Pay navigate
 - `click_id` travels in `init` props and provider query (`sub4`) only; `returnUrl` passed to the provider is origin+path (no ad-params).
 
 ## Fallback chain
-The embed is the only checkout path; there is no pop-out fallback anymore. If the iframe 404s, is blocked, or the handshake stalls within 8s (`onMountFailed`), the modal shows a "temporarily unavailable — try again" message. If `BFEmbed` itself failed to load (rare), the legacy Processing… unlock keeps the flow completable.
+`BFEmbed` missing / config disabled / demo gate closed → CPA pop-out (`offerUrl()`). Mount throws or no handshake within 8s (`onMountFailed`) → overlay closed + CPA pop-out. If no offer configured → legacy demo unlock.
 
 ## Going live
 1. Set `PROVIDER_URL` + `DEMO:false` (config in `offers.js`).

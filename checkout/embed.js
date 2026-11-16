@@ -34,6 +34,8 @@
     if (amount) amount.textContent = (props.currency === 'USD' ? '$' : '') + (props.amount != null ? props.amount : '1.00');
     if (interval) interval.textContent = props.interval != null ? props.interval : '29.99$';
     if (trial) trial.textContent = (props.trialDays != null ? props.trialDays : 7) + '-day trial';
+    var notice = document.getElementById('demoNotice');
+    if (notice) notice.style.display = (props.demo !== false) ? 'block' : 'none';
     var pb = document.getElementById('pay');
     if (pb) pb.disabled = false;
     reportResize();
@@ -97,17 +99,17 @@
       var demo = props.demo !== false;
       var providerUrl = props.providerUrl || '';
       if (demo) {
-        // transitional local completion (DEMO=true): run handshake through to complete
-        if (msg) msg.textContent = 'Processing…';
+        // demo: run handshake through to complete
+        if (msg) msg.textContent = 'Processing demo payment…';
         payBtn.disabled = true;
-        setTimeout(function () { complete('pay_' + Date.now()); }, 600);
+        setTimeout(function () { complete('pay_demo_' + Date.now()); }, 600);
       } else if (!providerUrl) {
         // configured as real but no provider URL — fail explicitly, never fake-complete
         if (msg) msg.textContent = 'Checkout is not configured. Please contact support.';
         post({ bf: 'event', name: 'error', message: 'PROVIDER_URL not configured' });
       } else {
         // REAL: navigate inside iframe to provider-hosted payment page.
-        // Network attribution contract: sub4 = click_id,
+        // Same attribution contract as offers.js offerUrl(): sub4 = click_id,
         // sub15 = Meta pixel ID when present. Provider redirects back to
         // return_url (this document) with payment+status params.
         if (msg) msg.textContent = 'Redirecting to secure payment…';
