@@ -245,7 +245,14 @@ function finish(){
      <p class="fine" id="gateFine">${PLANS.trial[2]}. Cancel any time.</p>
     </div></div></div>`;
   document.querySelectorAll('#app input[name="plan"]').forEach(r=>r.addEventListener('change',()=>{const p=PLANS[r.value];$('gateTot').textContent=p[1];$('gateFine').textContent=p[2]+'. Cancel any time.';}));
-  $('gateGo').onclick=()=>{st.done=false;showResults();};
+  $('gateGo').onclick=()=>{
+    const offer=window.bfTrack&&window.bfTrack.offerUrl();
+    if(offer){ // checkout configured (tracking.js OFFER_BASE): hand off to the offer with sub1=click_id
+      window.bfTrack.event('GoToCheckout',{plan:(document.querySelector('#app input[name="plan"]:checked')||{}).value});
+      location.href=offer;return;
+    }
+    st.done=false;showResults(); // no checkout configured: mock paywall
+  };
   $('gateGo').focus();window.scrollTo(0,0);
 }
 
