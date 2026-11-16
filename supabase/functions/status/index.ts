@@ -1,6 +1,6 @@
 // Supabase Edge Function: payment status.
 //   GET ?click_id=...                       -> {paid}           (checkout page polling after the pop-out)
-//   GET with Authorization: Bearer <user>   -> {paid, email}    (signed-in account: any click linked to that email that was paid)
+//   GET with Authorization: Bearer <user>   -> {paid, cancelled, email} (signed-in account: any click linked to that email that was paid)
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const ORIGIN = Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io";
 const H = { "Access-Control-Allow-Origin": ORIGIN, "Vary": "Origin", "Cache-Control": "no-store", "content-type": "application/json" };
@@ -30,7 +30,9 @@ Deno.serve(async (req) => {
       if (!email) return json({ paid: false });
       const l = await sb("click_links?select=click_id&limit=200&email=eq." + encodeURIComponent(email));
       const rows = l.ok ? await l.json() : [];
-      return json({ paid: await anyPaid(rows.map((x: { click_id: string }) => x.click_id)), email });
+      const c = await sb("cancel_requests?select=click_id&limit=1&email=eq." + encodeURIComponent(email));
+      const cancelled = c.ok && ((await c.json()) as unknown[]).length > 0;
+      return json({ paid: await anyPaid(rows.map((x: { click_id: string }) => x.click_id)), cancelled, email });
     }
     if (!CLICK_ID_RE.test(id)) return json({ error: "bad click_id" }, 400);
     return json({ paid: await anyPaid([id]) });

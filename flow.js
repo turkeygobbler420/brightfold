@@ -45,7 +45,12 @@
     cancelRequested(){return S.local().cancelAt||null;},
     async requestCancel(){
       const d=S.local();d.cancelAt=new Date().toISOString();S.saveLocal(d);
-      const id=window.bfTrack&&window.bfTrack.clickId,emails=[...new Set([...(d.paidEmails||[]),...(d.linked||[]),(S.user()||{}).email].filter(e=>e&&e!==DEMO.email).map(e=>String(e).toLowerCase()))];
+      const a=window.BF_AUTH,sb=a&&a.sb&&a.sb(),u=S.user();
+      if(sb&&u&&u.email&&u.email!==DEMO.email){ /* signed in: the server resolves the account's payments from the token */
+        try{const {data}=await sb.auth.getSession();const tok=data&&data.session&&data.session.access_token;
+          if(tok){const r=await fetch(FN+'cancel',{method:'POST',headers:{Authorization:'Bearer '+tok},cache:'no-store'});if(r.ok)return true;}}catch(e){}
+      }
+      const id=window.bfTrack&&window.bfTrack.clickId,emails=[...new Set([...(d.paidEmails||[]),...(d.linked||[]),(u||{}).email].filter(e=>e&&e!==DEMO.email).map(e=>String(e).toLowerCase()))];
       let ok=!!id&&emails.length>0;
       for(const email of emails){try{const r=await fetch(FN+'cancel',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});if(!r.ok)ok=false;}catch(e){ok=false;}}
       return ok;
@@ -74,6 +79,7 @@
         const {data}=await sb.auth.getSession();const tok=data&&data.session&&data.session.access_token;if(!tok)return;
         const r=await fetch(STATUS_API,{headers:{Authorization:'Bearer '+tok},cache:'no-store'});if(!r.ok)return;
         const j=await r.json();if(j&&j.paid&&!S.isPaid())S.unlock();
+        if(j&&j.cancelled&&!S.local().cancelAt){const d=S.local();d.cancelAt=new Date().toISOString();S.saveLocal(d);window.dispatchEvent(new Event('bf:paid'));}
       }catch(e){}
     }
   };
