@@ -43,7 +43,7 @@ GitHub Pages (`turkeygobbler420.github.io/brightfold`) serves the static site. I
 - Meta pixel goes in `sub15` (not sub3). Set `PIXEL_ID` in offers.js.
 - Offer wording ($1 trial / "not charged" on the checkout vs our modal) must match the real offer.
 - Offer restrictions: 26199/26200 exclude email, SMS, push, exit, proxy/VPN traffic; 26114 excludes email.
-- Remove the TEMP DEV skip button in flow.js before launch.
+- (done) TEMP DEV skip button removed.
 - Account sync: signed-in users call `status` with their Bearer token; it returns `{paid}` if any click linked to their email was paid. Paid state in the browser is stored per email (`paidEmails`).
 - Cancelling renewals happens at the payment provider; the in-app Cancel only explains this (and clears demo accounts).
 - Unsubscribe: Settings > Emails posts to the `unsubscribe` function (table `unsubscribes`). Deploy it with `supabase functions deploy unsubscribe --no-verify-jwt`. For email links set secret `UNSUB_SECRET` and use `.../functions/v1/unsubscribe?email=<email>&t=<hex HMAC-SHA256 of lowercase email>`. Any mailer must skip addresses in `unsubscribes`.
