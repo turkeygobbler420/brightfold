@@ -131,9 +131,35 @@
      ${ds.slice(0,3).map((x,i)=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${Math.max(8,Math.round(x.f*100))}%"></i></div></div>`).join('')}
      <p class="gl-n">Based on your own answers. Exact scores and the full breakdown are in the report.</p></section>`;
   }
-  /* Payment screen: opens the processor's real checkout in a pop-out window (so it renders exactly as the processor serves it);
-     if the browser blocks the pop-out, the current tab goes to the checkout instead. */
+  /* Payment screen. With a Whop plan set (offers.js WHOP_PLAN) the card form is embedded on this page via Whop Elements,
+     the same method as tradingascension. Otherwise the affiliate offer opens in a pop-out window (or this tab if blocked). */
+  function whopEmbed(plan){
+    let m=document.getElementById('bfEmbed');if(m)m.remove();
+    m=document.createElement('div');m.id='bfEmbed';
+    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto';
+    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:14px;width:min(520px,100%);max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #e5e7eb;font:600 15px system-ui,sans-serif;color:#111">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer">&times;</button></div>'+
+      '<div id="bfWhopMount" style="min-height:22rem;padding:12px 16px"><p style="text-align:center;color:#555;font:14px system-ui,sans-serif;padding:2rem 0">Loading secure payment…</p></div>'+
+      '<p style="text-align:center;font:12px system-ui,sans-serif;color:#777;margin:0 0 14px">Secure payment processed by Whop.</p></div>';
+    document.body.appendChild(m);
+    const x=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
+    document.getElementById('bfEmbedX').onclick=x;
+    new Promise((res,rej)=>{
+      if(window.WhopElements)return res();
+      const sc=document.createElement('script');sc.src='https://cdn.whop.com/elements/amber/elements.js';sc.setAttribute('data-whop-elements','');
+      sc.onload=()=>window.WhopElements?res():rej();sc.onerror=rej;document.head.appendChild(sc);
+    }).then(()=>{
+      const mount=document.getElementById('bfWhopMount');mount.innerHTML='';
+      const c=window.WhopElements().checkout.create({
+        plan:plan,metadata:{click_id:window.bfTrack.clickId},returnUrl:location.origin+location.pathname+'?checkout=return',
+        onComplete:r=>{if(r&&r.result==='payment'){x();S.unlock();st.done=false;showResults();}}
+      });
+      c.create('checkout').mount(mount);
+    }).catch(()=>{x();alert('Could not load the secure payment form. Please try again.');});
+  }
   function embedCheckout(url){
+    const plan=window.bfTrack&&window.bfTrack.whopPlan;
+    if(plan){whopEmbed(plan);return;}
     const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
     const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
     if(!win){location.href=url;return;}
