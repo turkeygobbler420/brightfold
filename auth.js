@@ -48,7 +48,7 @@
   }
 
   const FORMS={
-    login:()=>`<h2>Log in</h2><p class="auth-sub">Welcome back to Neurometric.</p>
+    login:()=>`<h2>Log in</h2><p class="auth-sub">Welcome back to Mindmetric.</p>
       <form novalidate><label>Email<input name="email" type="email" autocomplete="email" required></label>
       <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
       <p class="auth-msg" role="status"></p><button class="btn btn-primary" type="submit">Log in</button></form>

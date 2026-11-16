@@ -186,7 +186,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   const P=window.BF_PCT;if(!P)return;
   document.querySelectorAll('[data-pct]').forEach(e=>{
     const k=e.dataset.pct;
-    e.textContent=k==='ahead'?P.ahead+'%':k==='top'?'Top '+P.top+'%':k==='ctop'?'Top '+P.countryTop+'%':'You scored higher than '+P.ahead+'% of Neurometric test takers.';
+    e.textContent=k==='ahead'?P.ahead+'%':k==='top'?'Top '+P.top+'%':k==='ctop'?'Top '+P.countryTop+'%':'You scored higher than '+P.ahead+'% of Mindmetric test takers.';
   });
   document.querySelectorAll('[data-pct-ring]').forEach(c=>{const C=2*Math.PI*20;c.setAttribute('stroke-dasharray',(P.ahead/100*C).toFixed(1)+' '+C.toFixed(1));});
 })();

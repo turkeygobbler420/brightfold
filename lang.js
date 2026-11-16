@@ -18,7 +18,7 @@ var T={
  terms:{en:'Terms of Service',es:'Términos del servicio',pt:'Termos de serviço',fr:'Conditions d’utilisation',de:'Nutzungsbedingungen',it:'Termini di servizio',tr:'Hizmet Şartları',pl:'Regulamin'},
  cookie:{en:'Cookie Policy',es:'Política de cookies',pt:'Política de cookies',fr:'Politique de cookies',de:'Cookie-Richtlinie',it:'Cookie Policy',tr:'Çerez Politikası',pl:'Polityka cookies'},
  refund:{en:'Refund Policy',es:'Política de reembolso',pt:'Política de reembolso',fr:'Politique de remboursement',de:'Rückerstattung',it:'Politica di rimborso',tr:'İade Politikası',pl:'Polityka zwrotów'},
- copy:{en:'Copyright © 2024-2026 Neurometric.',es:'Copyright © 2024-2026 Neurometric.',pt:'Copyright © 2024-2026 Neurometric.',fr:'Copyright © 2024-2026 Neurometric.',de:'Copyright © 2024-2026 Neurometric.',it:'Copyright © 2024-2026 Neurometric.',tr:'Telif Hakkı © 2024-2026 Neurometric.',pl:'Prawa autorskie © 2024-2026 Neurometric.'}
+ copy:{en:'Copyright © 2024-2026 Mindmetric.',es:'Copyright © 2024-2026 Mindmetric.',pt:'Copyright © 2024-2026 Mindmetric.',fr:'Copyright © 2024-2026 Mindmetric.',de:'Copyright © 2024-2026 Mindmetric.',it:'Copyright © 2024-2026 Mindmetric.',tr:'Telif Hakkı © 2024-2026 Mindmetric.',pl:'Prawa autorskie © 2024-2026 Mindmetric.'}
 };
 var MH={
  en:function(n,s){return 'Press Start. After a 3-2-1 countdown, '+n+' digits will appear one at a time, '+s+' seconds in total. You see them once.'},

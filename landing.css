@@ -256,7 +256,7 @@ html[data-motion="off"] #landing *{animation:none!important}
 @media (hover:hover){#landing .foot nav a:hover{color:var(--ink);text-decoration:underline}}
 @media (max-width:720px){#landing footer.closing .foot{grid-template-columns:repeat(2,minmax(0,1fr))}#landing .foot-brand{grid-column:1/-1}}
 
-/* Neurometric-style professional cards: white surface, 1px border, soft layered shadow, framed certificate, pill eyebrows */
+/* Mindmetric-style professional cards: white surface, 1px border, soft layered shadow, framed certificate, pill eyebrows */
 #landing{--card-shadow:0 1px 2px rgba(18,18,18,.05),0 12px 28px -14px rgba(18,18,18,.22)}
 #landing .sec-head>.label,#landing .split-txt>.label{display:inline-flex;align-items:center;gap:8px;background:#eef0f1;border-radius:999px;padding:5px 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);width:fit-content}
 #landing .panel,#landing .revs article,#landing .courses li,#landing .tile,#landing .snap{background:#fff;border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--card-shadow)}
@@ -276,7 +276,7 @@ html[data-motion="off"] #landing *{animation:none!important}
 #landing .faq{border:0;display:grid;gap:12px}
 #landing .faq>div{border:1px solid var(--line);border-radius:var(--r-m);padding:20px 24px;background:#fff;box-shadow:var(--card-shadow)}
 
-/* step cards: Neurometric-style product mockups */
+/* step cards: Mindmetric-style product mockups */
 #landing .art.card-art{background:#fff;border:1px solid var(--line);box-shadow:var(--card-shadow);padding:22px;place-items:stretch;align-content:center;min-height:0}
 #landing .card-art .board{width:100%;max-width:240px;margin:0 auto}
 #landing .sc{display:grid;gap:14px;min-width:0}

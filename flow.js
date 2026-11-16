@@ -6,7 +6,7 @@
   const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
 
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
-  const DEMO={email:'demo@neurometric.app',name:'Demo user'};
+  const DEMO={email:'demo@mindmetric.info',name:'Demo user'};
   const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API=FN+'link',STATUS_API=FN+'status';
   const S=window.BF_STORE={
     demoUser(){return ls.get('bf_demo',null);},
@@ -154,7 +154,7 @@
       <p class="em-sub">Enter your email to unlock your complete analysis and personalised cognitive profile.</p>
       <form id="emF" novalidate><div class="em-f"><label for="emIn">Email</label><input id="emIn" type="email" autocomplete="email" inputmode="email" value="${E(pre)}" required></div>
       <p class="em-err" id="emErr" role="alert"></p>
-      <p class="em-fine">Neurometric keeps your personal information confidential. By clicking “Continue” you acknowledge that you have read, understood and accepted our terms and privacy policy.</p>
+      <p class="em-fine">Mindmetric keeps your personal information confidential. By clicking “Continue” you acknowledge that you have read, understood and accepted our terms and privacy policy.</p>
       <button class="btn btn-primary em-go" type="submit">Continue</button></form></div>`;
     const inp=$('emIn');inp.focus();
     $('emF').onsubmit=async e=>{e.preventDefault();const v=inp.value.trim();
