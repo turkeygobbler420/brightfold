@@ -11,7 +11,7 @@
     // Network tracking links. sub8 = our click_id (returned in the postback as {sub8}), sub15 = Meta pixel ID.
     // Never use sub1 (tracker overwrites it) or sub2-sub7 (email/first/last name/street/ZIP/city prefill fields).
     OFFERS: {
-      '25388': { name: 'US DailyOffer Shop Pay Only Shipping Prefill (CC), 24 USD CPA', base: 'https://vadvpl.com/clickout/25388/361471/' },
+      '25388': { name: 'US DailyOffer Shop Pay Only Shipping Prefill (CC), 24 USD CPA', base: 'https://vadvpl.com/clickout/25388/361471/', unsubscribe: 'https://unsubscribe.mailsolvo.com/unsubscribe/34837f666bc711f18cb502042bbd4231' },
       '26114': { name: 'US Green Checkout VOD (CC), 24 USD CPA',                        base: 'https://avdiupt.com/clickout/26114/361472/' },
       '26199': { name: 'GLO WW Green Checkout VOD (CC), 80% PPS',                       base: 'https://opniivsac.com/clickout/26199/361473/' },
       '26200': { name: 'GLO WW Digital Checkout (CC), 80% PPS',                         base: 'https://apritrun.com/clickout/26200/361474/' }
@@ -48,6 +48,8 @@
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
     cancelUrl: CONFIG.CANCEL_URL,
+    // Network-provided unsubscribe page (offer 25388 allows email traffic and requires it). Null when the offer has none.
+    unsubscribeUrl: function (offerKey) { var o = CONFIG.OFFERS[offerKey || CONFIG.ACTIVE_OFFER] || CONFIG.OFFERS['25388']; return (o && o.unsubscribe) || CONFIG.OFFERS['25388'].unsubscribe || null; },
     event: function (name, data) { if (window.fbq) fbq('trackCustom', name, data || {}); },
     // Builds <OFFER_BASE>?sub8=<click_id>&sub15=<pixel_id> (sub1 is overwritten by the tracker; sub2-sub7 are checkout prefill fields). Only the click ID and pixel ID are sent, no personal data.
     offerUrl: function (offerKey) {
