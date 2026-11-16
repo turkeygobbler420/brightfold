@@ -428,7 +428,7 @@
     if(h==='unsub'||h==='resub'){const out=h==='unsub';S().setOptOut(out).then(ok=>{toast=ok?(out?'You are unsubscribed from emails.':'You are subscribed to emails again.'):'Saved on this device, but we could not reach the server. Please try again.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},3000);});return;}
     if(h==='doCancel'){const d=S().local();box=null;
       if(S().mode()==='demo'){d.paid=false;delete d.since;S().saveLocal(d);toast='Demo membership removed.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},3000);return;}
-      const cu=window.bfTrack&&bfTrack.cancelUrl;if(cu)window.open(cu,'_blank','noopener');
+      const cu=window.bfTrack&&(bfTrack.cancelUrl||bfTrack.unsubscribeUrl());if(cu)window.open(cu,'_blank','noopener');
       S().requestCancel().then(ok=>{toast=ok?'Cancellation requested. Use the cancel link in your payment receipt email to stop billing right away.':'We could not send your request. Please try again.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},6000);});return;}
     if(h==='retake'){close();const b=document.querySelector('.js-start');if(b)b.click();return;}
     if(h==='cert'){close();location.hash='#cert';const b=document.querySelector('[data-cert],.js-cert');if(b)b.click();return;}
