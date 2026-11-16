@@ -22,6 +22,12 @@ Nothing here is live until this branch is merged to `main` and deployed.
 | 26199 | GLO WW Green Checkout VOD (CC) | 80% PPS (no email/SMS/push/VPN) |
 | 26200 | GLO WW Digital Checkout (CC) | 80% PPS (no email/SMS/push/VPN) |
 
+## Hosting
+- GitHub Pages (`turkeygobbler420.github.io/brightfold`) serves the static site and `tracking.js` only.
+  It cannot run `api/postback.js`, so the network's postback URL must point at the Vercel deployment.
+- `.github/workflows/vercel-deploy.yml` deploys `main` to Vercel once the `VERCEL_TOKEN` repo secret is added.
+  (Vercel Hobby allows 100 deployments/day; a deploy that hits the limit can be re-run via Actions -> Run workflow.)
+
 ## Open items
 - Meta pixel ID: network said "sub3", but every offer lists sub3 = first_name and sub15 = FB_PIXEL. Using sub15; confirm with the network.
 - Set `POSTBACK_TOKEN` (and optional Meta env vars) in Vercel, and add `&token=` to the postback URL.
