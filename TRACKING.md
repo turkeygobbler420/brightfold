@@ -6,7 +6,7 @@ Nothing here is live until this branch is merged to `main` and deployed.
 1. `tracking.js` creates a `click_id` per visitor (localStorage).
 2. The results gate button ("Show my results") redirects to the active offer's tracking link
    with `sub1=<click_id>` (and `sub15=<meta pixel id>` once `PIXEL_ID` is set).
-   Redirect is OFF by default. Testers enable it with `?checkout=1`, or set `ENABLE_REDIRECT: true`.
+   Redirect is ON (`ENABLE_REDIRECT: true`). Set it to false to go back to the mock paywall.
 3. When the offer converts, the network calls our postback:
 
        https://<domain>/api/postback?click_id={sub1}&payout={payout_amount}&token=<POSTBACK_TOKEN>

@@ -226,7 +226,7 @@ function finish(){
   const answered=ITEMS.filter(it=>st.ans[it.idx]!==null&&st.ans[it.idx]!==undefined).length;
   const peer=(src,nm,iq)=>`<div class="peer"><span class="pl">${iq}</span><div class="pc"><img src="${src}" alt="" loading="lazy"></div><span class="pn">${nm}</span></div>`;
   $('tMain').innerHTML=`<div class="gate" role="region" aria-label="Unlock your results">
-   <span class="mockbar">Mock paywall, no payment is taken</span>
+   ${window.bfTrack&&window.bfTrack.offerUrl()?'':'<span class="mockbar">Mock paywall, no payment is taken</span>'}
    <h2>Your results are ready</h2>
    <div class="g-grid">
     <div class="g-l"><div class="g-card">

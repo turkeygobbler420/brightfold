@@ -6,7 +6,7 @@
     ACTIVE_OFFER: '26199', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
-    ENABLE_REDIRECT: false,
+    ENABLE_REDIRECT: true,
     // Network tracking links. sub1 = our click_id (returned in the postback), sub15 = Meta pixel ID.
     OFFERS: {
       '25388': { name: 'US DailyOffer Shop Pay Only Shipping Prefill (CC), 24 USD CPA', base: 'https://vadvpl.com/clickout/25388/361471/' },
