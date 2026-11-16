@@ -123,7 +123,7 @@
       <section class="hm-sec"><div class="hm-head"><h2>Recommended for you</h2><button type="button" class="link-btn" data-tab="courses">All courses</button></div><div class="hm-cards">${rec.map(courseCard).join('')}</div></section>
       <div class="hm-grid">${stats}${cert}</div>${hist}${paid()?'':upsell()}`;
   }
-  function upsell(){return `<section class="hm-card hm-up"><div><div class="hm-k">Membership</div><h3>Unlock all ${COURSES.length} courses and ${TOT_EX} exercises</h3><p class="hm-note">${TOT_L} lessons, about ${TOT_H} hours of learning, retests and progress tracking. 7-day trial for $1.00, then $29.99 every 28 days until you cancel.</p></div><button class="btn btn-primary" type="button" data-h="trial">Start 7-day trial</button></section>`;}
+  function upsell(){return `<section class="hm-card hm-up"><div><div class="hm-k">Membership</div><h3>Unlock all ${COURSES.length} courses and ${TOT_EX} exercises</h3><p class="hm-note">${TOT_L} lessons, about ${TOT_H} hours of learning, retests and progress tracking. $1.00 for the first 7 days, then $29.99 every 28 days until you cancel.</p></div><button class="btn btn-primary" type="button" data-h="trial">Get full access</button></section>`;}
 
   /* ---------- courses ---------- */
   let cf='all';
@@ -358,10 +358,10 @@
   let box=null;
   function trialBox(){box='trial';draw();}
   function modal(){
-    if(box==='trial')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Membership"><h3>7-day trial for $1.00</h3>
+    if(box==='trial')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Membership"><h3>Full access: $1.00 for the first 7 days</h3>
       <p>Full access to ${COURSES.length} courses (${TOT_L} lessons), ${TOT_EX} exercises, retests and progress tracking.</p>
-      <p><b>After the trial your plan renews at $29.99 every 28 days</b> until you cancel. Cancel any time in Settings, and you keep access until the paid period ends.</p>
-      <div class="hm-row"><button class="btn btn-primary" type="button" data-h="startTrial">Start trial</button><button class="btn btn-line" type="button" data-h="closebox">Not now</button></div></div></div>`;
+      <p><b>After the first 7 days your plan renews at $29.99 every 28 days</b> until you cancel. Cancel any time in Settings, and you keep access until the paid period ends.</p>
+      <div class="hm-row"><button class="btn btn-primary" type="button" data-h="startTrial">Continue</button><button class="btn btn-line" type="button" data-h="closebox">Not now</button></div></div></div>`;
     if(box==='cancel')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Cancel membership"><h3>Cancel your membership?</h3><p>You will not be charged again. You keep access until the end of the period you have paid for.</p>
       <div class="hm-row"><button class="btn btn-primary" type="button" data-h="doCancel">Cancel membership</button><button class="btn btn-line" type="button" data-h="closebox">Keep it</button></div></div></div>`;
     return '';
@@ -374,8 +374,8 @@
         <dl class="hm-dl"><dt>Name</dt><dd>${E(x.name||'Not set')}</dd><dt>Email</dt><dd>${E(x.email)}</dd><dt>Sign-in</dt><dd>${mode==='demo'?'Demo account, stored on this device':'Email and password'}</dd></dl>
         <div class="hm-row">${mode==='live'?'<button class="btn btn-line btn-sm" type="button" data-h="manage">Change name, email or password</button>':'<button class="btn btn-line btn-sm" type="button" data-h="real">Create a real account</button>'}</div></section>
         <section class="hm-card"><div class="hm-k">Membership</div>
-        ${pd?`<p class="hm-status on">Active</p><p class="hm-note">Full access to every course and exercise.${renew?` Trial ends ${E(renew.toLocaleDateString((window.BF_LOC?BF_LOC():'en-GB'),{day:'numeric',month:'long'}))}, then $29.99 every 28 days until cancelled.`:''}</p><div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="cancel">Cancel membership</button></div>`
-        :`<p class="hm-status">Free</p><p class="hm-note">Your results and the first lessons are free. A membership unlocks everything: 7-day trial for $1.00, then $29.99 every 28 days until you cancel.</p><div class="hm-row"><button class="btn btn-primary btn-sm" type="button" data-h="trial">Start 7-day trial</button></div>`}</section></div>
+        ${pd?`<p class="hm-status on">Active</p><p class="hm-note">Full access to every course and exercise.${renew?` First period ends ${E(renew.toLocaleDateString((window.BF_LOC?BF_LOC():'en-GB'),{day:'numeric',month:'long'}))}, then $29.99 every 28 days until cancelled.`:''}</p><div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="cancel">Cancel membership</button></div>`
+        :`<p class="hm-status">Free</p><p class="hm-note">Your results and the first lessons are free. A membership unlocks everything: $1.00 for the first 7 days, then $29.99 every 28 days until you cancel.</p><div class="hm-row"><button class="btn btn-primary btn-sm" type="button" data-h="trial">Get full access</button></div>`}</section></div>
       <section class="hm-card"><div class="hm-k">Your data</div><p class="hm-note">${mode==='live'?'Results and progress are saved to your account.':'Results and progress are saved in this browser.'} You can delete your account and everything in it at any time.</p>
         <div class="hm-row">${mode==='live'?'<button class="btn btn-line btn-sm" type="button" data-h="manage">Delete account</button>':''}<button class="btn btn-line btn-sm" type="button" data-h="logout">${mode==='live'?'Log out':'Leave demo'}</button></div></section>`;
   }

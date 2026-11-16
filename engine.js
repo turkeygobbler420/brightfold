@@ -288,7 +288,7 @@ function correctText(it){
 }
 
 /* MOCK paywall (proof of concept). No payment is collected; the button simply reveals the results. */
-const PLANS={trial:['7-day trial','$0.99','Then $4.99 per week until you cancel'],month:['1 month','$9.99','Renews monthly at $9.99 until you cancel'],year:['12 months','$29.99','Renews yearly at $29.99 until you cancel']};
+const PLANS={trial:['IQ score report','$0.99','Then $4.99 per week until you cancel'],month:['1 month','$9.99','Renews monthly at $9.99 until you cancel'],year:['12 months','$29.99','Renews yearly at $29.99 until you cancel']};
 function finish(){
   if(st.done&&st.finished)return;st.done=true;st.view=null;dock();clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   ($('finishBtn')||{}).hidden=true;pips(true);$('tCount').textContent='Almost done';

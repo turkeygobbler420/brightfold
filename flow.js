@@ -134,33 +134,49 @@
   /* Payment screen: Whop-style on-page checkout modal (order summary + secure pay button).
      The provider's page sends X-Frame-Options: DENY so it cannot be framed; the pay button opens it in a
      pop-out window sized like a card form (falls back to this tab if pop-ups are blocked). */
-  /* Polls the server (filled by the network's postback) and unlocks the results once the click is marked paid.
-     Closing the pop-out never unlocks; polling continues 45s after it closes, 15 min max. */
+  /* Polls the status function (filled by the network postback) and unlocks the results once the click is paid.
+     Adaptive schedule with jitter, error backoff, instant re-check when the tab regains focus, 30 min cap,
+     and the pending state survives a reload / same-tab checkout via localStorage. */
   const STATUS_API='https://llyanlleeynuznywttjg.supabase.co/functions/v1/status';
-  let payPoll=null;
-  function watchPayment(win,msg){
-    clearInterval(payPoll);
+  const PEND_KEY='bf_pay_pending',PEND_MAX=30*60e3;
+  let payT=null,payRun=0,payWin=null,payChk=null;
+  const pend={get(){try{const t=+localStorage.getItem(PEND_KEY);return t&&Date.now()-t<PEND_MAX?t:0;}catch(e){return 0;}},
+    set(){try{localStorage.setItem(PEND_KEY,String(Date.now()));}catch(e){}},
+    clear(){try{localStorage.removeItem(PEND_KEY);}catch(e){}}};
+  const payMsg=h=>{const m=document.getElementById('bfPayMsg');if(m)m.innerHTML=h;};
+  function stopPay(){payRun++;clearTimeout(payT);payT=null;
+    if(payChk){document.removeEventListener('visibilitychange',payChk);window.removeEventListener('focus',payChk);window.removeEventListener('pageshow',payChk);payChk=null;}}
+  function watchPayment(win){
+    stopPay();
     const id=window.bfTrack&&window.bfTrack.clickId;if(!id)return;
-    const t0=Date.now();let closedAt=0,busy=false;
-    payPoll=setInterval(async()=>{
-      if(busy)return;
-      let closed=false;try{closed=!win||win.closed;}catch(e){}
-      if(closed&&!closedAt)closedAt=Date.now();
-      if(Date.now()-t0>15*60e3||(closedAt&&Date.now()-closedAt>45e3)){clearInterval(payPoll);
-        const m=document.getElementById('bfPayMsg');if(m)m.textContent='We have not received your payment yet. If you completed it, this page will unlock shortly.';return;}
+    payWin=win||null;const run=++payRun,t0=pend.get()||Date.now();pend.set();
+    let fails=0,busy=false;
+    const delay=()=>{if(fails)return Math.min(30e3,3e3*Math.pow(2,fails));
+      const e=Date.now()-t0,b=e<30e3?3e3:e<120e3?5e3:e<600e3?10e3:20e3;return b*(0.8+Math.random()*0.4);};
+    const giveUp=()=>{stopPay();
+      payMsg('We have not received your payment confirmation yet. <button id="bfRecheck" type="button" style="border:0;background:none;color:#4f46e5;text-decoration:underline;cursor:pointer;font:inherit;padding:0">Check again</button>');
+      const r=document.getElementById('bfRecheck');if(r)r.onclick=()=>{pend.set();watchPayment(payWin);};};
+    const unlock=()=>{stopPay();pend.clear();clearInterval(sellT);clearInterval(offerT);
+      try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
+      const em=document.getElementById('bfEmbed');if(em)em.remove();
+      S.unlock();st.done=false;showResults();};
+    const check=async()=>{
+      if(run!==payRun||busy)return;
+      if(Date.now()-t0>PEND_MAX){pend.clear();return giveUp();}
       busy=true;
       try{
         const r=await fetch(STATUS_API+'?click_id='+encodeURIComponent(id),{cache:'no-store'});
-        const j=r.ok?await r.json():null;
-        if(j&&j.paid){
-          clearInterval(payPoll);clearInterval(sellT);clearInterval(offerT);
-          try{win&&!win.closed&&win.close();}catch(e){}
-          const em=document.getElementById('bfEmbed');if(em)em.remove();
-          S.unlock();st.done=false;showResults();
-        }
-      }catch(e){}
-      busy=false;
-    },3000);
+        if(!r.ok)throw new Error('status '+r.status);
+        const j=await r.json();fails=0;
+        if(run!==payRun)return;
+        if(j&&j.paid)return unlock();
+      }catch(e){fails++;console.warn('bf status check failed',e&&e.message);}
+      finally{busy=false;}
+      if(run===payRun){clearTimeout(payT);payT=setTimeout(check,delay());}
+    };
+    payChk=()=>{if(document.visibilityState!=='hidden'&&run===payRun){clearTimeout(payT);check();}};
+    document.addEventListener('visibilitychange',payChk);window.addEventListener('focus',payChk);window.addEventListener('pageshow',payChk);
+    payT=setTimeout(check,1500);
   }
   function embedCheckout(url){
     let m=document.getElementById('bfEmbed');if(m)m.remove();
@@ -170,7 +186,7 @@
       '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
       '<div style="padding:18px">'+
         '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.99</b></div>'+
-        '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99/week after the trial. Cancel anytime.</div>'+
+        '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99 every week until you cancel. Cancel anytime.</div>'+
         '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.99</span></div>'+
         '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
         '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
@@ -182,11 +198,12 @@
     m.addEventListener('click',e=>{if(e.target===m)close();});
     document.getElementById('bfPay').onclick=()=>{
       const msg=document.getElementById('bfPayMsg');
+      const inApp=/Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(navigator.userAgent||'');
       const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
-      const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
-      if(!win){location.href=url;return;}
+      const win=inApp?null:window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
+      if(!win){pend.set();location.href=url;return;}
       try{win.focus();}catch(e){}
-      watchPayment(win,msg);
+      watchPayment(win);
       msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window did not open?</a>';
     };
   }
@@ -194,40 +211,36 @@
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);
     const peer=(src,nm,iq)=>{const sc=(iq-100)/60;return `<div class="peer"><span class="pl">IQ ${iq}</span><div class="pc" style="aspect-ratio:${(3/(4*sc)).toFixed(3)}"><img src="${src}" alt="" loading="lazy"></div><span class="pn">${nm}</span></div>`;};
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
-    let left=Math.max(60,Math.min(600,Math.round(ls.get('bf_offer',600))));
     $('tMain').innerHTML=`<div class="co">
-      <div class="co-tick" id="coTick" aria-live="off">${sold(0)}</div>
       <div class="co-user"><span class="av">${E((st.email||'?')[0].toUpperCase())}</span><span>${E(st.email||'')}</span></div>
-      <p class="co-offer">IQ score only <b>$0.99</b>! <span>Offer ends in</span> <i id="coT">10:00</i></p>
+      <p class="co-offer">IQ score report: <b>$0.99</b></p>
       <h2 class="co-h">Congratulations! Your score is ready!</h2>
       ${glimpse()}
       <div class="gate"><div class="g-grid">
        <div class="g-l"><div class="g-card">
         <div class="peers">${peer('figs/einstein.webp','Albert Einstein',160)}<div class="peer you"><span class="pl">You</span><div class="pc" style="aspect-ratio:${(3/(4*1.25)).toFixed(3)}"><b>???</b><svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="34" r="19"/><path d="M8 110c0-30 14-46 42-46s42 16 42 46z"/></svg></div><span class="pn">Your score</span></div>${peer('figs/newton.webp','Isaac Newton',190)}</div>
-        <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b id="coN">18,397</b><span>Tests taken today</span></div><div><b>6</b><span>Skill areas measured</span></div></div>
+        <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>40</b><span>Questions answered</span></div><div><b>6</b><span>Skill areas measured</span></div></div>
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.99</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
-        <div class="promo"><span class="tg"></span><div><b>Promo code BRIGHT-85 applied</b><span>You save 85%</span></div><i>−85%</i></div>
-        <div class="co-pay"><div class="total"><span>Total due:</span><b><s>$6.60</s> $0.99</b></div>
+        <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.99</b></div>
          <button class="btn btn-primary co-b" data-m="express" type="button">Express checkout</button>
          <button class="btn btn-line co-b" data-m="card" type="button">Credit or debit card</button>
-         <p class="co-demo" id="coDemo">Demo checkout. No payment is taken and no card details are collected.</p></div>
-        <p class="fine">Get a 7-day trial for just $0.99. <b>After the trial, we’ll charge $4.99 every week until you cancel.</b></p>
+         <p class="co-demo" id="coDemo">Demo mode: no payment is taken.</p></div>
+        <p class="fine">You pay <b>$0.99 today</b> for your IQ score report. <b>Your plan then renews at $4.99 every week until you cancel.</b> Cancel anytime, and you keep access until the end of the period you have paid for.</p>
        </div></div></div></div>`;
-    let k=0;sellT=setInterval(()=>{const t=$('coTick');if(!t)return clearInterval(sellT);t.classList.remove('in');void t.offsetWidth;t.innerHTML=sold(++k);t.classList.add('in');},5200);
-    const paint=()=>{const e=$('coT');if(!e)return clearInterval(offerT);e.textContent=fmt(left);if(left>0){left--;ls.set('bf_offer',left);}};
-    paint();offerT=setInterval(paint,1000);
-    let n=18397;const nt=setInterval(()=>{const e=$('coN');if(!e)return clearInterval(nt);n+=Math.floor(rnd(1,4));e.textContent=n.toLocaleString('en-US');},3500);
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
       if(offer){window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});embedCheckout(offer);return;}
       document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
-      setTimeout(()=>{clearInterval(sellT);clearInterval(offerT);clearInterval(nt);S.unlock();st.done=false;showResults();},1300);
+      setTimeout(()=>{S.unlock();st.done=false;showResults();},1300);
     });
     window.scrollTo(0,0);
   }
+
+  /* resume polling after a reload or same-tab checkout */
+  if(pend.get())setTimeout(()=>{try{watchPayment(null);}catch(e){console.warn(e);}},800);
 
   /* take over the end of the test */
   window.guessScreen=analyze;window.reviewScreen=analyze;
