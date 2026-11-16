@@ -41,7 +41,7 @@ GitHub Pages (`turkeygobbler420.github.io/brightfold`) serves the static site. I
 ## Open items
 - Ask the network to confirm `{sub8}` is a valid postback macro and to run a test conversion.
 - Meta pixel goes in `sub15` (not sub3). Set `PIXEL_ID` in offers.js.
-- Offer wording ($1 trial / "not charged" on the checkout vs our modal) must match the real offer.
+- Offer terms confirmed with Boyd: $0 today, then $4.99/week. Site copy matches.
 - Offer restrictions: 26199/26200 exclude email, SMS, push, exit, proxy/VPN traffic; 26114 excludes email.
 - (done) TEMP DEV skip button removed.
 - Account sync: signed-in users call `status` with their Bearer token; it returns `{paid}` if any click linked to their email was paid. Paid state in the browser is stored per email (`paidEmails`).

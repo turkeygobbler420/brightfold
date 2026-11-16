@@ -233,9 +233,9 @@
     m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
       '<div style="padding:18px">'+
-        '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.99</b></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.00</b></div>'+
         '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99 every week until you cancel. Cancel anytime.</div>'+
-        '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.99</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.00</span></div>'+
         '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
         '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
         '<p style="text-align:center;font-size:12px;color:#888;margin:8px 0 0">&#128274; Encrypted, secure payment</p>'+
@@ -261,7 +261,7 @@
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
     $('tMain').innerHTML=`<div class="co">
       <div class="co-user"><span class="av">${E((st.email||'?')[0].toUpperCase())}</span><span>${E(st.email||'')}</span></div>
-      <p class="co-offer">IQ score report: <b>$0.99</b></p>
+      <p class="co-offer">IQ score report: <b>$0.00 today</b></p>
       <h2 class="co-h">Congratulations! Your score is ready!</h2>
       ${glimpse()}
       <div class="gate"><div class="g-grid">
@@ -270,17 +270,17 @@
         <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>40</b><span>Questions answered</span></div><div><b>6</b><span>Skill areas measured</span></div></div>
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
-        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.99</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
-        <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.99</b></div>
+        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.00</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
+        <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.00</b></div>
          <button class="btn btn-primary co-b" data-m="express" type="button">Express checkout</button>
          <button class="btn btn-line co-b" data-m="card" type="button">Credit or debit card</button>
          <p class="co-demo" id="coDemo">Demo mode: no payment is taken.</p></div>
-        <p class="fine">You pay <b>$0.99 today</b> for your IQ score report. <b>Your plan then renews at $4.99 every week until you cancel.</b> Cancel anytime, and you keep access until the end of the period you have paid for.</p>
+        <p class="fine">You pay <b>$0.00 today</b> for your IQ score report. <b>Your plan then renews at $4.99 every week until you cancel.</b> Cancel anytime, and you keep access until the end of the period you have paid for.</p>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
-      if(offer){window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});embedCheckout(offer);return;}
+      if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer);return;}
       document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
       setTimeout(()=>{S.unlock();st.done=false;showResults();},1300);
     });
@@ -288,7 +288,7 @@
   }
 
   /* membership checkout from the account area (same flow, no quiz): returns false when no real checkout is configured */
-  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});embedCheckout(o);return true;}};
+  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(o);return true;}};
   const syncSoon=()=>setTimeout(()=>S.syncMembership(),0);
   window.addEventListener('load',syncSoon);
 

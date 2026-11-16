@@ -123,7 +123,7 @@
       <section class="hm-sec"><div class="hm-head"><h2>Recommended for you</h2><button type="button" class="link-btn" data-tab="courses">All courses</button></div><div class="hm-cards">${rec.map(courseCard).join('')}</div></section>
       <div class="hm-grid">${stats}${cert}</div>${hist}${paid()?'':upsell()}`;
   }
-  function upsell(){return `<section class="hm-card hm-up"><div><div class="hm-k">Membership</div><h3>Unlock all ${COURSES.length} courses and ${TOT_EX} exercises</h3><p class="hm-note">${TOT_L} lessons, about ${TOT_H} hours of learning, retests and progress tracking. $0.99 today, then $4.99 every week until you cancel.</p></div><button class="btn btn-primary" type="button" data-h="trial">Get full access</button></section>`;}
+  function upsell(){return `<section class="hm-card hm-up"><div><div class="hm-k">Membership</div><h3>Unlock all ${COURSES.length} courses and ${TOT_EX} exercises</h3><p class="hm-note">${TOT_L} lessons, about ${TOT_H} hours of learning, retests and progress tracking. $0 today, then $4.99 every week until you cancel.</p></div><button class="btn btn-primary" type="button" data-h="trial">Get full access</button></section>`;}
 
   /* ---------- courses ---------- */
   let cf='all';
@@ -358,7 +358,7 @@
   let box=null;
   function trialBox(){box='trial';draw();}
   function modal(){
-    if(box==='trial')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Membership"><h3>Full access: $0.99 today</h3>
+    if(box==='trial')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Membership"><h3>Full access: $0 today</h3>
       <p>Full access to ${COURSES.length} courses (${TOT_L} lessons), ${TOT_EX} exercises, retests and progress tracking.</p>
       <p><b>Your plan then renews at $4.99 every week</b> until you cancel. Cancel any time in Settings, and you keep access until the paid period ends.</p>
       <div class="hm-row"><button class="btn btn-primary" type="button" data-h="startTrial">Continue</button><button class="btn btn-line" type="button" data-h="closebox">Not now</button></div></div></div>`;
@@ -375,7 +375,7 @@
         <div class="hm-row">${mode==='live'?'<button class="btn btn-line btn-sm" type="button" data-h="manage">Change name, email or password</button>':'<button class="btn btn-line btn-sm" type="button" data-h="real">Create a real account</button>'}</div></section>
         <section class="hm-card"><div class="hm-k">Membership</div>
         ${pd?`<p class="hm-status on">Active</p><p class="hm-note">Full access to every course and exercise.${renew?` Current period ends ${E(renew.toLocaleDateString((window.BF_LOC?BF_LOC():'en-GB'),{day:'numeric',month:'long'}))}, then $4.99 every week until cancelled.`:''}</p>${S().cancelRequested()?'<p class="hm-note">Cancellation requested. Use the cancel link in your payment receipt email to stop billing right away.</p>':'<div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="cancel">Cancel membership</button></div>'}`
-        :`<p class="hm-status">Free</p><p class="hm-note">Your results and the first lessons are free. A membership unlocks everything: $0.99 today, then $4.99 every week until you cancel.</p><div class="hm-row"><button class="btn btn-primary btn-sm" type="button" data-h="trial">Get full access</button></div>`}</section></div>
+        :`<p class="hm-status">Free</p><p class="hm-note">Your results and the first lessons are free. A membership unlocks everything: $0 today, then $4.99 every week until you cancel.</p><div class="hm-row"><button class="btn btn-primary btn-sm" type="button" data-h="trial">Get full access</button></div>`}</section></div>
       <section class="hm-card"><div class="hm-k">Emails</div><p class="hm-note">${S().optedOut()?'You are unsubscribed. We will not send you marketing or reminder emails.':'We may email you your certificate, reminders and offers.'} Receipts and account security messages are always sent.${window.bfTrack&&bfTrack.unsubscribeUrl&&bfTrack.unsubscribeUrl()?` To stop partner offers too, <a href="${E(bfTrack.unsubscribeUrl())}" target="_blank" rel="noopener">use the partner unsubscribe page</a>.`:''}</p>
         <div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="${S().optedOut()?'resub':'unsub'}">${S().optedOut()?'Subscribe again':'Unsubscribe from emails'}</button></div></section>
       <section class="hm-card"><div class="hm-k">Your data</div><p class="hm-note">${mode==='live'?'Results and progress are saved to your account.':'Results and progress are saved in this browser.'} You can delete your account and everything in it at any time.</p>
