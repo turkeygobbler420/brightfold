@@ -40,7 +40,7 @@ function geoName(){
   try{return new Intl.DisplayNames([(window.BF_LANG&&BF_LANG.get())||'en'],{type:'region'}).of(geoCC)||'';}catch(e){return '';}
 }
 function startTest(){
-  loadGeo();window.BF_URL&&BF_URL('/quiz?question');
+  loadGeo();
   st={i:0,ans:Array(ITEMS.length).fill(null),seen:{},cp:{},sec:0,done:false,hold:true,word:WORDS[Math.floor(Math.random()*WORDS.length)],recall:null};
   $('landing').hidden=true;$('app').hidden=false;window.scrollTo(0,0);
   clearInterval(clockTimer);
@@ -139,6 +139,7 @@ const WEL_REV=[[5,'Surprisingly insightful','The breakdown by area showed streng
 const WEL_PRESS=[['business-insider','Business Insider'],['buzzfeed','BuzzFeed'],['cnn','CNN']];
 const PLACEHOLDER_AVG_IQ=108; // TODO before launch: placeholder, replace with a real measured average or remove
 function welcomeScreen(){
+  window.BF_URL&&BF_URL('/quiz?step=intro');
   st.hold=true;st.view=welcomeScreen;dock();$('tCount').textContent=Xl('beforeStart');pips();
   const star=on=>`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L10 14.2 5 17l1.2-5.6L2 7.6l5.6-.6z" fill="${on?'var(--ink)':'none'}" stroke="var(--ink)" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
   const logos=al=>WEL_PRESS.map(p=>`<li><img src="press/${p[0]}.svg?v=5" alt="${al?'':p[1]}" height="24" loading="lazy"></li>`).join('');
