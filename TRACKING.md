@@ -6,7 +6,7 @@ Nothing here is live until this branch is merged to `main` and deployed.
 1. `tracking.js` creates a `click_id` per visitor (localStorage).
 2. The results gate button ("Show my results") redirects to the active offer's tracking link
    with `sub1=<click_id>` (and `sub15=<meta pixel id>` once `PIXEL_ID` is set).
-   Redirect is ON (`ENABLE_REDIRECT: true`). Set it to false to go back to the mock paywall.
+   Redirect is OFF by default. Testers enable it with `?checkout=1`, or set `ENABLE_REDIRECT: true`.
 3. When the offer converts, the network calls our postback:
 
        https://<domain>/api/postback?click_id={sub1}&payout={payout_amount}&token=<POSTBACK_TOKEN>
@@ -21,12 +21,6 @@ Nothing here is live until this branch is merged to `main` and deployed.
 | 26114 | US Green Checkout VOD (CC) | 24 USD CPA (no email) |
 | 26199 | GLO WW Green Checkout VOD (CC) | 80% PPS (no email/SMS/push/VPN) |
 | 26200 | GLO WW Digital Checkout (CC) | 80% PPS (no email/SMS/push/VPN) |
-
-## Hosting
-- GitHub Pages (`turkeygobbler420.github.io/brightfold`) serves the static site and `tracking.js` only.
-  It cannot run `api/postback.js`, so the network's postback URL must point at the Vercel deployment.
-- `.github/workflows/vercel-deploy.yml` deploys `main` to Vercel once the `VERCEL_TOKEN` repo secret is added.
-  (Vercel Hobby allows 100 deployments/day; a deploy that hits the limit can be re-run via Actions -> Run workflow.)
 
 ## Open items
 - Meta pixel ID: network said "sub3", but every offer lists sub3 = first_name and sub15 = FB_PIXEL. Using sub15; confirm with the network.
