@@ -5,3 +5,12 @@ create table if not exists paid_clicks (
   paid_at timestamptz default now()
 );
 alter table paid_clicks enable row level security;
+
+-- Links a browser's click id to the email entered at checkout, so a payment can be matched to an account.
+create table if not exists click_links (
+  click_id text primary key,
+  email text not null,
+  created_at timestamptz default now()
+);
+create index if not exists click_links_email_idx on click_links (email);
+alter table click_links enable row level security;

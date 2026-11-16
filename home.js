@@ -63,7 +63,7 @@
     }catch(e){}
   }
   const done=cid=>(P.lessons[cid]||[]).length;
-  const paid=()=>!!S().local().paid;
+  const paid=()=>S().isPaid();
   const today=()=>new Date().toISOString().slice(0,10);
   const mark=()=>{P.days=Array.from(new Set([...(P.days||[]),today()])).sort().slice(-60);};
 
@@ -362,12 +362,12 @@
       <p>Full access to ${COURSES.length} courses (${TOT_L} lessons), ${TOT_EX} exercises, retests and progress tracking.</p>
       <p><b>Your plan then renews at $4.99 every week</b> until you cancel. Cancel any time in Settings, and you keep access until the paid period ends.</p>
       <div class="hm-row"><button class="btn btn-primary" type="button" data-h="startTrial">Continue</button><button class="btn btn-line" type="button" data-h="closebox">Not now</button></div></div></div>`;
-    if(box==='cancel')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Cancel membership"><h3>Cancel your membership?</h3><p>You will not be charged again. You keep access until the end of the period you have paid for.</p>
+    if(box==='cancel')return `<div class="hm-modal" data-h="closebox"><div class="hm-mbox" role="dialog" aria-label="Cancel membership"><h3>Cancel your membership?</h3><p>Renewals are billed by the payment provider, so cancelling is done through them using the link in your payment receipt email. You keep access until the end of the period you have paid for.</p>
       <div class="hm-row"><button class="btn btn-primary" type="button" data-h="doCancel">Cancel membership</button><button class="btn btn-line" type="button" data-h="closebox">Keep it</button></div></div></div>`;
     return '';
   }
   function settings(){
-    const x=u(),d=S().local(),pd=!!d.paid,mode=S().mode();
+    const x=u(),d=S().local(),pd=S().isPaid(),mode=S().mode();
     const renew=d.since?new Date(new Date(d.since).getTime()+7*864e5):null;
     return `<div class="hm-hello"><h1>Settings</h1><p>Your account and membership.</p></div>
       <div class="hm-grid"><section class="hm-card"><div class="hm-k">Account</div>
@@ -422,9 +422,8 @@
     if(h==='again')return startEx(sess.id);
     if(h==='levelup'){const p=sess.id.split('-');p[2]=+p[2]+1;return startEx(p.join('-'));}
     if(h==='trial')return trialBox();
-    if(h==='startTrial'){const d=S().local();d.paid=true;d.since=new Date().toISOString();S().saveLocal(d);box=null;toast='Membership active. Everything is unlocked.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2600);return;}
-    if(h==='cancel'){box='cancel';return draw();}
-    if(h==='doCancel'){const d=S().local();d.paid=false;delete d.since;S().saveLocal(d);box=null;toast='Membership cancelled. You will not be charged again.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2800);return;}
+    if(h==='startTrial'){box=null;if(window.BF_PAY&&BF_PAY.start()){draw();return;}if(S().mode()==='demo'){S().unlock();toast='Demo membership active (no payment taken).';}else toast='Checkout is not available right now. Please try again later.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2600);return;}
+    if(h==='doCancel'){const d=S().local();if(S().mode()==='demo'){d.paid=false;delete d.since;S().saveLocal(d);toast='Demo membership removed.';}else toast='To stop renewal, cancel through the payment provider using the link in your payment receipt email.';box=null;draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},5000);return;}
     if(h==='retake'){close();const b=document.querySelector('.js-start');if(b)b.click();return;}
     if(h==='cert'){close();location.hash='#cert';const b=document.querySelector('[data-cert],.js-cert');if(b)b.click();return;}
     if(h==='manage'){close();window.BF_AUTH&&window.BF_AUTH.manage&&window.BF_AUTH.manage();return;}
@@ -433,5 +432,6 @@
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&root.classList.contains('on')&&!sess&&!box)close();else if(e.key==='Escape'&&box){box=null;draw();}});
   function relang(){if(!root||!root.classList.contains('on'))return;const ks=[];try{if(course)ks.push(course);if(gd)ks.push('train-'+gd);}catch(e){}Promise.all(ks.map(loadJ)).then(()=>{try{draw();}catch(e){}});try{draw();}catch(e){}}
+  window.addEventListener('bf:paid',()=>{if(!root.hidden)draw();});
   window.BF_HOME={open,close,go,relang};
 })();

@@ -4,3 +4,6 @@ verify_jwt = false
 
 [functions.status]
 verify_jwt = false
+
+[functions.link]
+verify_jwt = false

@@ -167,10 +167,12 @@
 
   const needNow=/access_token|type=recovery|[?&#]code=/.test(location.hash+location.search)||(()=>{try{return Object.keys(localStorage).some(k=>/^sb-/.test(k));}catch(e){return false;}})();
   new Promise(r=>needNow?r():(window.requestIdleCallback?requestIdleCallback(()=>r(),{timeout:1200}):setTimeout(r,800))).then(loadLib).then(()=>{
+    const sync=()=>setTimeout(()=>{const st=window.BF_STORE;if(st&&st.syncMembership)st.syncMembership();},0);
     sb=window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-    sb.auth.getSession().then(({data})=>{session=data.session;setNav();});
+    sb.auth.getSession().then(({data})=>{session=data.session;setNav();sync();});
     sb.auth.onAuthStateChange((ev,s)=>{
       session=s;setNav();
+      if(ev==='SIGNED_IN'||ev==='INITIAL_SESSION'||ev==='USER_UPDATED')sync();
       if(ev==='PASSWORD_RECOVERY'){render('recover');if(!dlg.open)dlg.showModal();}
       else if(ev==='SIGNED_IN'&&dlg.open&&view!=='recover')goHome();
       else if(ev==='SIGNED_OUT'){if(window.BF_HOME)window.BF_HOME.close();if(dlg.open)render('login');}

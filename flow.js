@@ -7,6 +7,7 @@
 
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
   const DEMO={email:'demo@neurometric.app',name:'Demo user'};
+  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API=FN+'link',STATUS_API=FN+'status';
   const S=window.BF_STORE={
     demoUser(){return ls.get('bf_demo',null);},
     startDemo(){ls.set('bf_demo',DEMO);return DEMO;},
@@ -34,7 +35,31 @@
       }
       return S.local().results;
     },
-    unlock(){const d=S.local();d.paid=true;S.saveLocal(d);}
+    /* Payment <-> email <-> account. The click id is linked server-side to every email used (quiz email, account email),
+       the postback marks the click paid, and paid state is kept per email so a different account on this device is not unlocked. */
+    async link(email){
+      email=String(email||'').trim().toLowerCase();const id=window.bfTrack&&window.bfTrack.clickId;if(!email||!id)return;
+      const d=S.local();d.linked=d.linked||[];if(!d.linked.includes(email)){d.linked.push(email);S.saveLocal(d);}
+      try{await fetch(LINK_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});}catch(e){}
+    },
+    isPaid(){
+      const d=S.local();if(!d.paid)return false;if(S.mode()!=='live')return true;
+      const e=String((S.user()||{}).email||'').toLowerCase();return (d.paidEmails||[]).includes(e);
+    },
+    unlock(){
+      const d=S.local();d.paid=true;d.paidEmails=[...new Set([...(d.paidEmails||[]),...(d.linked||[])])];d.since=d.since||new Date().toISOString();S.saveLocal(d);
+      try{window.dispatchEvent(new Event('bf:paid'));}catch(e){}
+    },
+    /* signed in: link this browser's click to the account email, then ask the server whether any linked click is paid */
+    async syncMembership(){
+      const a=window.BF_AUTH,sb=a&&a.sb&&a.sb(),u=a&&a.user&&a.user();if(!sb||!u||!u.email)return;
+      try{
+        await S.link(u.email);
+        const {data}=await sb.auth.getSession();const tok=data&&data.session&&data.session.access_token;if(!tok)return;
+        const r=await fetch(STATUS_API,{headers:{Authorization:'Bearer '+tok},cache:'no-store'});if(!r.ok)return;
+        const j=await r.json();if(j&&j.paid&&!S.isPaid())S.unlock();
+      }catch(e){}
+    }
   };
 
   /* ---------- helpers ---------- */
@@ -114,7 +139,7 @@
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){$('emErr').textContent='Enter a valid email address.';inp.focus();return;}
       $('emErr').textContent='';st.email=v;const b=e.target.querySelector('button');b.disabled=true;b.textContent='Please wait…';
       const r=calc();st.result=r;
-      await Promise.race([Promise.all([S.saveLead(v),S.saveResult(r)]),new Promise(ok=>setTimeout(ok,1200))]);
+      await Promise.race([Promise.all([S.saveLead(v),S.saveResult(r),S.link(v)]),new Promise(ok=>setTimeout(ok,1200))]);
       checkout();};
     window.scrollTo(0,0);
   }
@@ -137,7 +162,6 @@
   /* Polls the status function (filled by the network postback) and unlocks the results once the click is paid.
      Adaptive schedule with jitter, error backoff, instant re-check when the tab regains focus, 30 min cap,
      and the pending state survives a reload / same-tab checkout via localStorage. */
-  const STATUS_API='https://llyanlleeynuznywttjg.supabase.co/functions/v1/status';
   const PEND_KEY='bf_pay_pending',PEND_MAX=30*60e3;
   let payT=null,payRun=0,payWin=null,payChk=null;
   const pend={get(){try{const t=+localStorage.getItem(PEND_KEY);return t&&Date.now()-t<PEND_MAX?t:0;}catch(e){return 0;}},
@@ -159,7 +183,7 @@
     const unlock=()=>{stopPay();pend.clear();clearInterval(sellT);clearInterval(offerT);
       try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
       const em=document.getElementById('bfEmbed');if(em)em.remove();
-      S.unlock();st.done=false;showResults();};
+      S.unlock();if(st&&st.flow){st.done=false;showResults();}};
     const check=async()=>{
       if(run!==payRun||busy)return;
       if(Date.now()-t0>PEND_MAX){pend.clear();return giveUp();}
@@ -179,6 +203,8 @@
     payT=setTimeout(check,1500);
   }
   function embedCheckout(url){
+    /* make sure the click id is linked to the email(s) in use before the payment window opens */
+    const u=S.user();[st&&st.email,u&&u.email].forEach(e=>{if(e&&e!==DEMO.email)S.link(e);});
     let m=document.getElementById('bfEmbed');if(m)m.remove();
     m=document.createElement('div');m.id='bfEmbed';
     m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111';
@@ -238,6 +264,11 @@
     });
     window.scrollTo(0,0);
   }
+
+  /* membership checkout from the account area (same flow, no quiz): returns false when no real checkout is configured */
+  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});embedCheckout(o);return true;}};
+  const syncSoon=()=>setTimeout(()=>S.syncMembership(),0);
+  window.addEventListener('load',syncSoon);
 
   /* resume polling after a reload or same-tab checkout */
   if(pend.get())setTimeout(()=>{try{watchPayment(null);}catch(e){console.warn(e);}},800);
