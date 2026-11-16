@@ -225,34 +225,9 @@
     payT=setTimeout(check,1500);
   }
   function embedCheckout(url){
-    /* make sure the click id is linked to the email(s) in use before the payment window opens */
+    /* link the click id to the email(s) in use, then send the visitor straight to the hosted checkout */
     const u=S.user();[st&&st.email,u&&u.email].forEach(e=>{if(e&&e!==DEMO.email)S.link(e);});
-    let m=document.getElementById('bfEmbed');if(m)m.remove();
-    m=document.createElement('div');m.id='bfEmbed';
-    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111';
-    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
-      '<div style="padding:18px">'+
-        '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.00</b></div>'+
-        '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.00</span></div>'+
-        '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
-        '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
-        '<p style="text-align:center;font-size:12px;color:#888;margin:8px 0 0">&#128274; Encrypted, secure payment</p>'+
-      '</div></div>';
-    document.body.appendChild(m);
-    const close=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
-    document.getElementById('bfEmbedX').onclick=close;
-    m.addEventListener('click',e=>{if(e.target===m)close();});
-    document.getElementById('bfPay').onclick=()=>{
-      const msg=document.getElementById('bfPayMsg');
-      const inApp=/Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(navigator.userAgent||'');
-      const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
-      const win=inApp?null:window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
-      if(!win){pend.set();location.href=url;return;}
-      try{win.focus();}catch(e){}
-      watchPayment(win);
-      msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window did not open?</a>';
-    };
+    pend.set();location.href=url;
   }
   function checkout(){
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);
@@ -271,8 +246,7 @@
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.00</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.00</b></div>
-         <button class="btn btn-primary co-b" data-m="express" type="button">Express checkout</button>
-         <button class="btn btn-line co-b" data-m="card" type="button">Credit or debit card</button>
+         <button class="btn btn-primary co-b" data-m="card" type="button">Continue to secure checkout</button>
          <p class="co-demo" id="coDemo">Demo mode: no payment is taken.</p></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
