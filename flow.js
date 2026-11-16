@@ -234,7 +234,6 @@
       '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
       '<div style="padding:18px">'+
         '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.00</b></div>'+
-        '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99 every week until you cancel. Cancel anytime.</div>'+
         '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.00</span></div>'+
         '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
         '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
