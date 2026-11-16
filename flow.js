@@ -298,4 +298,21 @@
   /* take over the end of the test */
   window.guessScreen=analyze;window.reviewScreen=analyze;
   window.finish=function(){analyze();};
+  /* TEMP DEV: skips the calculating screen and email step, runs the score calculation, lands on checkout. */
+  window.devSkipToCheckout=function(){
+    st.flow=1;halt();close();
+    st.email=st.email||DEMO.email;
+    const r=calc();st.result=r;
+    try{S.saveResult(r);}catch(e){}
+    checkout();
+  };
+})();
+
+/* TEMP DEV: "Skip quiz" button, jumps straight to the calculating screen. REMOVE before launch. */
+(function(){
+  var b=document.createElement('button');b.type='button';b.id='devSkip';b.textContent='Skip quiz (dev)';
+  b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99999;padding:8px 12px;border-radius:8px;border:2px dashed #121212;background:#fff;color:#121212;font:700 13px system-ui;cursor:pointer;display:none';
+  b.onclick=function(){if(window.devSkipToCheckout)window.devSkipToCheckout();};
+  document.body.appendChild(b);
+  setInterval(function(){var t=document.getElementById('tMain');b.style.display=(t&&!t.querySelector('.an,.em,.co,.gate')&&document.getElementById('tCount')&&/of/.test(document.getElementById('tCount').textContent))?'block':'none';},400);
 })();
