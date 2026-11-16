@@ -44,6 +44,9 @@
     fbq('track', 'PageView');
   }
 
+  // Show the current stage in the address bar (no reload, no extra history entries).
+  window.BF_URL = function (p) { try { if (/^https?:$/.test(location.protocol)) history.replaceState(null, '', p); } catch (e) {} };
+
   window.bfTrack = {
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,

@@ -40,7 +40,7 @@ function geoName(){
   try{return new Intl.DisplayNames([(window.BF_LANG&&BF_LANG.get())||'en'],{type:'region'}).of(geoCC)||'';}catch(e){return '';}
 }
 function startTest(){
-  loadGeo();
+  loadGeo();window.BF_URL&&BF_URL('/quiz?question=1');
   st={i:0,ans:Array(ITEMS.length).fill(null),seen:{},cp:{},sec:0,done:false,hold:true,word:WORDS[Math.floor(Math.random()*WORDS.length)],recall:null};
   $('landing').hidden=true;$('app').hidden=false;window.scrollTo(0,0);
   clearInterval(clockTimer);
@@ -59,6 +59,7 @@ function pips(all){
   el.style.transform=`scaleX(${Math.min(1,f).toFixed(3)})`;
 }
 function render(){
+  window.BF_URL&&BF_URL('/quiz?question='+(st.i+1));
   clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   const it=ITEMS[st.i],dom=DOMAINS.find(d=>d.id===it.d);st.view=render;dock();
   $('tCount').textContent=U('nOf',st.i+1,ITEMS.length);
@@ -322,6 +323,7 @@ function finish(){
 window.BF_IQ=function(raw,n){return Math.round(Math.max(62,Math.min(145,100+15*(raw/n-.5)/.2)));};
 
 function showResults(){
+  window.BF_URL&&BF_URL('/quiz?step=results');
   if(st.done&&st.finished)return;st.done=true;st.finished=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);
   ($('finishBtn')||{}).hidden=true;pips(true);
   const right=ITEMS.map(it=>isRight(it,st.ans[it.idx]));const raw=right.filter(Boolean).length;const pct=raw/ITEMS.length;
