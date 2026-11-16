@@ -160,7 +160,10 @@
     const paint=()=>{const e=$('coT');if(!e)return clearInterval(offerT);e.textContent=fmt(left);if(left>0){left--;ls.set('bf_offer',left);}};
     paint();offerT=setInterval(paint,1000);
     let n=18397;const nt=setInterval(()=>{const e=$('coN');if(!e)return clearInterval(nt);n+=Math.floor(rnd(1,4));e.textContent=n.toLocaleString('en-US');},3500);
+    const offer=window.bfTrack&&window.bfTrack.offerUrl();
+    if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
+      if(offer){window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});location.href=offer;return;}
       document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
       setTimeout(()=>{clearInterval(sellT);clearInterval(offerT);clearInterval(nt);S.unlock();st.done=false;showResults();},1300);
     });
