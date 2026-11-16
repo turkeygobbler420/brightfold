@@ -221,8 +221,55 @@
     let n=18397;const nt=setInterval(()=>{const e=$('coN');if(!e)return clearInterval(nt);n+=Math.floor(rnd(1,4));e.textContent=n.toLocaleString('en-US');},3500);
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
+    /* Embed config gate: real mode (DEMO:false + PROVIDER_URL) takes over checkout;
+       while DEMO:true only tester sessions (?checkout=1, remembered as bf_checkout)
+       see the embed demo — everyone else keeps the CPA offer path. */
+    const cfgE=window.BF_EMBED_CONFIG||null;
+    const embedOK=!!(cfgE&&cfgE.ENABLED&&window.BFEmbed&&(cfgE.DEMO===false||(()=>{try{return sessionStorage.getItem('bf_checkout')==='1';}catch(e){return false;}})()));
+    var embedHandle=null;
+    const closeEmbed=()=>{if(embedHandle){try{embedHandle.destroy();}catch(e){}embedHandle=null;}const mm=document.getElementById('bfEmbed');if(mm)mm.remove();};
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
-      if(offer){window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});embedCheckout(offer);return;}
+      window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});
+      if(!embedOK){
+        if(offer){embedCheckout(offer);return;}
+      }else{
+        try{
+          closeEmbed();
+          const m=document.createElement('div');m.id='bfEmbed';
+          m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111';
+          m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">'+
+            '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
+            '<div id="bfEmbedHost" style="padding:0"></div></div>';
+          document.body.appendChild(m);
+          embedHandle=window.BFEmbed().checkout.create({
+            amount:cfgE.AMOUNT,currency:'USD',trialDays:cfgE.TRIAL_DAYS,interval:cfgE.INTERVAL,
+            metadata:{click_id:(window.bfTrack&&window.bfTrack.clickId)||'',pixel:(window.bfTrack&&window.bfTrack.pixelId)||''},
+            returnUrl:location.origin+location.pathname,
+            /* REAL mode never unlocks on the iframe message — the paid state comes
+               from /api/status (postback truth) via watchPayment. DEMO mode unlocks
+               locally: it is an explicitly-labelled demo (no payment is taken). */
+            onComplete:function(res){
+              closeEmbed();
+              if(res&&res.result==='payment'){
+                clearInterval(sellT);clearInterval(offerT);clearInterval(nt);
+                if(cfgE.DEMO===false){watchPayment(null,'');}
+                else{S.unlock();st.done=false;showResults();}
+              }
+            },
+            /* iframe 404 / blocked / handshake timeout → CPA pop-out fallback. */
+            onMountFailed:function(){closeEmbed();if(offer){embedCheckout(offer);}},
+            theme:'light'
+          });
+          embedHandle.create('checkout').mount(document.getElementById('bfEmbedHost'));
+          document.getElementById('bfEmbedX').onclick=closeEmbed;
+          m.addEventListener('click',function(e){if(e.target===m)closeEmbed();});
+          return;
+        }catch(e){
+          closeEmbed();
+          if(offer){embedCheckout(offer);return;}
+        }
+        return;
+      }
       document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
       setTimeout(()=>{clearInterval(sellT);clearInterval(offerT);clearInterval(nt);S.unlock();st.done=false;showResults();},1300);
     });
