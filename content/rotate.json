@@ -1,0 +1,298 @@
+{"id":"rotate","lessons":[
+{"t":"Turning a shape in your head","intro":"You will learn how to rotate a shape in your mind while keeping its size and form. This skill sits at the heart of many spatial reasoning questions.","cards":[
+{"h":"A rotation keeps the shape","b":"When you rotate a shape, its size, edges and angles stay exactly the same. Only its orientation changes, so it is still the same shape.","i":"eye"},
+{"h":"Pick a fixed reference point","b":"Choose one feature, such as a corner or a notch, and track where it moves. Following one landmark makes the turn much easier to picture.","i":"target"},
+{"h":"Imagine the turn, then check","b":"Picture the shape turning smoothly until it lines up with the target. Then compare the features you tracked to confirm the match.","i":"brain"}],
+"fig":{"type":"steps","title":"Mental rotation routine","steps":["Pick a feature","Imagine turn","Match target"],"note":"Track one feature through the whole turn."},
+"ex":{"q":"An L-shaped block is turned 90 degrees clockwise. Which property changes?","o":["Its size","Its angles","Its orientation","Its number of corners"],"a":2,"why":"A rotation moves the shape but keeps its size, angles and corner count the same. Only the direction the shape faces, its orientation, changes."},
+"tip":"Track one corner of the shape and the whole shape will follow.",
+"quiz":[
+{"q":"Is a triangle still the same triangle after it is rotated?","o":["No, because it points another way","Yes, its sides and angles are unchanged","No, because its angles change","Yes, but only if it is equilateral"],"a":1,"why":"Rotation changes only orientation, so every side and angle stays the same."},
+{"q":"Which move changes a shape's position but not its orientation?","o":["Turning it 180 degrees","Spinning it on its centre","Sliding it across the page","Flipping it over"],"a":2,"why":"A slide, called translation, shifts the shape without turning it, so every edge keeps pointing the same way."}]},
+
+{"t":"Quarter turns and clock faces","intro":"You will learn how to describe a turn using degrees and clock positions. Using the same language as a question makes the answer quicker to find.","cards":[
+{"h":"Clockwise turns in degrees","b":"A full turn is 360 degrees, so a quarter turn is 90 degrees and a half turn is 180 degrees. Turns are usually measured clockwise unless the question says otherwise.","i":"clock"},
+{"h":"Use the clock face","b":"Imagine a clock with the shape at its centre. Twelve o'clock is the starting position, three o'clock is 90 degrees clockwise and six o'clock is 180 degrees.","i":"target"},
+{"h":"Count the quarter turns","b":"Divide the total angle by 90 to count quarter turns. A 270 degree turn is three quarter turns, which lands the shape at nine o'clock.","i":"spark"}],
+"fig":{"type":"seq","title":"Clockwise degrees","items":["0","90","180","270","360"],"note":"Each step adds a quarter turn of 90 degrees."},
+"ex":{"q":"A shape is turned 270 degrees clockwise. How many quarter turns is that?","o":["Two","Three","Four","One and a half"],"a":1,"why":"Each quarter turn is 90 degrees, and 270 divided by 90 is 3. Three quarter turns clockwise moves the hand from twelve to nine on a clock face."},
+"tip":"On a clock, three is a quarter turn and six is a half turn.",
+"quiz":[
+{"q":"What is a half turn in degrees?","o":["90","360","180","270"],"a":2,"why":"A half turn is half of 360 degrees, which is 180 degrees."},
+{"q":"A shape turns from 12 o'clock to 6 o'clock. How many degrees clockwise is that?","o":["90","45","270","180"],"a":3,"why":"Going from 12 to 6 is halfway round the clock, which is a half turn of 180 degrees."}]},
+
+{"t":"Recognising letters that rotate","intro":"You will learn to tell when two shapes are the same shape turned, rather than two different shapes. Practising with digits makes the skill easy to check.","cards":[
+{"h":"Same shape, new direction","b":"A letter such as F stays recognisable when it is turned. Look for its unique parts, such as the long bar and the short arms, rather than its overall outline.","i":"eye"},
+{"h":"Look for distinctive features","b":"Pick the features that are hardest to confuse, like a notch or a tail. If those features line up after a turn, the two shapes match.","i":"target"},
+{"h":"Watch for turned digits","b":"A 6 turned upside down looks like a 9, because the loop moves from the bottom to the top. Test a suspicious pair by turning one of them in your mind before deciding.","i":"brain"}],
+"fig":{"type":"compare","title":"Same shape or different shape?","left":{"h":"Turned 180 degrees","pts":["A 6 becomes a 9","Same shape, new spot","Only orientation changed"]},"right":{"h":"Different shapes","pts":["A 2 and a 5 differ","Features do not line up","Digits are not turned copies"]},"note":"Check whether the distinctive features still match."},
+"ex":{"q":"Which pair shows the same shape rotated?","o":["A 2 and a 5","A 7 and a 1","A 3 and an 8 side by side","A 6 and a 9 turned 180 degrees"],"a":3,"why":"Turning a 6 by 180 degrees gives a 9, so they are the same shape in different positions. The other pairs are different digits, not turned versions of each other."},
+"tip":"Turn the page halfway round before deciding that two shapes differ.",
+"quiz":[
+{"q":"Two shapes match after a turn if...","o":["Their outlines are the same size","Their distinctive features line up after turning","They have the same number of letters","They are drawn in the same colour"],"a":1,"why":"Matching depends on the distinctive features lining up once one shape is turned."},
+{"q":"Turning a 6 by 180 degrees gives which digit?","o":["3","0","9","6"],"a":2,"why":"A 6 turned upside down becomes a 9, since its loop moves from the bottom to the top."}]},
+
+{"t":"Rotating a grid by a quarter turn","intro":"You will learn how each cell of a 2 by 2 grid moves when the whole grid turns 90 degrees clockwise. Knowing the rule lets you solve grid puzzles quickly.","cards":[
+{"h":"Corners travel around the ring","b":"In a clockwise quarter turn, each corner moves one place round the square. The top left corner moves to the top right, and the bottom left moves to the top left.","i":"puzzle"},
+{"h":"Write down the rule","b":"For a grid with X Y on top and Z W below, the clockwise turn gives Z X on top and W Y below. Writing the rule down stops you mixing up the positions.","i":"book"},
+{"h":"Check with one cell","b":"Pick a single cell and trace where it lands after the turn. If the answer matches the rule, apply the same rule to the other cells.","i":"eye"}],
+"fig":{"type":"grid","title":"After a clockwise quarter turn","rows":[["C","A"],["D","B"]],"hi":[0,1],"note":"A moves from top left to top right."},
+"ex":{"q":"A 2 by 2 grid reads: top row X Y, bottom row Z W. After a 90 degree clockwise turn, what is the top row?","o":["X Y","Y X","Z X","W Y"],"a":2,"why":"A clockwise quarter turn moves the left column across to the top row, read from the bottom up. So Z moves to the top left and X moves to the top right, giving Z X."},
+"tip":"The left column always becomes the top row, read from the bottom up.",
+"quiz":[
+{"q":"In a 2 by 2 grid, which corner moves to the top left after a clockwise quarter turn?","o":["Top right","Bottom left","Bottom right","Top left"],"a":1,"why":"Each corner moves one place clockwise, and the bottom left is the next corner round to the top left."},
+{"q":"After a 180 degree turn, where does the top left corner end up?","o":["Top left","Top right","Bottom left","Bottom right"],"a":3,"why":"Two quarter turns move each corner two places round the square, so the top left lands at the bottom right."}]},
+
+{"t":"Mirror images are not rotations","intro":"You will learn why a flipped shape cannot be made by turning the original. Telling mirror images apart is a common trap in spatial questions.","cards":[
+{"h":"Reflection flips the shape","b":"A mirror image reverses left and right, like the reflection of a glove on the other hand. The result has the opposite handedness, so turning alone cannot produce it.","i":"eye"},
+{"h":"Check the order of features","b":"Look at the order in which the features appear going clockwise round the shape. A turn keeps that order, but a mirror image reverses it.","i":"target"},
+{"h":"Rotations keep handedness","b":"Any combination of turns keeps the clockwise order of features. This is why a rotated letter R still reads as an R, while its mirror image does not.","i":"brain"}],
+"fig":{"type":"compare","title":"Rotated versus mirrored shape","left":{"h":"Rotated","pts":["Same clockwise order","Same handedness","Made by turning"]},"right":{"h":"Mirrored","pts":["Order runs anticlockwise","Opposite handedness","Needs a flip to make"]},"note":"A turn never reverses the order of the features."},
+"ex":{"q":"Which operation turns an R into its mirror image?","o":["A 90 degree turn","A 180 degree turn","A left to right flip","A slide to the right"],"a":2,"why":"A flip reverses left and right, changing the handedness, and no amount of turning can do that. Turns and slides both keep the original handedness."},
+"tip":"If the order of features reverses, you are looking at a mirror image.",
+"quiz":[
+{"q":"Can a turn ever produce a mirror image of a shape?","o":["Yes, with a 90 degree turn","Yes, with a 360 degree turn","No, turns always keep handedness","Yes, if the shape is very small"],"a":2,"why":"Turns preserve handedness, so a mirror image needs a flip, not a turn."},
+{"q":"A dot on a shape's top right moves to its top left, with the height unchanged. What kind of change is this?","o":["A stretch","A rotation","A slide","A mirror reflection"],"a":3,"why":"Moving a feature from one side to the other, while keeping its height, is the signature of a mirror reflection."}]},
+
+{"t":"Spotting rotational symmetry","intro":"You will learn how to find shapes that look the same after a partial turn. Rotational symmetry shortens many counting and matching tasks.","cards":[
+{"h":"Symmetry under partial turns","b":"A shape has rotational symmetry if it looks unchanged after a turn of less than a full 360 degrees. The number of times it matches in one full turn is its order of symmetry.","i":"spark"},
+{"h":"A square has four matches","b":"A square looks the same after 90, 180 and 270 degrees, plus the full 360 degrees. That gives an order of symmetry of four.","i":"eye"},
+{"h":"An equilateral triangle has three","b":"An equilateral triangle looks the same after 120 and 240 degrees, as well as 360 degrees. That gives an order of symmetry of three.","i":"chart"}],
+"fig":{"type":"bars","title":"Order of rotational symmetry","data":[["Equilateral",3],["Square",4],["Rectangle",2],["Scalene",1]],"note":"Counts the matches made in one full turn."},
+"ex":{"q":"A regular hexagon has six equal sides. How many times does it match itself in one full turn?","o":["Two","Three","Eight","Six"],"a":3,"why":"A regular hexagon matches itself every 60 degrees, and 60 fits six times into 360. So its order of rotational symmetry is six."},
+"tip":"Divide 360 by the smallest matching angle to get the order.",
+"quiz":[
+{"q":"What is the order of symmetry of a square?","o":["1","4","2","8"],"a":1,"why":"A square matches itself every 90 degrees, and 360 divided by 90 is 4."},
+{"q":"A shape matches itself every 120 degrees. What is its order of symmetry?","o":["2","3","4","6"],"a":1,"why":"360 divided by 120 is 3, so the shape matches itself three times in a full turn."}]},
+
+{"t":"Counting faces on a cube view","intro":"You will learn how many cube faces you can see from one viewpoint, and how turning reveals others. Cube questions appear often in spatial tests.","cards":[
+{"h":"A cube has six faces","b":"A cube has six square faces, and each face has exactly one opposite face. From any one viewpoint, at most three faces are visible at once.","i":"eye"},
+{"h":"Opposite faces never show together","b":"Opposite faces sit on the far side of the cube from each other. So a single view can never show a pair of opposite faces.","i":"link"},
+{"h":"Turning reveals hidden faces","b":"When you turn a cube, a hidden face can come into view while a visible face leaves. Tracking one face through each turn tells you what the next view shows.","i":"brain"}],
+"fig":{"type":"steps","title":"Finding a hidden face","steps":["Mark one face","Turn the cube","Read the view"],"note":"Follow one marked face through each turn."},
+"ex":{"q":"A cube has a red top and a blue bottom. Which two faces can never be seen together from one view?","o":["Front and side","Top and side","Red and front","Red and blue"],"a":3,"why":"The red top and the blue bottom are opposite faces, so one viewpoint can never show both at once."},
+"tip":"Opposite faces are the pairs that never meet at a corner.",
+"quiz":[
+{"q":"How many faces of a cube can you see from one viewpoint?","o":["One","Two","Three","Six"],"a":2,"why":"At most three faces are visible at once, because the other three sit on the far side."},
+{"q":"A cube has labels 1 to 6, with 1 opposite 6, 2 opposite 5 and 3 opposite 4. Which pair can be seen together?","o":["1 and 6","2 and 5","3 and 4","1 and 2"],"a":3,"why":"Only pairs that are not opposite can appear together, and 1 and 2 are not opposite, so they sit on adjacent faces."}]},
+
+{"t":"Following two turns in a row","intro":"You will learn how to combine two rotations into one total turn. Chaining turns is a common step in multi-part spatial problems.","cards":[
+{"h":"Add the angles together","b":"When a shape turns twice in the same direction, add the two angles. A 90 degree turn followed by another 90 degree turn gives one 180 degree turn.","i":"spark"},
+{"h":"Track the running total","b":"Keep a running total of the angle after each turn to avoid confusion. Subtract a full 360 degrees whenever the total passes it.","i":"chart"},
+{"h":"Opposite turns cancel out","b":"A 90 degree clockwise turn followed by a 90 degree anticlockwise turn leaves the shape where it started. Clockwise and anticlockwise turns carry opposite signs.","i":"puzzle"}],
+"fig":{"type":"seq","title":"Running total of quarter turns","items":["90","180","270","360"],"note":"A full 360 degrees brings the shape back to the start."},
+"ex":{"q":"A shape turns 120 degrees clockwise, then 150 degrees clockwise. What is the total clockwise turn?","o":["260 degrees","270 degrees","290 degrees","30 degrees"],"a":1,"why":"Both turns are clockwise, so add them: 120 plus 150 gives 270 degrees."},
+"tip":"Add clockwise turns and subtract anticlockwise ones.",
+"quiz":[
+{"q":"A shape turns 200 degrees clockwise and then 90 degrees anticlockwise. What is the net clockwise turn?","o":["110 degrees","290 degrees","90 degrees","20 degrees"],"a":0,"why":"The anticlockwise turn cancels part of the clockwise one, so 200 minus 90 leaves 110 degrees clockwise."},
+{"q":"A shape turns 270 degrees clockwise and then 180 degrees clockwise. What is the total turn, reduced to less than a full turn?","o":["450 degrees","180 degrees","270 degrees","90 degrees"],"a":3,"why":"The total is 450 degrees, and removing one full 360 degree turn leaves 90 degrees."}]},
+
+{"t":"Combining rotation, flips and symmetry","intro":"You will learn a short checklist that combines turning, mirror checks and symmetry. This routine speeds up any rotation question you face.","cards":[
+{"h":"Turned or flipped?","b":"First decide whether the second shape is a rotation or a reflection. Use the clockwise order of features, which only changes with a flip.","i":"puzzle"},
+{"h":"Check symmetry before counting","b":"If a shape has rotational symmetry, some of its turns look identical. Count only the distinct positions to avoid double counting.","i":"target"},
+{"h":"Confirm with one feature","b":"Pick a distinctive feature and check that it lands where you predicted. If it does, the rest of the shape should follow.","i":"eye"}],
+"fig":{"type":"cycle","title":"Rotation check routine","nodes":["Spot feature","Check order","Turn it","Confirm"],"note":"Repeat for every new pair of shapes."},
+"ex":{"q":"Shape A has a notch on its top left. Shape B has the same notch on its top right, and its features run anticlockwise in the opposite order. Which operation links them?","o":["A 90 degree turn","No link at all","A mirror flip","A 180 degree turn"],"a":2,"why":"The features run in the opposite order, which signals that handedness has reversed. Only a mirror flip reverses handedness, while turns cannot."},
+"tip":"A reversed feature order means a flip, not a turn.",
+"quiz":[
+{"q":"A square matches itself after turns of 90 degrees. Which turn angle is the smallest that makes it match itself?","o":["45 degrees","90 degrees","180 degrees","360 degrees"],"a":1,"why":"A square looks the same every 90 degrees, so 90 is the smallest matching angle."},
+{"q":"Two identical shapes differ only by a 270 degree clockwise turn. Is the second shape a rotation of the first?","o":["Yes, it is a rotation","No, it is a mirror image","Only if it is a square","No, because 270 is too large"],"a":0,"why":"A turn of any size keeps handedness, so a 270 degree clockwise turn is still a rotation."}]},
+
+{"t":"Plan view and street view","intro":"You will learn how a plan view from above differs from a view at ground level. Switching between the two is central to many map reading questions.","cards":[
+{"h":"Plan view looks down","b":"A plan view shows the layout as seen from directly above, with roads and buildings drawn flat. It is the usual style of a street map.","i":"eye"},
+{"h":"Street view looks across","b":"A ground view shows what you would see standing in a place, including heights and front faces. Matching features between the two views takes practice.","i":"brain"},
+{"h":"Match landmarks between views","b":"Find a tall or unusual building that appears in both views. Its position relative to the roads tells you which way you are facing.","i":"target"}],
+"fig":{"type":"compare","title":"Plan view and street view","left":{"h":"Plan view","pts":["Seen from above","Roads drawn flat","Shows the layout clearly"]},"right":{"h":"Street view","pts":["Seen at ground level","Shows building heights","Shows front faces"]},"note":"Use landmarks to link the two views."},
+"ex":{"q":"Which feature is most useful for matching a plan view to a street view?","o":["A tall landmark with a distinct shape","The colour of the road","The font of the scale bar","The printed date"],"a":0,"why":"A tall, distinctive landmark appears in both views, so you can match its position to the roads and work out your direction."},
+"tip":"Look for the tallest landmark first, because it shows up in both views.",
+"quiz":[
+{"q":"Which view shows buildings flat, as if seen from above?","o":["Street view","Panoramic view","Plan view","Photograph"],"a":2,"why":"A plan view looks straight down, so buildings appear as flat footprints."},
+{"q":"In a plan view, what does a building normally appear as?","o":["A tall front wall","A window grid","A footprint outline","A shaded cube"],"a":2,"why":"From directly above, a building shows only its roof outline, which is its footprint."}]},
+
+{"t":"Turning a map to match your view","intro":"You will learn how to rotate a map so its directions match the real world around you. Orienting a map is the first step in navigating an unfamiliar place.","cards":[
+{"h":"Maps are usually north up","b":"Most maps place north at the top, so the top of the page points to north. Your position on the map only helps once the map matches your surroundings.","i":"target"},
+{"h":"Line up a landmark","b":"Stand where you are and find a landmark you can see ahead. Turn the map until that landmark sits in the same direction on the page as it does in reality.","i":"eye"},
+{"h":"Check with a road","b":"Confirm the orientation using a road that runs in a known direction. If the road on the map runs the same way as the road in front of you, the map is set.","i":"link"}],
+"fig":{"type":"steps","title":"Orienting a map","steps":["Find north","Face landmark","Turn the map","Check road"],"note":"Match the map to the world, not the other way round."},
+"ex":{"q":"A map is north up, and you are facing east. Which way must you turn the map so the direction ahead matches the top of the map?","o":["Turn it 90 degrees clockwise","Turn it 90 degrees anticlockwise","Leave it north up","Turn it 180 degrees"],"a":1,"why":"Facing east means the east edge, on the right of the map, must point ahead. Turning the map 90 degrees anticlockwise brings its right edge to the top."},
+"tip":"Turn the map, not your body, so the features line up.",
+"quiz":[
+{"q":"Facing south, which direction on a north up map should be at the top once you have oriented it?","o":["North","East","South","West"],"a":2,"why":"When you face south, the south edge of the map must point ahead, so south goes at the top."},
+{"q":"Why check orientation with a road?","o":["Roads always point north","Roads change the scale","Roads hide the landmarks","Roads confirm the map matches the ground"],"a":3,"why":"A road running a known way lets you confirm that the map matches the real direction."}]},
+
+{"t":"Reading the scale on a map","intro":"You will learn how a map scale turns a measured length into a real distance. Scale questions reward careful multiplication and unit conversion.","cards":[
+{"h":"Scale links map and ground","b":"A scale such as 1 cm to 50 m means each centimetre on the map covers 50 metres on the ground. Knowing this ratio lets you convert any measurement.","i":"chart"},
+{"h":"Measure, then multiply","b":"Measure the distance on the map with a ruler, in centimetres. Multiply that number by the scale factor to get the real distance.","i":"clock"},
+{"h":"Keep your units consistent","b":"Convert centimetres to metres or kilometres before you finish. There are 100 centimetres in a metre and 1,000 metres in a kilometre.","i":"spark"}],
+"fig":{"type":"bars","title":"Scale 1 cm to 50 m","data":[["Map 1 cm",1],["Ground 50 m",50],["Map 4 cm",4],["Ground 200 m",200]],"note":"Each map centimetre stands for 50 metres."},
+"ex":{"q":"On a map with a scale of 1 cm to 50 m, two towns are 6 cm apart. How far apart are they in real life?","o":["56 m","3,000 m","30 m","300 m"],"a":3,"why":"Multiply the map distance by the scale: 6 cm times 50 m per cm is 300 m."},
+"tip":"Multiply the map length by the scale, never add.",
+"quiz":[
+{"q":"A map scale is 1 cm to 2 km. Two points are 5 cm apart on the map. What is the real distance?","o":["7 km","2.5 km","10 km","100 km"],"a":2,"why":"5 cm multiplied by 2 km per cm gives 10 km."},
+{"q":"A map scale is 1 cm to 25 m. A path is 8 cm long on the map. How long is it on the ground?","o":["200 m","33 m","800 m","2 km"],"a":0,"why":"8 cm multiplied by 25 m per cm is 200 m."}]},
+
+{"t":"Using compass bearings","intro":"You will learn how a bearing gives a direction as an angle clockwise from north. Bearings let you describe any direction with a single three-figure number.","cards":[
+{"h":"Bearings start at north","b":"A bearing is measured clockwise from north, which is 000 degrees. East is 090, south is 180 and west is 270.","i":"target"},
+{"h":"Always write three figures","b":"Bearings are written with three figures, so 5 degrees becomes 005. This avoids confusion when you read a protractor or a map.","i":"book"},
+{"h":"Reverse a bearing by 180","b":"The back bearing points the opposite way, so add or subtract 180 degrees. If the bearing is 060, the back bearing is 240.","i":"link"}],
+"fig":{"type":"cycle","title":"Compass bearings clockwise","nodes":["North 000","East 090","South 180","West 270"],"note":"Bearings are measured clockwise from north."},
+"ex":{"q":"You walk on a bearing of 135 degrees. What is the back bearing?","o":["045","225","315","135"],"a":2,"why":"The back bearing is 135 plus 180, which equals 315 degrees, since 135 is less than 180."},
+"tip":"Add 180 if the bearing is under 180, otherwise subtract 180.",
+"quiz":[
+{"q":"Which bearing points due east?","o":["180","090","270","000"],"a":1,"why":"East is a quarter turn clockwise from north, which is 90 degrees, written as 090."},
+{"q":"What is the back bearing of 300 degrees?","o":["120","480","030","210"],"a":0,"why":"Since 300 is over 180, subtract 180 to get 120 degrees."}]},
+
+{"t":"Reading contour lines for height","intro":"You will learn how closely spaced contour lines show steep ground, and widely spaced lines show gentle slopes. Reading these lines helps you judge height and difficulty.","cards":[
+{"h":"Contours join equal heights","b":"A contour line joins all points at the same height above sea level. Each line is labelled, and the gap in height between neighbouring lines is the interval.","i":"chart"},
+{"h":"Close lines mean steep slopes","b":"When contour lines sit close together, the ground rises quickly over a short distance. Widely spaced lines show a gentle, flatter slope.","i":"eye"},
+{"h":"Count lines to find height","b":"Start from a labelled line and count the intervals to reach your target. Multiply the number of intervals by the height between lines.","i":"clock"}],
+"fig":{"type":"bars","title":"Horizontal gap between lines","data":[["Wide gap",50],["Medium gap",20],["Close gap",5]],"note":"Smaller gaps between lines mean steeper ground."},
+"ex":{"q":"Contour lines are 10 m apart in height. You start on the 100 m line and count 4 intervals up the hill. What height do you reach?","o":["104 m","110 m","140 m","400 m"],"a":2,"why":"Each interval is 10 m, so 4 intervals add 40 m to 100 m, giving 140 m."},
+"tip":"Closer contour lines always mean a steeper slope.",
+"quiz":[
+{"q":"Slope X has contour lines 2 cm apart on the map, and slope Y has lines 8 cm apart. Both maps share the same scale and contour interval. Which slope is steeper?","o":["Slope X","Slope Y","They are equal","Neither can be judged"],"a":0,"why":"Slope X has its lines closer together, so its height changes faster over the same distance."},
+{"q":"What do contour lines show?","o":["Roads and paths","Points at equal height","Rivers only","Building heights"],"a":1,"why":"Each contour line joins points that sit at the same height above sea level."}]},
+
+{"t":"Estimating area with grid squares","intro":"You will learn how to estimate the size of an area by counting grid squares. This technique helps when a map has no scale bar to rely on.","cards":[
+{"h":"Count whole squares first","b":"Count the grid squares that lie completely inside the area. Each full square adds its whole area to your total.","i":"puzzle"},
+{"h":"Pair up the partial squares","b":"Two halves that together make a whole square count as one square. Estimate any other part by eye, rounding to the nearest half.","i":"brain"},
+{"h":"Convert squares to real area","b":"Multiply the square count by the area of one real square. If each square is 100 m by 100 m, one square is 10,000 square metres.","i":"chart"}],
+"fig":{"type":"grid","title":"Filled squares in a grid","rows":[["X","X","X"],["X","X","-"],["X","-","-"]],"hi":[1,1],"note":"Six squares are filled, so count them one by one."},
+"ex":{"q":"A park covers 12 whole grid squares, and each square represents 100 m by 100 m. What is the area of the park in square metres?","o":["1,200 sq m","12,000 sq m","120,000 sq m","1,000,000 sq m"],"a":2,"why":"One square is 100 by 100, which is 10,000 square metres. Twelve squares give 12 times 10,000, which equals 120,000 square metres."},
+"tip":"Find the area of one square first, then multiply by the count.",
+"quiz":[
+{"q":"Each grid square is 50 m by 50 m. How many square metres is one square?","o":["100","5,000","2,500","250"],"a":2,"why":"Multiply 50 by 50 to get 2,500 square metres."},
+{"q":"An area holds 8 whole squares and 4 halves. How many squares is that in total?","o":["12 squares","8 squares","4 squares","10 squares"],"a":3,"why":"Four halves make two whole squares, so 8 plus 2 gives 10 squares."}]},
+
+{"t":"Grid references and coordinates","intro":"You will learn how to read a grid reference such as B3 to locate a point. Coordinates are used on maps, in games and in many spatial tests.","cards":[
+{"h":"Letters run across, numbers down","b":"In a common grid, the letter names a column and the number names a row. B3 means column B and row 3, where the two lines cross.","i":"link"},
+{"h":"Read letter before number","b":"Always give the column first, just as a street address lists the street before the house. Reversing them sends you to a different square.","i":"book"},
+{"h":"Locate point inside square","b":"A grid reference usually picks a whole square, and the point sits inside it. Estimate its position in tenths of a square if the map allows.","i":"target"}],
+"fig":{"type":"grid","title":"Grid labels","rows":[["A1","B1","C1"],["A2","B2","C2"],["A3","B3","C3"]],"hi":[2,1],"note":"B3 is column B, row 3."},
+"ex":{"q":"A station sits at B3. Which grid square is one column to the right and one row up from B3?","o":["A4","C2","B2","C4"],"a":1,"why":"Moving one column right takes B to C, and moving one row up takes 3 to 2, giving C2."},
+"tip":"Letters go across first, then numbers go down.",
+"quiz":[
+{"q":"What does the grid reference A5 identify?","o":["Column 5, row A","Column A, row 5","Row A only","Square 5 of column one"],"a":1,"why":"The letter names the column and the number names the row, so A5 is column A, row 5."},
+{"q":"How many squares lie along the same row from A1 to C1, including both ends?","o":["2","5","3","4"],"a":2,"why":"The squares A1, B1 and C1 are the three squares in that row."}]},
+
+{"t":"Building a mental map of a place","intro":"You will learn how to store a place as a set of relationships rather than a set of pictures. A mental map keeps you oriented when you cannot see a map.","cards":[
+{"h":"Store landmarks as anchors","b":"Pick a few landmarks, such as a station, a park and a shop, and note their rough positions. Each anchor gives you a fixed point to rebuild the layout from.","i":"brain"},
+{"h":"Link places by direction","b":"Describe how one landmark lies from another, such as the park is north of the station. These links let you picture the area without seeing a map.","i":"link"},
+{"h":"Test your map from memory","b":"Close your eyes and imagine walking from one landmark to another. If the route feels clear, your mental map is accurate enough to use.","i":"eye"}],
+"fig":{"type":"cycle","title":"Building a mental map","nodes":["Landmark","Direction","Distance","Route"],"note":"Add one link at a time, then test the whole."},
+"ex":{"q":"The park is north of the station, and the shop is east of the park. Roughly which direction is the shop from the station?","o":["North-west","North-east","South-east","South-west"],"a":1,"why":"The park lies north of the station and the shop lies east of the park, so the shop is north and east of the station, which is roughly north-east."},
+"tip":"Link each new place to one you already know.",
+"quiz":[
+{"q":"What is a good first step in building a mental map?","o":["Memorise every street name","Pick a few landmarks as anchors","Draw the map to scale","Count every building"],"a":1,"why":"A few fixed anchors give you reference points, which is easier than memorising everything."},
+{"q":"If your mental route feels unclear when you test it, what should you do?","o":["Give up on the area","Trust the first guess","Add missing links between landmarks","Ignore the directions"],"a":2,"why":"Missing links are the usual cause of an unclear route, so adding them fixes the gap."}]},
+
+{"t":"Turning directions into a route sketch","intro":"You will learn how to sketch a route from written directions, then check it against a map. A quick sketch prevents wrong turns and speeds up planning.","cards":[
+{"h":"Read directions in order","b":"Write each instruction on its own line, such as turn left at the church. Keeping the order intact stops steps from being skipped.","i":"book"},
+{"h":"Draw one line per leg","b":"Sketch each straight leg as a line, with a label for the turn at its end. Add the distance if the directions give one.","i":"chart"},
+{"h":"Check sketch against map","b":"Compare the finished sketch with the real map, and confirm the turns match the roads. A quick check catches reversed left and right turns.","i":"shield"}],
+"fig":{"type":"steps","title":"From directions to sketch","steps":["List steps","Draw legs","Mark turns","Check map"],"note":"A sketch turns words into a shape you can follow."},
+"ex":{"q":"Directions say: walk 200 m north, then turn right and walk 300 m. Which way do you go on the second leg?","o":["West","East","North","South"],"a":1,"why":"When you face north, a right turn points you east, so the second leg runs east for 300 m."},
+"tip":"Facing north, right is east and left is west.",
+"quiz":[
+{"q":"You face south and turn left. Which direction are you now facing?","o":["East","West","North","South"],"a":0,"why":"Facing south, your left hand points east, so a left turn sends you east."},
+{"q":"Directions give three legs of 200 m, 350 m and 150 m. What is the total distance?","o":["600 m","650 m","700 m","750 m"],"a":2,"why":"Adding 200 and 350 gives 550, and adding 150 gives 700 m."}]},
+
+{"t":"Shortest path on a city grid","intro":"You will learn how to find the shortest walking route along a grid of streets. Grid counting is the core idea behind many route planning questions.","cards":[
+{"h":"Walk along the streets","b":"On a street grid you cannot cut through blocks, so distance is measured along the streets. The total is the number of east-west blocks plus the number of north-south blocks.","i":"puzzle"},
+{"h":"Many routes share one length","b":"Any route that only moves towards the target has the same total length. For example, going 3 blocks east and 2 blocks north always takes 5 blocks, in any order.","i":"brain"},
+{"h":"Never move away from goal","b":"A shortest route on a grid never goes backwards or loops away from the target. Any detour that moves away adds extra blocks you must walk.","i":"target"}],
+"fig":{"type":"bars","title":"Route lengths in blocks","data":[["Direct",7],["Detour",9],["Long loop",13]],"note":"The direct route is the shortest of these three."},
+"ex":{"q":"Your destination is 4 blocks east and 3 blocks north of you. What is the shortest route length in blocks?","o":["12","3","1","7"],"a":3,"why":"The shortest route uses all 4 east steps and all 3 north steps, so 4 plus 3 gives 7 blocks."},
+"tip":"Any shortest route on a grid only moves towards the target.",
+"quiz":[
+{"q":"A route goes 5 blocks east, then 2 blocks west, then 1 block north. What is its total length?","o":["6","4","8","2"],"a":2,"why":"Every move adds to the length, so 5 plus 2 plus 1 gives 8 blocks, even though the west moves cancel some progress."},
+{"q":"Which route to the same destination is shortest on a grid?","o":["A loop round the park","A route that goes west first","A route with extra turns and detours","Straight east then north with no backtracking"],"a":3,"why":"Moving only towards the target uses the fewest blocks, while loops and westward moves add extra blocks."}]},
+
+{"t":"Straight line versus walking route","intro":"You will learn why the straight line between two points is always shorter than a walking route. You will also use Pythagoras to measure that straight line.","cards":[
+{"h":"A straight line is shortest","b":"Between any two points, the straight line is the shortest possible distance. Any bent path between them must be longer, because it adds sideways movement.","i":"target"},
+{"h":"Use Pythagoras for the diagonal","b":"For a move of 3 blocks east and 4 blocks north, the straight distance is 5 blocks. Square each side, add the squares, then take the square root: 9 plus 16 is 25, and the root of 25 is 5.","i":"chart"},
+{"h":"Compare with the walking route","b":"Walking along the streets takes 3 plus 4, which is 7 blocks. That is longer than the straight line of 5 blocks, and the gap shows the extra walking the street grid forces.","i":"clock"}],
+"fig":{"type":"compare","title":"Straight line versus streets","left":{"h":"Straight line","pts":["Diagonal across blocks","Length 5 blocks","Cuts across the blocks"]},"right":{"h":"Street route","pts":["East then north","Length 7 blocks","Follows the grid"]},"note":"The diagonal is shorter than the streets."},
+"ex":{"q":"A walker moves 6 km east and then 8 km north. What is the straight line distance?","o":["14 km","2 km","10 km","12 km"],"a":2,"why":"The squares are 36 and 64, which add to 100, and the square root of 100 is 10 km."},
+"tip":"The straight line between two points is always the shortest distance.",
+"quiz":[
+{"q":"A route goes 9 blocks east and 12 blocks north. What is the straight line distance?","o":["21","15","3","108"],"a":1,"why":"The squares are 81 and 144, which add to 225, and the square root of 225 is 15."},
+{"q":"Why is a walking route through the streets longer than the straight line?","o":["Streets are curved","The route must follow right angled turns","Straight lines do not exist","Walkers are slower"],"a":1,"why":"Right angled turns add sideways steps that a straight diagonal avoids."}]},
+
+{"t":"Comparing two routes by total length","intro":"You will learn to add up route segments and compare the totals fairly. A careful total stops you choosing the route that only looks shorter.","cards":[
+{"h":"Add every segment","b":"Write the length of each segment along the route, then add them in order. Missing one segment is the most common error in these questions.","i":"chart"},
+{"h":"Compare totals, not first legs","b":"A route that starts short can finish long. Always compare the complete totals from start to finish before you choose.","i":"eye"},
+{"h":"Note the difference","b":"Subtract the smaller total from the larger to find how much longer the other route is. This gives a clear measure of the extra distance.","i":"spark"}],
+"fig":{"type":"bars","title":"Total length of three routes","data":[["Route A",14],["Route B",11],["Route C",17]],"note":"Route B has the shortest total of the three."},
+"ex":{"q":"Route A has legs of 4, 6 and 3 km. Route B has legs of 5, 2 and 7 km. Which route is shorter, and by how much?","o":["Route A, by 1 km","Route B, by 1 km","Route A, by 3 km","They are equal"],"a":0,"why":"Route A totals 4 plus 6 plus 3, which is 13 km. Route B totals 5 plus 2 plus 7, which is 14 km, so A is shorter by 1 km."},
+"tip":"Write each leg in the sum so you do not miss one.",
+"quiz":[
+{"q":"A route has legs of 2 km, 8 km and 5 km. What is its total?","o":["13 km","16 km","10 km","15 km"],"a":3,"why":"2 plus 8 plus 5 equals 15 km."},
+{"q":"Route X is 20 km and route Y is 26 km. How much longer is Y?","o":["4 km","6 km","46 km","8 km"],"a":1,"why":"26 minus 20 is 6 km."}]},
+
+{"t":"Tracing the cheapest path through a network","intro":"You will learn how to find the shortest path through a network of junctions, by building up totals one junction at a time. The same method underlies real navigation software.","cards":[
+{"h":"Start from the origin","b":"Label the start with a total of zero, and every other junction with an unknown total. Each step will fill in better totals as you go.","i":"target"},
+{"h":"Always extend the cheapest total","b":"Choose the junction with the lowest total so far and check the roads leaving it. Update a neighbour only if the new total is lower than the one already recorded.","i":"brain"},
+{"h":"Repeat until goal is fixed","b":"Keep fixing the cheapest unvisited junction until your goal is reached. The total recorded there is the shortest distance from the start.","i":"puzzle"}],
+"fig":{"type":"steps","title":"Shortest path method","steps":["Set start 0","Pick cheapest","Update roads","Repeat"],"note":"Stop when the goal junction is fixed."},
+"ex":{"q":"From start S, the road to A is 4 and the road to B is 2. The road from A to G is 5, and the road from B to G is 9. What is the shortest distance from S to G?","o":["9","11","7","13"],"a":0,"why":"Via A the total is 4 plus 5, which is 9. Via B it is 2 plus 9, which is 11, so the shortest distance is 9."},
+"tip":"A cheaper total found later always replaces a dearer one.",
+"quiz":[
+{"q":"From start S, a road to A costs 3 and a road from A to G costs 6. A direct road from S to G costs 12. What is the shortest total?","o":["12","9","18","3"],"a":1,"why":"Going through A costs 3 plus 6, which is 9, and that beats the direct road of 12."},
+{"q":"In the shortest path method, which junction do you process next?","o":["The one furthest from the start","The one you reached first","A random unvisited junction","The one with the lowest total so far"],"a":3,"why":"Picking the lowest total keeps every fixed total the shortest found so far."}]},
+
+{"t":"Choosing between two routes with a detour","intro":"You will learn when a detour is worth taking because it gives a shorter overall journey. The decision depends on total time, not just the first turn.","cards":[
+{"h":"Compare full distances","b":"A road that looks direct may be slow or blocked, so a longer route can win. Add up the full detour to see whether it beats the original path.","i":"shield"},
+{"h":"Include the time too","b":"Two routes of equal distance can take different times if the speeds differ. Use distance divided by speed to compare journey times.","i":"clock"},
+{"h":"Decide with a margin","b":"If the routes differ only slightly, traffic and measurement errors may matter. In that case, pick the simpler route when the gap is tiny.","i":"heart"}],
+"fig":{"type":"compare","title":"Direct road versus detour","left":{"h":"Direct road","pts":["Length 10 km","Speed 50 km/h","Through the town"]},"right":{"h":"Detour","pts":["Length 14 km","Speed 80 km/h","Mostly on a fast road"]},"note":"Compare times, not just distances."},
+"ex":{"q":"The direct road is 10 km at 50 km/h. The detour is 14 km at 80 km/h. Which is faster, and by how much?","o":["Direct road, by 1.5 minutes","Detour, by 1.5 minutes","Both take 12 minutes","Detour, by 3 minutes"],"a":1,"why":"The direct road takes 10 divided by 50, which is 0.2 hours or 12 minutes. The detour takes 14 divided by 80, which is 0.175 hours or 10.5 minutes, so it is faster by 1.5 minutes."},
+"tip":"Time equals distance divided by speed, so speed matters as much as length.",
+"quiz":[
+{"q":"A journey of 60 km at 60 km/h takes how long?","o":["30 minutes","90 minutes","1 hour","2 hours"],"a":2,"why":"Distance divided by speed is 60 divided by 60, which equals 1 hour."},
+{"q":"A 45 km trip at 90 km/h takes how long?","o":["30 minutes","45 minutes","1 hour","90 minutes"],"a":0,"why":"45 divided by 90 is 0.5 hours, which is 30 minutes."}]},
+
+{"t":"Routes with one-way streets","intro":"You will learn how one-way streets change which route is shortest. Ignoring direction rules is a common reason for wrong answers.","cards":[
+{"h":"Direction limits your options","b":"A one-way street can only be used in one direction, so it cannot count for a trip the other way. Mark each allowed direction with an arrow before you measure.","i":"shield"},
+{"h":"Check the return path separately","b":"The route from A to B may differ from the route from B to A if one-way streets are involved. Always plan each direction on its own.","i":"eye"},
+{"h":"Look for a loop around","b":"When a direct road is blocked by one-way traffic, a loop of two or three blocks may still be the shortest legal path. Count it carefully.","i":"puzzle"}],
+"fig":{"type":"steps","title":"Planning one-way routes","steps":["Mark arrows","Trace each leg","Count the loop","Compare totals"],"note":"Only legal legs count towards the total."},
+"ex":{"q":"A direct road from X to Y is 4 blocks, but it is one-way from Y to X. A loop X to Z to Y is 3 blocks plus 3 blocks, and both legs run the allowed way. Which is the shortest allowed route from X to Y?","o":["4 blocks, the direct road","3 blocks, via Z","6 blocks, the loop","8 blocks, the loop"],"a":2,"why":"The direct road only runs from Y to X, so it cannot be used. The loop is 3 plus 3, which is 6 blocks, and it is the shortest allowed route."},
+"tip":"Arrows matter more than distances when checking whether a route is legal.",
+"quiz":[
+{"q":"A one-way street allows travel only eastwards. What must you avoid when planning a westward trip?","o":["Using it going west","Any junction","Turning left","Counting blocks"],"a":0,"why":"A one-way eastward street cannot be used westward, so a westward trip must avoid it."},
+{"q":"Two routes from A to B are 7 and 9 blocks long, but the 7-block route is one-way from B to A only. Which route is valid from A to B?","o":["Both are valid","The 7-block route","Neither is valid","The 9-block route"],"a":3,"why":"The 7-block route only runs from B to A, so from A to B you must take the 9-block route."}]},
+
+{"t":"Estimating travel time along a route","intro":"You will learn how to turn a planned route into an estimate of journey time. Time estimates help you decide when to leave and whether a route fits your plan.","cards":[
+{"h":"Time is distance over speed","b":"Divide the total distance by your average speed to get the time for the whole route. Keep both in the same units, such as kilometres and kilometres per hour.","i":"clock"},
+{"h":"Split the route into legs","b":"Work out the time for each leg separately if the speeds differ. Add the leg times together to get the full journey time.","i":"chart"},
+{"h":"Add a margin for stops","b":"Real journeys include junctions, traffic lights and short pauses. Add a few minutes per stop to keep your estimate realistic.","i":"heart"}],
+"fig":{"type":"bars","title":"Leg times in minutes","data":[["Leg 1 walk",12],["Leg 2 bus",8],["Leg 3 walk",6]],"note":"The total journey time is 26 minutes."},
+"ex":{"q":"A route is 15 km long, and you average 30 km/h. How long, in minutes, does the route take?","o":["15 minutes","45 minutes","60 minutes","30 minutes"],"a":3,"why":"Time is 15 divided by 30, which is 0.5 hours. Half an hour is 30 minutes."},
+"tip":"Convert hours to minutes by multiplying by 60.",
+"quiz":[
+{"q":"Leg 1 is 4 km at 8 km/h, and leg 2 is 6 km at 12 km/h. What is the total time?","o":["1 hour","45 minutes","2 hours","30 minutes"],"a":0,"why":"Each leg takes half an hour, so the total is 1 hour."},
+{"q":"Why add a margin to a travel time estimate?","o":["It makes the route longer","Speed always rises","Distance is measured wrongly","Stops and junctions add time not in the sum"],"a":3,"why":"Stops, lights and junctions add time that a simple distance and speed calculation misses."}]},
+
+{"t":"Planning around a blocked road","intro":"You will learn how to replan a route when one road is closed. Working around an obstacle tests your ability to keep track of alternatives.","cards":[
+{"h":"Remove the blocked link","b":"Cross out the closed road on your sketch so you cannot use it by mistake. This keeps the remaining network clear to plan with.","i":"shield"},
+{"h":"Find the nearest alternatives","b":"Look for junctions that still connect to your start and goal. The best detour often leaves the original route at the last open junction before the closure.","i":"target"},
+{"h":"Compare the new total","b":"Add up the detour and compare it with your original route length. Choose the shorter total unless time or safety says otherwise.","i":"chart"}],
+"fig":{"type":"seq","title":"Route length in km","items":["18","-4","+9","23"],"note":"Remove the 4 km section, then add the 9 km detour."},
+"ex":{"q":"Your original route is 18 km. A closure blocks a 4 km section, and a detour of 9 km replaces it. What is the new total length?","o":["22 km","23 km","27 km","13 km"],"a":1,"why":"Remove the blocked 4 km from 18 km to get 14 km, then add the 9 km detour to reach 23 km."},
+"tip":"Subtract the blocked section before you add the detour.",
+"quiz":[
+{"q":"Your route is 20 km and a 5 km section is blocked, replaced by a 7 km detour. What is the new length?","o":["25 km","12 km","22 km","27 km"],"a":2,"why":"Removing 5 km leaves 15 km, and adding the 7 km detour gives 22 km."},
+{"q":"Why cross out the blocked road on your sketch?","o":["To change the scale","To make the sketch look neat","To count the junctions","To avoid accidentally using it when planning"],"a":3,"why":"A closed road still looks usable on a sketch, so marking it out keeps the plan valid."}]},
+
+{"t":"Checking your finished route plan","intro":"You will learn a final checklist that confirms your route is complete, legal and as short as it can be. A quick review catches the mistakes that cost the most time.","cards":[
+{"h":"Confirm start and finish","b":"Check that the route begins at your start point and ends at your goal, with no gaps between legs. A missing link is the most common cause of a failed route.","i":"target"},
+{"h":"Check directions and rules","b":"Confirm every leg follows allowed directions, such as one-way streets and open roads. A route that breaks a rule is not a valid plan, however short it looks.","i":"shield"},
+{"h":"Test against a shorter option","b":"Ask whether a straighter line or a different junction would save distance. A quick comparison often reveals a shorter, equally valid route.","i":"spark"}],
+"fig":{"type":"steps","title":"Final route checklist","steps":["Start and goal","Rules and legs","Compare option","Record total"],"note":"Work through each check before you commit."},
+"ex":{"q":"A route from start to goal has legs of 5, 3 and 6 km. Another valid route totals 12 km. Which is shorter, and by how much?","o":["The first, by 2 km","The second, by 2 km","The second, by 4 km","They are equal"],"a":1,"why":"The first route totals 14 km, and the second totals 12 km, so the second is shorter by 2 km."},
+"tip":"Add the legs once more before you trust a total.",
+"quiz":[
+{"q":"Which check comes first in a final route review?","o":["Confirm the start and goal are linked","Count the exact number of turns","Draw a new map from scratch","Change the scale of the map"],"a":0,"why":"A route must connect the start and goal before any other check is worth doing."},
+{"q":"A route passes a one-way street the wrong way. What does this make it?","o":["A faster route","A scenic route","An invalid route","A shorter route"],"a":2,"why":"Breaking a direction rule makes the route invalid, no matter how short it looks."}]}
+]}

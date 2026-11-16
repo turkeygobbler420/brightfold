@@ -1,0 +1,2100 @@
+{
+ "id": "focus",
+ "lessons": [
+  {
+   "t": "Why your attention drifts",
+   "intro": "Your attention drifts within minutes of starting almost any task. Understanding why this happens lets you plan around it instead of fighting yourself.",
+   "cards": [
+    {
+     "h": "Attention is a limited resource",
+     "b": "Your brain can hold only a small amount of focus at once. Every new thought, sound or notification takes a share of it, so spare focus runs thin.",
+     "i": "brain"
+    },
+    {
+     "h": "Drift is normal",
+     "b": "Research on everyday thinking finds that the mind wanders in a large share of waking hours. Noticing the drift is the skill that matters, not avoiding it altogether.",
+     "i": "eye"
+    },
+    {
+     "h": "Set a clear starting point",
+     "b": "Begin each session by writing one sentence that says what you will do next. A specific starting point gives your attention a target to return to.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "cycle",
+    "title": "The focus loop",
+    "nodes": [
+     "Start",
+     "Drift",
+     "Notice",
+     "Return"
+    ],
+    "note": "Noticing and returning is the core skill."
+   },
+   "ex": {
+    "q": "You plan 3 focus blocks of 15 minutes each, with a 5 minute break after each block. How many minutes of focused work is that in total?",
+    "o": [
+     "30",
+     "45",
+     "50",
+     "60"
+    ],
+    "a": 1,
+    "why": "Three blocks of 15 minutes make 45 minutes. The breaks are not focused work, so they are not counted."
+   },
+   "tip": "Write the task in one sentence at the top of the page before you begin.",
+   "quiz": [
+    {
+     "q": "If you plan 4 blocks of 20 minutes each, how many minutes of focus is that?",
+     "o": [
+      "60",
+      "70",
+      "80",
+      "100"
+     ],
+     "a": 2,
+     "why": "Four times 20 is 80."
+    },
+    {
+     "q": "Which response best helps you after your mind wanders?",
+     "o": [
+      "Notice the drift and return to the task",
+      "Blame yourself for a while",
+      "Switch to a new task at once",
+      "Wait until you feel motivated"
+     ],
+     "a": 0,
+     "why": "Noticing the drift and returning is the repeatable skill that rebuilds focus."
+    }
+   ]
+  },
+  {
+   "t": "Setting a timer for focus",
+   "intro": "A focus block that is too long can feel impossible, and one that is too short gives little progress. Choosing a length you can actually finish is the first step toward longer sessions.",
+   "cards": [
+    {
+     "h": "Start with a short block",
+     "b": "Five to ten minutes is enough for a first attempt. A short target is easy to hit, and each success makes the next session feel more possible.",
+     "i": "clock"
+    },
+    {
+     "h": "Extend in small steps",
+     "b": "Add about five minutes each time you finish a block well. Gradual growth builds stamina without the crash that comes from trying an hour on day one.",
+     "i": "chart"
+    },
+    {
+     "h": "Use a visible timer",
+     "b": "A timer on screen shows how much time is left without checking the clock. Seeing the countdown keeps the goal in view and reduces the urge to check other things.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Focus block lengths",
+    "data": [
+     [
+      "5 min",
+      5
+     ],
+     [
+      "15 min",
+      15
+     ],
+     [
+      "25 min",
+      25
+     ],
+     [
+      "45 min",
+      45
+     ]
+    ],
+    "note": "Build up to longer blocks gradually."
+   },
+   "ex": {
+    "q": "You can focus for 10 minutes on Monday. You finish every block and add 5 minutes to your target each day. How many minutes can you focus on Thursday?",
+    "o": [
+     "20",
+     "25",
+     "30",
+     "35"
+    ],
+    "a": 1,
+    "why": "Thursday is three days after Monday, so three additions of 5 minutes give 10 + 15 = 25 minutes."
+   },
+   "tip": "Set the timer before you open anything else.",
+   "quiz": [
+    {
+     "q": "A block is 25 minutes, and you complete 4 blocks in a row. How many minutes of focus is that in total?",
+     "o": [
+      "80",
+      "90",
+      "100",
+      "120"
+     ],
+     "a": 2,
+     "why": "Four blocks of 25 minutes is 4 times 25, which equals 100."
+    },
+    {
+     "q": "What is the main benefit of a visible countdown?",
+     "o": [
+      "It keeps the goal in view and reduces clock checking",
+      "It makes the work feel shorter in the mind",
+      "It removes the need for any breaks",
+      "It guarantees perfect concentration"
+     ],
+     "a": 0,
+     "why": "The countdown keeps the goal in view, so you check the clock less often."
+    }
+   ]
+  },
+  {
+   "t": "Breaking work into first steps",
+   "intro": "Large tasks stall because it is unclear where to begin. Breaking them into small first steps makes starting easier and progress easier to see.",
+   "cards": [
+    {
+     "h": "Name the finished result",
+     "b": "Write down what done looks like in one sentence. A clear end point stops you drifting into side tasks that feel productive but move nothing forward.",
+     "i": "target"
+    },
+    {
+     "h": "Split into small pieces",
+     "b": "Divide the task into parts that each take 10 to 20 minutes. Small pieces are easier to start, and finishing one gives a clear signal to continue.",
+     "i": "puzzle"
+    },
+    {
+     "h": "Choose the first physical action",
+     "b": "Pick the very first action, such as opening the document or writing a heading. A concrete action removes the friction that stalls attention.",
+     "i": "spark"
+    }
+   ],
+   "fig": {
+    "type": "steps",
+    "title": "From big task to first step",
+    "steps": [
+     "Define",
+     "Split",
+     "Start",
+     "Check"
+    ],
+    "note": "Make each step small enough to finish."
+   },
+   "ex": {
+    "q": "A report has 4 sections. Each section takes 20 minutes to draft, and you plan 2 focus blocks of 40 minutes. Does the plan fit the drafting time exactly?",
+    "o": [
+     "Yes, with no time to spare",
+     "No, 20 minutes short",
+     "Yes, with 20 minutes spare",
+     "No, 40 minutes short"
+    ],
+    "a": 0,
+    "why": "Four sections at 20 minutes is 80 minutes. Two blocks of 40 minutes also total 80, so the plan fits exactly."
+   },
+   "tip": "If a step takes more than 20 minutes, split it again.",
+   "quiz": [
+    {
+     "q": "A task takes 90 minutes. What is the fewest 30 minute blocks needed to finish it?",
+     "o": [
+      "2",
+      "4",
+      "3",
+      "5"
+     ],
+     "a": 2,
+     "why": "Three blocks of 30 minutes make 90 minutes exactly."
+    },
+    {
+     "q": "What makes a first step effective?",
+     "o": [
+      "It is vague enough to cover the whole task",
+      "It waits until you feel fully ready",
+      "It is the hardest part of the task",
+      "It is a concrete action you can start right away"
+     ],
+     "a": 3,
+     "why": "A concrete action you can start immediately removes the friction that stalls attention."
+    }
+   ]
+  },
+  {
+   "t": "Pacing focus and rest in cycles",
+   "intro": "Working in unbroken stretches can exhaust you, while constant small breaks never let momentum build. A steady rhythm of focus and rest protects your attention across a long day.",
+   "cards": [
+    {
+     "h": "Work in fixed blocks",
+     "b": "A fixed block of 25 minutes gives your attention a predictable shape. Knowing when the block ends makes it easier to commit to the work inside it.",
+     "i": "clock"
+    },
+    {
+     "h": "Rest briefly and deliberately",
+     "b": "Use five minutes to stand, drink water or look at something far away. A deliberate break resets attention, while scrolling a feed often steals it.",
+     "i": "heart"
+    },
+    {
+     "h": "Repeat the cycle",
+     "b": "After four blocks, take a longer rest of 15 to 20 minutes. A repeating rhythm helps you start each block without renegotiating with yourself.",
+     "i": "chart"
+    }
+   ],
+   "fig": {
+    "type": "seq",
+    "title": "Work and rest pattern",
+    "items": [
+     "25m",
+     "5m",
+     "25m",
+     "5m",
+     "?"
+    ],
+    "note": "Work block, then a short rest."
+   },
+   "ex": {
+    "q": "You work in 25 minute blocks with 5 minute breaks between them. How many minutes pass from the start of the first block to the end of the third block?",
+    "o": [
+     "75",
+     "80",
+     "85",
+     "90"
+    ],
+    "a": 2,
+    "why": "Three blocks take 75 minutes and the two breaks between them take 10 minutes, giving 85."
+   },
+   "tip": "Decide on your break before the block starts, not when you are tired.",
+   "quiz": [
+    {
+     "q": "A cycle has 25 minutes of work and 5 minutes of rest. How many minutes is one full cycle?",
+     "o": [
+      "25",
+      "5",
+      "35",
+      "30"
+     ],
+     "a": 3,
+     "why": "Work and rest together make 25 + 5 = 30 minutes."
+    },
+    {
+     "q": "Which break is most likely to restore attention?",
+     "o": [
+      "Scrolling a social feed",
+      "Standing and looking far away",
+      "Checking email messages",
+      "Starting a new task"
+     ],
+     "a": 1,
+     "why": "Looking away and moving briefly is restful, while feeds, email and new tasks add demands."
+    }
+   ]
+  },
+  {
+   "t": "Protecting focus from interruptions",
+   "intro": "Interruptions from messages and alerts are the most common reason focus breaks down during the day. Taking control of when and how you respond protects your attention.",
+   "cards": [
+    {
+     "h": "Name your interruptions",
+     "b": "List the sources that pull you away, such as messages, alerts and colleagues. Naming them makes them easier to control than a vague feeling of being distracted.",
+     "i": "shield"
+    },
+    {
+     "h": "Batch checks into set times",
+     "b": "Read messages at two or three fixed points in the day instead of every few minutes. Batching leaves the rest of the time free for uninterrupted work.",
+     "i": "clock"
+    },
+    {
+     "h": "Close unused windows",
+     "b": "Close tabs, mute alerts and put the phone out of reach while you work. Removing the option is more reliable than relying on willpower in the moment.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "grid",
+    "title": "Check mail at set times",
+    "rows": [
+     [
+      "9:00",
+      "10:00",
+      "11:00"
+     ],
+     [
+      "Work",
+      "Work",
+      "Mail"
+     ],
+     [
+      "Work",
+      "Work",
+      "Work"
+     ]
+    ],
+    "hi": [
+     1,
+     2
+    ],
+    "note": "One scheduled check replaces many small ones."
+   },
+   "ex": {
+    "q": "You check messages 12 times an hour, and each check takes 2 minutes. How many minutes an hour go to checking?",
+    "o": [
+     "12",
+     "16",
+     "30",
+     "24"
+    ],
+    "a": 3,
+    "why": "Twelve checks at 2 minutes each is 24 minutes. Batching to two checks would cut this to 4 minutes."
+   },
+   "tip": "Turn off alerts first, then decide whether you need to check at all.",
+   "quiz": [
+    {
+     "q": "If you check messages 4 times an hour for 3 minutes each, how many minutes an hour is that?",
+     "o": [
+      "7",
+      "9",
+      "15",
+      "12"
+     ],
+     "a": 3,
+     "why": "Four checks of 3 minutes is 4 times 3, which is 12."
+    },
+    {
+     "q": "Which change most reliably reduces interruptions?",
+     "o": [
+      "Trying harder to ignore the alert",
+      "Keeping the phone nearby just in case",
+      "Checking everything as it arrives",
+      "Closing unneeded tabs and muting alerts"
+     ],
+     "a": 3,
+     "why": "Removing the source of interruptions works better than resisting them one by one."
+    }
+   ]
+  },
+  {
+   "t": "One task at a time beats switching",
+   "intro": "Many people believe they can handle several demanding tasks at once. Understanding what switching does to your attention helps you choose a more effective way to work.",
+   "cards": [
+    {
+     "h": "Why multitasking costs you",
+     "b": "The brain does not really run two demanding tasks at once. It switches between them, and each switch takes time and leaves some attention behind on the previous task.",
+     "i": "brain"
+    },
+    {
+     "h": "Keep one main task open",
+     "b": "Choose one primary task for the block and keep everything else out of view. A single open goal lets attention settle instead of splitting across options.",
+     "i": "target"
+    },
+    {
+     "h": "Use a parking list",
+     "b": "Write down any side thought in one place so it can wait. Capturing an idea takes seconds and frees your attention to return to the main work.",
+     "i": "book"
+    }
+   ],
+   "fig": {
+    "type": "compare",
+    "title": "Single task versus switching",
+    "left": {
+     "h": "Single task",
+     "pts": [
+      "One goal at a time",
+      "Fewer restarts",
+      "Deeper understanding"
+     ]
+    },
+    "right": {
+     "h": "Constant switching",
+     "pts": [
+      "Frequent restarts",
+      "Slower progress",
+      "More mistakes"
+     ]
+    },
+    "note": "Protect one task per block."
+   },
+   "ex": {
+    "q": "You switch tasks 10 times in an hour, and each switch costs about 1 minute. How many minutes of the hour are lost to switching?",
+    "o": [
+     "1",
+     "5",
+     "10",
+     "60"
+    ],
+    "a": 2,
+    "why": "Ten switches at one minute each cost 10 minutes, leaving 50 minutes for actual work."
+   },
+   "tip": "Name one task for each block and write it down.",
+   "quiz": [
+    {
+     "q": "A person loses 2 minutes per switch and switches 6 times in a morning. How many minutes are lost?",
+     "o": [
+      "8",
+      "12",
+      "10",
+      "16"
+     ],
+     "a": 1,
+     "why": "Six switches at 2 minutes each is 12 minutes."
+    },
+    {
+     "q": "What does a parking list help you do?",
+     "o": [
+      "Finish tasks faster by skipping them",
+      "Replace the main task with easier ones",
+      "Track how many breaks you have taken",
+      "Capture side thoughts so attention stays on the main task"
+     ],
+     "a": 3,
+     "why": "It stores side thoughts in one place so you do not need to act on them mid-task."
+    }
+   ]
+  },
+  {
+   "t": "Matching work to your energy",
+   "intro": "Your concentration is not the same at every hour of the day. Matching demanding work to your strongest periods can make the same effort produce noticeably better results.",
+   "cards": [
+    {
+     "h": "Notice your peak hours",
+     "b": "Most people have a window of stronger focus, often in the morning, though this varies widely. Track when concentration feels easiest for a week to find your own pattern.",
+     "i": "clock"
+    },
+    {
+     "h": "Match hard work to peaks",
+     "b": "Schedule demanding reading, writing or problem solving in your best window. Use lighter tasks such as filing or routine email when your energy is lower.",
+     "i": "chart"
+    },
+    {
+     "h": "Respect your natural dips",
+     "b": "A slump in the afternoon is common and not a personal failing. A short walk or a change of posture often lifts alertness more than pushing through.",
+     "i": "heart"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Typical focus pattern in a day",
+    "data": [
+     [
+      "Morning",
+      80
+     ],
+     [
+      "Midday",
+      60
+     ],
+     [
+      "Afternoon",
+      45
+     ],
+     [
+      "Evening",
+      70
+     ]
+    ],
+    "note": "Track your own week to find your peak."
+   },
+   "ex": {
+    "q": "Your focus window lasts 90 minutes and starts at 7:30 am. What time does it end?",
+    "o": [
+     "8:30",
+     "9:00",
+     "9:30",
+     "10:00"
+    ],
+    "a": 1,
+    "why": "Adding 90 minutes to 7:30 gives 9:00, since 90 minutes is one hour and a half."
+   },
+   "tip": "Protect your peak window from meetings and messages.",
+   "quiz": [
+    {
+     "q": "A focus window starts at 8:00 and lasts 2 hours. What time does it end?",
+     "o": [
+      "10:00",
+      "9:30",
+      "11:00",
+      "9:00"
+     ],
+     "a": 0,
+     "why": "Two hours after 8:00 is 10:00."
+    },
+    {
+     "q": "Which task suits a low energy period best?",
+     "o": [
+      "Solving a complex problem",
+      "Writing a detailed report",
+      "Filing or sorting routine emails",
+      "Learning a new skill"
+     ],
+     "a": 2,
+     "why": "Routine tasks need less concentration, so they suit a lower energy period."
+    }
+   ]
+  },
+  {
+   "t": "Recovering after a lapse",
+   "intro": "Almost everyone loses focus during a session, sometimes for the whole block. How you recover matters more than the lapse itself, because a quick, calm restart keeps the session worth doing.",
+   "cards": [
+    {
+     "h": "Expect lapses to happen",
+     "b": "Everyone loses focus at times, sometimes for an entire session. Planning for lapses makes them a normal event rather than a sign that you have failed.",
+     "i": "shield"
+    },
+    {
+     "h": "Use a short reset ritual",
+     "b": "Take three slow breaths, sit up and state your task in one sentence. A consistent ritual signals your brain that focused work is starting again.",
+     "i": "spark"
+    },
+    {
+     "h": "Avoid the all-or-nothing trap",
+     "b": "Telling yourself the session is ruined makes it easy to quit. Restart with even five minutes, since a short block still counts toward your goal.",
+     "i": "heart"
+    }
+   ],
+   "fig": {
+    "type": "steps",
+    "title": "Recovering from a lapse",
+    "steps": [
+     "Notice",
+     "Pause",
+     "Reset",
+     "Resume"
+    ],
+    "note": "Recovery is a skill you can practise."
+   },
+   "ex": {
+    "q": "You planned 4 blocks of 25 minutes. You focused fully for the first block, then did only 10 minutes of the second before losing focus. How many focused minutes did you complete?",
+    "o": [
+     "25",
+     "30",
+     "35",
+     "50"
+    ],
+    "a": 2,
+    "why": "The first block gave 25 minutes and the partial second block gave 10, which totals 35 focused minutes."
+   },
+   "tip": "Resume with the smallest possible step rather than a full restart.",
+   "quiz": [
+    {
+     "q": "You planned 3 blocks of 20 minutes. You completed 2 full blocks plus 5 minutes of a third. How many minutes did you focus?",
+     "o": [
+      "45",
+      "50",
+      "40",
+      "60"
+     ],
+     "a": 0,
+     "why": "Two blocks of 20 minutes is 40, plus 5 makes 45."
+    },
+    {
+     "q": "What is the best response to losing focus mid-session?",
+     "o": [
+      "End the whole session",
+      "Wait until the next day",
+      "Switch to unrelated tasks until you feel ready",
+      "Pause, reset and restart with the smallest step"
+     ],
+     "a": 3,
+     "why": "A brief reset and a small restart keeps momentum without giving up on the session."
+    }
+   ]
+  },
+  {
+   "t": "Growing a focus habit week by week",
+   "intro": "A focus habit forms through repetition at a steady, manageable size, not through occasional heroic efforts. Growing your target slowly and tracking it keeps the habit alive.",
+   "cards": [
+    {
+     "h": "Fixed time each day",
+     "b": "Doing focus work at the same time each day turns it into a habit. Familiar timing lowers the effort of starting, because the cue is already there.",
+     "i": "clock"
+    },
+    {
+     "h": "Track the minutes you complete",
+     "b": "A simple log of finished focus minutes shows progress that feelings alone can hide. Seeing the total grow is a dependable source of motivation.",
+     "i": "chart"
+    },
+    {
+     "h": "Review and adjust weekly",
+     "b": "Once a week, check which block lengths worked and which felt too long. Adjust the target gently so the habit grows without burning you out.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "seq",
+    "title": "Daily focus target by week",
+    "items": [
+     "10m",
+     "15m",
+     "20m",
+     "25m",
+     "?"
+    ],
+    "note": "Add five minutes each week."
+   },
+   "ex": {
+    "q": "In week 1 you focus for 10 minutes a day. Each following week adds 5 minutes to your daily target. What is your daily target in week 4?",
+    "o": [
+     "20",
+     "25",
+     "30",
+     "35"
+    ],
+    "a": 1,
+    "why": "Week 4 is three weeks after week 1, so three additions of 5 minutes bring the target to 25."
+   },
+   "tip": "Log your minutes at the end of each session, while they are fresh.",
+   "quiz": [
+    {
+     "q": "A habit starts at 10 minutes and grows by 5 minutes per week. What is the target after 6 weeks?",
+     "o": [
+      "30",
+      "40",
+      "45",
+      "35"
+     ],
+     "a": 3,
+     "why": "Five weeks of additions at 5 minutes each add 25 minutes to the starting 10, giving 35."
+    },
+    {
+     "q": "Why does a fixed session time help?",
+     "o": [
+      "It removes all effort",
+      "It guarantees no interruptions",
+      "The same cue makes starting feel automatic",
+      "It makes sessions longer by default"
+     ],
+     "a": 2,
+     "why": "A consistent time becomes a cue, so starting takes less deliberate effort."
+    }
+   ]
+  },
+  {
+   "t": "Defining the signal in the noise",
+   "intro": "Your attention is pulled by far more input than you can use, from messages to passing ideas. Learning to tell what matters from what does not is the foundation of focused work.",
+   "cards": [
+    {
+     "h": "Define your signal",
+     "b": "Signal is information that moves your current goal forward. Before you start, write one sentence stating what matters for this task so you can judge incoming items.",
+     "i": "target"
+    },
+    {
+     "h": "Noise is anything off goal",
+     "b": "Noise includes messages, adverts and interesting facts that pull you off course. It is not always bad, but it competes for the same limited attention.",
+     "i": "shield"
+    },
+    {
+     "h": "Sort before you react",
+     "b": "When something arrives, ask whether it serves the current goal. Sorting takes a moment and stops a small interruption becoming a long detour.",
+     "i": "eye"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Sorting an hour of input",
+    "data": [
+     [
+      "Signal",
+      5
+     ],
+     [
+      "Noise",
+      12
+     ],
+     [
+      "Urgent",
+      3
+     ]
+    ],
+    "note": "Sort before you react to anything."
+   },
+   "ex": {
+    "q": "An hour has 60 minutes. You receive 6 alerts, and each one costs about 3 minutes of attention. How many minutes go to alerts?",
+    "o": [
+     "18",
+     "6",
+     "12",
+     "24"
+    ],
+    "a": 0,
+    "why": "Six alerts at 3 minutes each costs 18 minutes, which is 30 percent of the hour."
+   },
+   "tip": "Ask whether it helps your goal before you read it.",
+   "quiz": [
+    {
+     "q": "If 5 notifications an hour cost 2 minutes each, how many minutes are lost?",
+     "o": [
+      "10",
+      "7",
+      "5",
+      "12"
+     ],
+     "a": 0,
+     "why": "Five times 2 is 10 minutes."
+    },
+    {
+     "q": "What is the best first question to ask about an incoming item?",
+     "o": [
+      "Is it interesting?",
+      "Does it help my current goal?",
+      "Who sent it?",
+      "How long will it take to read?"
+     ],
+     "a": 1,
+     "why": "Connecting it to the current goal tells you whether it deserves attention now."
+    }
+   ]
+  },
+  {
+   "t": "Scanning for the key detail",
+   "intro": "Documents and search results often hold far more text than you need. Scanning with a clear question lets you find the right detail without absorbing everything else.",
+   "cards": [
+    {
+     "h": "Scan before you read",
+     "b": "Look at headings, bold words and numbers first to map the content. This gives you an outline, so each detail has a place to attach to.",
+     "i": "eye"
+    },
+    {
+     "h": "Look for your answer",
+     "b": "Ask a precise question, then search for the words or numbers that answer it. A clear question stops you absorbing everything else on the page.",
+     "i": "target"
+    },
+    {
+     "h": "Skip what does not fit",
+     "b": "Once you have your answer, stop reading that section. Continuing out of habit lets noise replace the information you actually need.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "grid",
+    "title": "Scan for the matching row",
+    "rows": [
+     [
+      "Supplier",
+      "Cost",
+      "Days"
+     ],
+     [
+      "A",
+      "40",
+      "2"
+     ],
+     [
+      "B",
+      "30",
+      "5"
+     ],
+     [
+      "C",
+      "33",
+      "3"
+     ]
+    ],
+    "hi": [
+     3,
+     1
+    ],
+    "note": "Check each column against your two conditions."
+   },
+   "ex": {
+    "q": "You need a supplier that costs under 35 and delivers within 3 days. A costs 40 with 2 day delivery, B costs 30 with 5 day delivery, and C costs 33 with 3 day delivery. Which fits both conditions?",
+    "o": [
+     "A",
+     "B",
+     "C",
+     "None of them"
+    ],
+    "a": 2,
+    "why": "A is too expensive and B is too slow, while C is under 35 and delivers within 3 days, so it fits both conditions."
+   },
+   "tip": "Write your search question at the top of the page before you start scanning.",
+   "quiz": [
+    {
+     "q": "A list has 12 items. You need only the 5 marked urgent. How many items can you skip?",
+     "o": [
+      "5",
+      "7",
+      "12",
+      "17"
+     ],
+     "a": 1,
+     "why": "Twelve minus five leaves 7 items you can skip."
+    },
+    {
+     "q": "What should you do once you have found your answer?",
+     "o": [
+      "Stop and move on",
+      "Read the same section again slowly",
+      "Keep reading the whole section",
+      "Share it with everyone"
+     ],
+     "a": 0,
+     "why": "Stopping prevents extra material from replacing the information you need."
+    }
+   ]
+  },
+  {
+   "t": "Ignoring visual distractions",
+   "intro": "Your eyes are drawn to movement, colour and novelty, whether or not those things matter to you. Reducing what is visible during work makes it easier to keep your attention where you want it.",
+   "cards": [
+    {
+     "h": "Your eyes grab novelty",
+     "b": "Movement, bright colours and new items draw attention automatically. Even a glance at an unrelated element can cost some concentration.",
+     "i": "eye"
+    },
+    {
+     "h": "Simplify the visible field",
+     "b": "Keep only what the current task needs in view, such as one document and one window. Fewer visible options means fewer things competing for your attention.",
+     "i": "shield"
+    },
+    {
+     "h": "Use steady background sound",
+     "b": "Many people find steady, low-volume sound easier to ignore than changing noise or lyrics. Test what works for you and keep it consistent.",
+     "i": "puzzle"
+    }
+   ],
+   "fig": {
+    "type": "compare",
+    "title": "Cluttered versus clear workspace",
+    "left": {
+     "h": "Cluttered desk",
+     "pts": [
+      "Many open tabs",
+      "Phone in view",
+      "Loud background"
+     ]
+    },
+    "right": {
+     "h": "Clear workspace",
+     "pts": [
+      "One document open",
+      "Phone out of view",
+      "Steady, quiet sound"
+     ]
+    },
+    "note": "Reduce what your eyes can grab."
+   },
+   "ex": {
+    "q": "Your screen has 8 tabs open, and your task needs only 2 of them. How many tabs are not needed?",
+    "o": [
+     "2",
+     "6",
+     "4",
+     "8"
+    ],
+    "a": 1,
+    "why": "Eight minus two equals 6 tabs that are not needed. Closing them removes options that pull on your eyes."
+   },
+   "tip": "Close any window you do not need before you start the block.",
+   "quiz": [
+    {
+     "q": "A desk has 12 items and you keep only 5. How many items are removed?",
+     "o": [
+      "7",
+      "6",
+      "5",
+      "8"
+     ],
+     "a": 0,
+     "why": "Twelve minus five equals 7 items removed."
+    },
+    {
+     "q": "Why is a clear workspace helpful?",
+     "o": [
+      "It makes you feel busy",
+      "It removes the need to focus",
+      "Fewer visible options compete for attention",
+      "It increases the number of tasks"
+     ],
+     "a": 2,
+     "why": "Fewer visible competing items means less pull on your attention."
+    }
+   ]
+  },
+  {
+   "t": "Labelling passing thoughts",
+   "intro": "Stray thoughts and background sounds keep demanding a response, which splits your attention. Labelling them and returning to your task reduces their hold without a long internal argument.",
+   "cards": [
+    {
+     "h": "Notice what keeps pulling",
+     "b": "Pay attention to recurring thoughts or sounds that pull you away. Simply noticing them weakens their grip compared with reacting every time.",
+     "i": "eye"
+    },
+    {
+     "h": "Label instead of engaging",
+     "b": "Mentally say noted or later to a passing worry or sound. A short label files the thought away without giving it the full conversation it wants.",
+     "i": "puzzle"
+    },
+    {
+     "h": "Return to your anchor",
+     "b": "After labelling, bring attention back to the task or to a physical anchor such as the keyboard. Repeating this return is the core filtering skill.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "steps",
+    "title": "Labelling passing thoughts",
+    "steps": [
+     "Notice",
+     "Label",
+     "Let go",
+     "Return"
+    ],
+    "note": "Labelling weakens the pull of a thought."
+   },
+   "ex": {
+    "q": "You notice 3 distracting thoughts in a 25 minute block. Each time you label the thought and return in about 10 seconds. How many seconds are spent returning in total?",
+    "o": [
+     "10",
+     "25",
+     "45",
+     "30"
+    ],
+    "a": 3,
+    "why": "Three returns at 10 seconds each take 30 seconds in total."
+   },
+   "tip": "Name the thought in a few words and go back to work.",
+   "quiz": [
+    {
+     "q": "If each return takes 15 seconds and you return 4 times, how many seconds is that?",
+     "o": [
+      "45",
+      "50",
+      "60",
+      "75"
+     ],
+     "a": 2,
+     "why": "Four times 15 seconds equals 60 seconds."
+    },
+    {
+     "q": "What does labelling a thought do?",
+     "o": [
+      "Files it away without fully engaging",
+      "Forces you to act on it now",
+      "Gives it more energy",
+      "Makes it grow"
+     ],
+     "a": 0,
+     "why": "A label files the thought away so it stops demanding your full attention."
+    }
+   ]
+  },
+  {
+   "t": "Narrowing results with filters",
+   "intro": "Searching can quickly produce hundreds of results, and browsing them is itself a distraction. Applying filters one at a time keeps the list manageable and the search focused.",
+   "cards": [
+    {
+     "h": "Define the criteria first",
+     "b": "Decide what a useful result must have, such as a date range, a source type or a keyword. Clear criteria tell you what to discard at a glance.",
+     "i": "target"
+    },
+    {
+     "h": "One filter at a time",
+     "b": "Add one constraint, check the result count, then add another if the list is still too large. This shows which filter is doing the work.",
+     "i": "puzzle"
+    },
+    {
+     "h": "Stop at a manageable list",
+     "b": "Once you have a handful of strong options, stop searching and start reading. Endless browsing is one of the quietest forms of distraction.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "seq",
+    "title": "Results after each filter",
+    "items": [
+     "480",
+     "120",
+     "24",
+     "6"
+    ],
+    "note": "Each filter narrows what you must read."
+   },
+   "ex": {
+    "q": "A search returns 480 results. A filter removes three quarters of them. How many results remain?",
+    "o": [
+     "240",
+     "120",
+     "96",
+     "360"
+    ],
+    "a": 1,
+    "why": "Removing three quarters leaves one quarter, and a quarter of 480 is 120."
+   },
+   "tip": "Count results after each filter so you can see what each one achieved.",
+   "quiz": [
+    {
+     "q": "A list of 200 items is cut to half by one filter, then to a quarter of that by another. How many remain?",
+     "o": [
+      "25",
+      "50",
+      "40",
+      "100"
+     ],
+     "a": 0,
+     "why": "Half of 200 is 100, and a quarter of 100 is 25."
+    },
+    {
+     "q": "Why stop searching once you have a few strong options?",
+     "o": [
+      "Because the first result is always best",
+      "Because endless browsing becomes a distraction",
+      "Because searching is always wrong",
+      "Because filters stop working"
+     ],
+     "a": 1,
+     "why": "Endless browsing is a quiet distraction that delays the real work."
+    }
+   ]
+  },
+  {
+   "t": "Reading with a clear purpose",
+   "intro": "Reading everything at the same depth wastes time and attention, while skimming something you need to know can leave gaps. Choosing your reading mode before you start keeps effort proportional to purpose.",
+   "cards": [
+    {
+     "h": "Choose the depth you need",
+     "b": "Skim for an overview, scan for a specific fact and study closely only when you must retain detail. Matching depth to purpose stops wasted effort.",
+     "i": "book"
+    },
+    {
+     "h": "Preview before you dig in",
+     "b": "Read the title, summary and section headings before the body. A preview shows what matters, so your attention goes to the right parts.",
+     "i": "eye"
+    },
+    {
+     "h": "Take brief notes",
+     "b": "Write a few words per section capturing the main claim. Notes anchor your focus and reveal when your attention has drifted away from the text.",
+     "i": "bulb"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Minutes per page by reading mode",
+    "data": [
+     [
+      "Skim",
+      0.5
+     ],
+     [
+      "Scan",
+      1
+     ],
+     [
+      "Read",
+      2
+     ],
+     [
+      "Study",
+      4
+     ]
+    ],
+    "note": "Match depth to what you need."
+   },
+   "ex": {
+    "q": "A document has 12 pages, and each page takes 2 minutes to read carefully. How many minutes would a full careful read take?",
+    "o": [
+     "12",
+     "18",
+     "24",
+     "36"
+    ],
+    "a": 2,
+    "why": "Twelve pages at 2 minutes each is 24 minutes, far more time than you need if you only want one fact."
+   },
+   "tip": "Ask what you need before you start reading.",
+   "quiz": [
+    {
+     "q": "A scan takes 1 minute per page. How many minutes does it take to scan 8 pages?",
+     "o": [
+      "4",
+      "8",
+      "6",
+      "10"
+     ],
+     "a": 1,
+     "why": "Eight pages at one minute each is 8 minutes."
+    },
+    {
+     "q": "Which step helps your attention stay on the text?",
+     "o": [
+      "Reading the footnotes first",
+      "Jumping between documents",
+      "Reading faster than you can absorb",
+      "Writing brief notes on key points"
+     ],
+     "a": 3,
+     "why": "Brief notes make you process actively and show when your attention has drifted."
+    }
+   ]
+  },
+  {
+   "t": "Breaking the check-and-scroll loop",
+   "intro": "Checking and scrolling often happens without a clear decision, as a reflex that appears when attention dips. Seeing the loop as a sequence lets you interrupt it at the earliest point.",
+   "cards": [
+    {
+     "h": "Recognise the trigger",
+     "b": "Most checking begins with a small trigger, such as boredom or a sudden pause in work. Naming the trigger lets you respond to it rather than follow the urge.",
+     "i": "spark"
+    },
+    {
+     "h": "Delay the urge",
+     "b": "Wait sixty seconds before opening the app, and notice whether the urge fades. Often it does, and you keep your attention for the task.",
+     "i": "clock"
+    },
+    {
+     "h": "Replace with a planned break",
+     "b": "Choose a healthier alternative such as a glass of water or a short stretch. A planned replacement is easier to repeat than willpower alone.",
+     "i": "heart"
+    }
+   ],
+   "fig": {
+    "type": "cycle",
+    "title": "The check-and-scroll loop",
+    "nodes": [
+     "Trigger",
+     "Urge",
+     "Check",
+     "Reset"
+    ],
+    "note": "Interrupt the loop early, before the check."
+   },
+   "ex": {
+    "q": "You check your phone 15 times in a 60 minute block, and each check takes 40 seconds. How many minutes do the checks take in total?",
+    "o": [
+     "6",
+     "8",
+     "15",
+     "10"
+    ],
+    "a": 3,
+    "why": "Fifteen checks at 40 seconds is 600 seconds, which equals 10 minutes."
+   },
+   "tip": "Put your phone in another room during your most important block.",
+   "quiz": [
+    {
+     "q": "You delay each urge by 1 minute and feel the urge 5 times. How many minutes do you wait in total?",
+     "o": [
+      "5",
+      "3",
+      "1",
+      "10"
+     ],
+     "a": 0,
+     "why": "Five delays of one minute each total 5 minutes."
+    },
+    {
+     "q": "What is the main purpose of delaying an urge?",
+     "o": [
+      "To check later for longer",
+      "To hide the device",
+      "To let the urge fade before you act",
+      "To schedule more notifications"
+     ],
+     "a": 2,
+     "why": "Waiting gives the urge time to fade so you can choose whether to act."
+    }
+   ]
+  },
+  {
+   "t": "Ignoring on purpose, not by accident",
+   "intro": "Some ignoring is deliberate and useful, while much of it happens by accident as you react to whatever appears. Setting your filters in advance turns ignoring into a reliable habit.",
+   "cards": [
+    {
+     "h": "Decide what to skip early",
+     "b": "Make a list of things you will not respond to during focus time, such as non-urgent email. Deciding ahead saves you from making the choice again and again.",
+     "i": "shield"
+    },
+    {
+     "h": "Accept some missed items",
+     "b": "No filter is perfect, so some relevant items will slip past you. Accepting small misses is the price of protecting deep work.",
+     "i": "heart"
+    },
+    {
+     "h": "Keep a clear exception rule",
+     "b": "Define the few things that truly interrupt, such as a call from a specific person about a real emergency. A narrow rule keeps the filter reliable without reopening every decision.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "compare",
+    "title": "Deliberate versus reactive filtering",
+    "left": {
+     "h": "Chosen in advance",
+     "pts": [
+      "Decide what to skip",
+      "Accept a few misses",
+      "Protect the main goal"
+     ]
+    },
+    "right": {
+     "h": "Reacting by default",
+     "pts": [
+      "Respond to every item",
+      "Lose track of goals",
+      "Feel constantly behind"
+     ]
+    },
+    "note": "Decide your filters before the work starts."
+   },
+   "ex": {
+    "q": "A team sends you 30 emails a day, and you decide to check email only 3 times. If you handle 10 emails at each check, how many emails do you handle?",
+    "o": [
+     "10",
+     "20",
+     "60",
+     "30"
+    ],
+    "a": 3,
+    "why": "Three checks of ten emails each gives 30 handled emails, matching the daily total."
+   },
+   "tip": "Write your exception list on a sticky note next to your screen.",
+   "quiz": [
+    {
+     "q": "You check email 4 times and handle 6 emails each time. How many in total?",
+     "o": [
+      "24",
+      "18",
+      "10",
+      "30"
+     ],
+     "a": 0,
+     "why": "Four times six is 24."
+    },
+    {
+     "q": "What is the chief benefit of a clear exception rule?",
+     "o": [
+      "It removes all interruptions",
+      "It makes you check more often",
+      "It prevents missing deadlines entirely",
+      "It keeps the filter reliable without reopening every decision"
+     ],
+     "a": 3,
+     "why": "A narrow rule keeps the filter steady, so you do not reconsider every item."
+    }
+   ]
+  },
+  {
+   "t": "Finding the decision in a meeting",
+   "intro": "Long meetings contain a lot of talk that does not change anything, and your attention can drift with it. Listening for decisions, owners and deadlines helps you keep only the parts that matter.",
+   "cards": [
+    {
+     "h": "Listen for decisions and owners",
+     "b": "The most valuable output of a meeting is a decision, a deadline or a named owner. Tuning your listening to these signals keeps your attention on what changes next.",
+     "i": "target"
+    },
+    {
+     "h": "Take notes in three columns",
+     "b": "Split your notes into decisions, actions and open questions. This structure lets you let small talk pass without losing anything important.",
+     "i": "book"
+    },
+    {
+     "h": "Summarise before you move on",
+     "b": "Restate the decision in one sentence to confirm it. Summaries anchor attention and stop you drifting back into a topic that has already closed.",
+     "i": "chart"
+    }
+   ],
+   "fig": {
+    "type": "grid",
+    "title": "Meeting time by item",
+    "rows": [
+     [
+      "Item",
+      "Mins",
+      "Kind"
+     ],
+     [
+      "Budget",
+      "24",
+      "Plan"
+     ],
+     [
+      "Hiring",
+      "18",
+      "Info"
+     ],
+     [
+      "Chat",
+      "18",
+      "Off"
+     ]
+    ],
+    "hi": [
+     1,
+     0
+    ],
+    "note": "Sort each item as it comes up."
+   },
+   "ex": {
+    "q": "A meeting runs 60 minutes. Decisions take 24 minutes in total and updates take 18 minutes. How many minutes are left over?",
+    "o": [
+     "12",
+     "18",
+     "24",
+     "42"
+    ],
+    "a": 1,
+    "why": "Subtracting 24 and 18 from 60 leaves 18 minutes for small talk, questions and buffers."
+   },
+   "tip": "Write the decision down before the meeting ends.",
+   "quiz": [
+    {
+     "q": "A meeting is 45 minutes. Updates take 15 minutes and questions take 20 minutes. How many minutes remain?",
+     "o": [
+      "10",
+      "5",
+      "15",
+      "20"
+     ],
+     "a": 0,
+     "why": "Forty five minus 15 and 20 leaves 10 minutes."
+    },
+    {
+     "q": "What is the purpose of summarising a decision?",
+     "o": [
+      "To lengthen the meeting",
+      "To invite more discussion on it",
+      "To confirm it and stop drift into closed topics",
+      "To hand the notes to someone else only"
+     ],
+     "a": 2,
+     "why": "A summary confirms the outcome and anchors attention on what comes next."
+    }
+   ]
+  },
+  {
+   "t": "What switching really costs you",
+   "intro": "Every time you change tasks, your attention has to reload the new goal, rules and context. Knowing this cost helps you decide when a switch is worth it and when it is not.",
+   "cards": [
+    {
+     "h": "Switching has a hidden cost",
+     "b": "Each change of task requires you to load new goals, rules and context. That loading takes time, and it happens every time you return to something.",
+     "i": "brain"
+    },
+    {
+     "h": "Residue slows the next task",
+     "b": "Part of your attention stays on the previous task after you switch. This leftover focus, often called attention residue, makes the new task feel slower.",
+     "i": "puzzle"
+    },
+    {
+     "h": "Fewer switches, more progress",
+     "b": "Grouping related work into blocks reduces how often you must reload context. Fewer switches usually means more output from the same hours.",
+     "i": "chart"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Minutes in one work-switch-work cycle",
+    "data": [
+     [
+      "Focus A",
+      25
+     ],
+     [
+      "Switch",
+      5
+     ],
+     [
+      "Focus B",
+      25
+     ]
+    ],
+    "note": "The switch is short but its cost adds up."
+   },
+   "ex": {
+    "q": "You switch tasks 8 times in an afternoon, and each switch costs about 5 minutes of reloading. How many minutes go to switching?",
+    "o": [
+     "13",
+     "40",
+     "80",
+     "30"
+    ],
+    "a": 1,
+    "why": "Eight switches at 5 minutes each is 40 minutes of reloading time."
+   },
+   "tip": "Write down where you stopped before you leave a task.",
+   "quiz": [
+    {
+     "q": "Switching 6 times at 4 minutes each costs how many minutes?",
+     "o": [
+      "24",
+      "20",
+      "10",
+      "30"
+     ],
+     "a": 0,
+     "why": "Six times four is 24."
+    },
+    {
+     "q": "What is attention residue?",
+     "o": [
+      "A sign of good multitasking",
+      "A type of break",
+      "The energy you gain from variety",
+      "Leftover focus on the previous task after switching"
+     ],
+     "a": 3,
+     "why": "Attention lingers on the last task, which slows down the one you have just started."
+    }
+   ]
+  },
+  {
+   "t": "Leaving a clear stop point",
+   "intro": "Stopping in the middle of a thought is hard to return from, because you must rebuild the thread from memory. A clear stop point and a written next step make restarting much simpler.",
+   "cards": [
+    {
+     "h": "Stop at a natural break",
+     "b": "Finish a sentence, a calculation or a small section before you move on. Stopping at a clear point leaves less unfinished material pulling at your mind.",
+     "i": "target"
+    },
+    {
+     "h": "Leave a written next step",
+     "b": "Write one line saying exactly what you will do next, such as the next heading to draft. The note acts as a bridge when you return.",
+     "i": "book"
+    },
+    {
+     "h": "Close the loop mentally",
+     "b": "Tell yourself briefly that the current task is paused, not abandoned. This signal helps your attention let go and move on without lingering.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "steps",
+    "title": "Leaving a stop point",
+    "steps": [
+     "Finish",
+     "Note",
+     "Park",
+     "Return"
+    ],
+    "note": "A stop point speeds the restart."
+   },
+   "ex": {
+    "q": "You write 3 notes for each task, and you have 4 tasks today. How many notes will you write in total?",
+    "o": [
+     "7",
+     "34",
+     "12",
+     "16"
+    ],
+    "a": 2,
+    "why": "Three notes for each of four tasks gives 3 times 4, which is 12."
+   },
+   "tip": "Make the next step so clear that you could start it half asleep.",
+   "quiz": [
+    {
+     "q": "You leave 5 tasks with 2 notes each. How many notes is that?",
+     "o": [
+      "10",
+      "7",
+      "12",
+      "15"
+     ],
+     "a": 0,
+     "why": "Five times two is 10."
+    },
+    {
+     "q": "Why does a written next step help?",
+     "o": [
+      "It replaces the task itself",
+      "It means you never need to restart",
+      "It gives your return a clear starting point",
+      "It stops all other thoughts"
+     ],
+     "a": 2,
+     "why": "A clear next action makes restarting faster and less effortful."
+    }
+   ]
+  },
+  {
+   "t": "Batching similar tasks together",
+   "intro": "Alternating between different kinds of work forces a fresh switch every few minutes. Grouping similar tasks into batches lets you stay in one mode long enough to make real progress.",
+   "cards": [
+    {
+     "h": "Group similar tasks together",
+     "b": "Do all reading in one block and all replies in another, rather than alternating between them. Similar tasks share a mental setup, so the switch cost falls.",
+     "i": "puzzle"
+    },
+    {
+     "h": "Set a batch order",
+     "b": "Decide which batch comes first, such as planning, then writing, then messages. A fixed order removes the small decisions that cause delay.",
+     "i": "chart"
+    },
+    {
+     "h": "Keep batches bounded",
+     "b": "Limit each batch to a set time, such as 30 minutes of email. A clear boundary stops a batch from spilling into the next focus block.",
+     "i": "clock"
+    }
+   ],
+   "fig": {
+    "type": "grid",
+    "title": "Batch the same work together",
+    "rows": [
+     [
+      "Email",
+      "Email",
+      "Email"
+     ],
+     [
+      "Write",
+      "Write",
+      "Write"
+     ],
+     [
+      "Plan",
+      "Plan",
+      "Plan"
+     ]
+    ],
+    "hi": [
+     1,
+     1
+    ],
+    "note": "Like work in one block, not spread across the day."
+   },
+   "ex": {
+    "q": "A day has 3 email batches of 20 minutes each and 2 writing blocks of 50 minutes each. How many minutes are spent in these batches in total?",
+    "o": [
+     "120",
+     "160",
+     "140",
+     "180"
+    ],
+    "a": 1,
+    "why": "Three batches of 20 minutes is 60, and two blocks of 50 is 100, which totals 160."
+   },
+   "tip": "Schedule your batches in your calendar so they are not decided on the spot.",
+   "quiz": [
+    {
+     "q": "You switch 6 times between tasks at 3 minutes each. Grouped, you would switch only 2 times. How many minutes do you save?",
+     "o": [
+      "6",
+      "9",
+      "12",
+      "18"
+     ],
+     "a": 2,
+     "why": "Four fewer switches at 3 minutes each saves 12 minutes."
+    },
+    {
+     "q": "What does a bounded batch prevent?",
+     "o": [
+      "Completing the work",
+      "Writing notes",
+      "Scheduling",
+      "Spilling into the next focus block"
+     ],
+     "a": 3,
+     "why": "A time limit keeps the batch from taking over the next block."
+    }
+   ]
+  },
+  {
+   "t": "Keeping one task list you trust",
+   "intro": "When you pick up paused work, the first few minutes are often spent rebuilding where you were. A single, trusted task list cuts that rebuilding time sharply.",
+   "cards": [
+    {
+     "h": "Use a single task list",
+     "b": "Keep all open work in one ordered list rather than scattered notes. One source tells you what to do next without rebuilding your plan from memory.",
+     "i": "book"
+    },
+    {
+     "h": "Mark the active task clearly",
+     "b": "Highlight the one task you are working on right now. A visible marker makes it easier to resist grabbing a different item from the pile.",
+     "i": "target"
+    },
+    {
+     "h": "Review the list daily",
+     "b": "Check the list at the start and end of the day, rather than after every task. Periodic review keeps the list accurate without creating new switches.",
+     "i": "clock"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Minutes to resume a task",
+    "data": [
+     [
+      "With notes",
+      1
+     ],
+     [
+      "No notes",
+      6
+     ],
+     [
+      "Mental reload",
+      9
+     ]
+    ],
+    "note": "A written list cuts restart time sharply."
+   },
+   "ex": {
+    "q": "Resuming a task with notes takes 1 minute, and without notes it takes 6 minutes. If you resume 5 times a day, how many minutes do you save with notes?",
+    "o": [
+     "5",
+     "25",
+     "10",
+     "30"
+    ],
+    "a": 1,
+    "why": "Each resume saves 5 minutes, so five resumes save 25 minutes."
+   },
+   "tip": "Keep the active list to five open items at most.",
+   "quiz": [
+    {
+     "q": "A list has 8 tasks, and 3 are done. How many remain?",
+     "o": [
+      "5",
+      "8",
+      "3",
+      "11"
+     ],
+     "a": 0,
+     "why": "Eight minus three leaves five tasks."
+    },
+    {
+     "q": "Why review your list only at set times?",
+     "o": [
+      "Lists become useless after an hour",
+      "You must always see it",
+      "It is faster to ignore it",
+      "Frequent checking is itself a switch"
+     ],
+     "a": 3,
+     "why": "Checking constantly creates new switches, so periodic review keeps the list useful without breaking focus."
+    }
+   ]
+  },
+  {
+   "t": "Planning your transitions",
+   "intro": "A transition is the moment between two tasks, and it can quietly stretch into a long detour. Planning how you will move between tasks keeps the gaps short and purposeful.",
+   "cards": [
+    {
+     "h": "Plan transitions in advance",
+     "b": "Decide how you will move between tasks before the day starts. Planned transitions cost less effort than deciding under pressure.",
+     "i": "clock"
+    },
+    {
+     "h": "Use a transition ritual",
+     "b": "Stand, stretch or refill your water between tasks to mark the change. A small physical marker helps your attention reset for the next task.",
+     "i": "spark"
+    },
+    {
+     "h": "Limit how long transitions last",
+     "b": "Keep transitions to a few minutes, since they can expand without notice. A timed transition stops a brief pause becoming a lengthy detour.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "cycle",
+    "title": "A planned transition",
+    "nodes": [
+     "Finish",
+     "Note",
+     "Move",
+     "Begin"
+    ],
+    "note": "Plan the change so it stays short."
+   },
+   "ex": {
+    "q": "You plan 4 transitions of 5 minutes each, but each one runs 3 minutes longer than planned. How many minutes do the transitions take in total?",
+    "o": [
+     "20",
+     "24",
+     "32",
+     "28"
+    ],
+    "a": 2,
+    "why": "Each transition actually lasts 8 minutes, and four of them take 32 minutes."
+   },
+   "tip": "Time your transitions for one week to see where they stretch.",
+   "quiz": [
+    {
+     "q": "Four transitions each take 7 minutes instead of 5. How many minutes do they take in total?",
+     "o": [
+      "28",
+      "22",
+      "24",
+      "26"
+     ],
+     "a": 0,
+     "why": "Each becomes 7 minutes, and four of them make 28 minutes."
+    },
+    {
+     "q": "What does a transition ritual do?",
+     "o": [
+      "Adds a new task to the list",
+      "Signals the brain that a change is happening",
+      "Replaces the next task",
+      "Lengthens the break"
+     ],
+     "a": 1,
+     "why": "The small physical marker signals that a change of focus is starting."
+    }
+   ]
+  },
+  {
+   "t": "Handling interrupted tasks",
+   "intro": "Interruptions cost more than the moment they take, because you must reconstruct where you were afterwards. Knowing this helps you decide quickly which interruptions to handle now and which to park.",
+   "cards": [
+    {
+     "h": "Interruptions add real time",
+     "b": "Being pulled away from work adds time beyond the interruption itself, since you must reconstruct your place. Expect a recovery period after each one.",
+     "i": "clock"
+    },
+    {
+     "h": "Mark your place",
+     "b": "Leave a bookmark, a highlighted line or a note about where you were. A visible marker shortens the rebuilding time after an interruption.",
+     "i": "target"
+    },
+    {
+     "h": "Decide: handle now or later",
+     "b": "When an interruption arrives, judge quickly whether it is urgent. If it is not, record it and return to your work to protect the block.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Minutes to finish one task",
+    "data": [
+     [
+      "No breaks",
+      20
+     ],
+     [
+      "3 breaks",
+      35
+     ]
+    ],
+    "note": "Each interruption adds recovery time."
+   },
+   "ex": {
+    "q": "An uninterrupted task takes 20 minutes. Each of 3 interruptions adds 5 minutes of recovery. How long does the task take now?",
+    "o": [
+     "35",
+     "25",
+     "30",
+     "40"
+    ],
+    "a": 0,
+    "why": "Three interruptions at 5 minutes each add 15 minutes to the original 20, giving 35."
+   },
+   "tip": "Write interruptions down, then handle them at your next batch.",
+   "quiz": [
+    {
+     "q": "A task takes 30 minutes, and 2 interruptions each add 6 minutes. How long does it take in total?",
+     "o": [
+      "36",
+      "40",
+      "38",
+      "42"
+     ],
+     "a": 3,
+     "why": "Two interruptions add 12 minutes to 30, giving 42."
+    },
+    {
+     "q": "What is the best response to a non-urgent interruption?",
+     "o": [
+      "Answer it immediately",
+      "Note it and return to the block",
+      "Ignore it forever",
+      "Switch to it fully"
+     ],
+     "a": 1,
+     "why": "Noting it protects the block while making sure nothing is lost."
+    }
+   ]
+  },
+  {
+   "t": "Returning to paused work",
+   "intro": "Work you put down for a while becomes harder to pick up, because the details fade. Scheduling returns at growing gaps keeps the thread alive without wasting time on what you already know.",
+   "cards": [
+    {
+     "h": "Return soon after a pause",
+     "b": "A quick review within a day of pausing keeps the thread alive. The sooner you return, the less you must rebuild from scratch.",
+     "i": "clock"
+    },
+    {
+     "h": "Space out later reviews",
+     "b": "As your understanding grows, you can wait longer between reviews. Expanding gaps keep you engaged without spending time on what you already know.",
+     "i": "chart"
+    },
+    {
+     "h": "Protect a return slot",
+     "b": "Schedule a fixed time to revisit paused work rather than hoping to remember. A booked slot turns the return into a plan, not a chance.",
+     "i": "target"
+    }
+   ],
+   "fig": {
+    "type": "seq",
+    "title": "Expanding review intervals",
+    "items": [
+     "Day 1",
+     "Day 3",
+     "Day 7",
+     "Day 14",
+     "?"
+    ],
+    "note": "Gaps grow as the task becomes familiar."
+   },
+   "ex": {
+    "q": "You review a paused task on Day 1, then 2 days later, then 4 days after that. On which day is the third review?",
+    "o": [
+     "Day 5",
+     "Day 6",
+     "Day 7",
+     "Day 8"
+    ],
+    "a": 2,
+    "why": "Day 1 plus 2 days gives Day 3, and Day 3 plus 4 days gives Day 7."
+   },
+   "tip": "Put the next review on your calendar before you close the task.",
+   "quiz": [
+    {
+     "q": "Reviews happen on day 2, then 3 days later, then 3 days after that. Which day is the last of these three?",
+     "o": [
+      "8",
+      "5",
+      "11",
+      "6"
+     ],
+     "a": 0,
+     "why": "Day 2 plus 3 is 5, and 5 plus 3 is 8."
+    },
+    {
+     "q": "Why book a return slot?",
+     "o": [
+      "So you never have to return",
+      "So you can forget the task",
+      "So returning becomes a plan rather than a chance",
+      "So you can skip the break"
+     ],
+     "a": 2,
+     "why": "A booked slot makes returning reliable instead of left to memory."
+    }
+   ]
+  },
+  {
+   "t": "Prioritising when tasks compete",
+   "intro": "When several tasks compete for your time, the loudest or most recent one tends to win. A simple priority rule helps you choose deliberately and stop switching between demands.",
+   "cards": [
+    {
+     "h": "Separate urgent from important",
+     "b": "Urgent tasks demand attention now, while important ones move your goals forward. Confusing the two is a common cause of constant switching.",
+     "i": "target"
+    },
+    {
+     "h": "Pick one priority per block",
+     "b": "Choose the single most valuable task before you start a block. A clear priority stops you jumping to whatever feels most pressing at the moment.",
+     "i": "chart"
+    },
+    {
+     "h": "Drop or delegate the rest",
+     "b": "Tasks that are neither urgent nor important deserve to be dropped or handed to someone else. Every task you remove is a switch you never have to make.",
+     "i": "shield"
+    }
+   ],
+   "fig": {
+    "type": "grid",
+    "title": "Urgent versus important",
+    "rows": [
+     [
+      "Type",
+      "Urgent",
+      "Later"
+     ],
+     [
+      "Big",
+      "Do now",
+      "Plan"
+     ],
+     [
+      "Small",
+      "Quick",
+      "Drop"
+     ]
+    ],
+    "hi": [
+     1,
+     1
+    ],
+    "note": "Pick the one priority for your block."
+   },
+   "ex": {
+    "q": "Task A takes 30 minutes and is urgent. Task B takes 45 minutes and is important. Task C takes 20 minutes and is neither. If you do A and B only, how many minutes do you spend?",
+    "o": [
+     "50",
+     "75",
+     "65",
+     "95"
+    ],
+    "a": 1,
+    "why": "A and B together take 30 plus 45, which is 75 minutes. C is dropped."
+   },
+   "tip": "Name your priority in one sentence before you open your list.",
+   "quiz": [
+    {
+     "q": "You drop a task that would have caused 2 switches of 5 minutes each. How many minutes of switching do you avoid?",
+     "o": [
+      "5",
+      "15",
+      "20",
+      "10"
+     ],
+     "a": 3,
+     "why": "Two switches of 5 minutes each is 10 minutes avoided."
+    },
+    {
+     "q": "Which task usually deserves to be dropped?",
+     "o": [
+      "An important goal",
+      "A task neither urgent nor important",
+      "An urgent deadline",
+      "A task your manager requested"
+     ],
+     "a": 1,
+     "why": "Tasks that are neither urgent nor important add switching without moving your goals forward."
+    }
+   ]
+  },
+  {
+   "t": "Switching with intention",
+   "intro": "A switch can be a deliberate choice that protects your progress, or a reflex that scatters it. Making each change intentional helps you move between tasks with less loss.",
+   "cards": [
+    {
+     "h": "Decide when to switch",
+     "b": "Set the moment a switch happens, such as the end of a block, rather than whenever you feel restless. A chosen switch point keeps your progress intact.",
+     "i": "clock"
+    },
+    {
+     "h": "Acknowledge the change",
+     "b": "Name the new task aloud or in writing before you begin. The acknowledgement points your attention where the effort needs to go.",
+     "i": "spark"
+    },
+    {
+     "h": "Review what you achieved",
+     "b": "Spend a moment noting what you finished in the last task. Seeing progress gives closure, so the old task stops occupying your mind.",
+     "i": "chart"
+    }
+   ],
+   "fig": {
+    "type": "seq",
+    "title": "A deliberate switch sequence",
+    "items": [
+     "Plan",
+     "Pause",
+     "Switch",
+     "Resume",
+     "Review"
+    ],
+    "note": "Each step makes the change intentional."
+   },
+   "ex": {
+    "q": "You work 3 blocks of 25 minutes, and each block is followed by a 5 minute switch. How many minutes pass in total?",
+    "o": [
+     "90",
+     "75",
+     "80",
+     "100"
+    ],
+    "a": 0,
+    "why": "Three blocks of 25 minutes is 75, plus three switches of 5 minutes gives 90 in total."
+   },
+   "tip": "Decide your next task before you finish the current one.",
+   "quiz": [
+    {
+     "q": "A switch takes 4 minutes and you make 5 switches. How many minutes is that?",
+     "o": [
+      "25",
+      "9",
+      "15",
+      "20"
+     ],
+     "a": 3,
+     "why": "Five times 4 is 20."
+    },
+    {
+     "q": "Why acknowledge a new task aloud or in writing?",
+     "o": [
+      "It delays your start",
+      "It tells your attention where to direct effort",
+      "It replaces planning",
+      "It proves the old task is finished"
+     ],
+     "a": 1,
+     "why": "The acknowledgement points attention to the new task, which helps it start."
+    }
+   ]
+  },
+  {
+   "t": "Staying on course all day",
+   "intro": "A focused day is rarely the result of one heroic push, but of a shape you can repeat. Planning blocks, checking in at midday and closing with a clear shutdown keeps you on course from start to finish.",
+   "cards": [
+    {
+     "h": "Plan the day in blocks",
+     "b": "Assign each block a single main task before the day starts. A day shaped by blocks gives you a rhythm that resists constant switching.",
+     "i": "clock"
+    },
+    {
+     "h": "Review progress at midday",
+     "b": "Pause briefly to check progress against the plan. A midday check lets you adjust the afternoon before drift accumulates.",
+     "i": "eye"
+    },
+    {
+     "h": "End with a shutdown routine",
+     "b": "Write tomorrow's top task and close open tabs before you leave. A clear shutdown lets your attention rest and starts tomorrow with focus.",
+     "i": "heart"
+    }
+   ],
+   "fig": {
+    "type": "bars",
+    "title": "Focus minutes across the day",
+    "data": [
+     [
+      "Morning",
+      50
+     ],
+     [
+      "Midday",
+      25
+     ],
+     [
+      "Afternoon",
+      20
+     ]
+    ],
+    "note": "Plan your blocks around the day's rhythm."
+   },
+   "ex": {
+    "q": "Your morning has 50 focus minutes, midday has 25 and the afternoon has 20. What is the total focus time?",
+    "o": [
+     "95",
+     "85",
+     "90",
+     "100"
+    ],
+    "a": 0,
+    "why": "Adding 50, 25 and 20 gives 95 minutes."
+   },
+   "tip": "Finish each day by writing tomorrow's first task.",
+   "quiz": [
+    {
+     "q": "A day has 3 blocks of 30 minutes each and 2 switches of 10 minutes each. How many minutes are the blocks in total?",
+     "o": [
+      "100",
+      "70",
+      "60",
+      "90"
+     ],
+     "a": 3,
+     "why": "Three blocks of 30 minutes make 90 minutes. The switches are not counted as blocks."
+    },
+    {
+     "q": "What does a midday check allow you to do?",
+     "o": [
+      "Skip the afternoon",
+      "Double your workload",
+      "Ignore the morning plan",
+      "Adjust the afternoon before drift builds up"
+     ],
+     "a": 3,
+     "why": "Checking midday lets you correct course before small drifts add up."
+    }
+   ]
+  }
+ ]
+}

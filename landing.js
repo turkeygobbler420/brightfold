@@ -14,7 +14,7 @@
     if(i===item.correct){
       b.classList.add('ok');board.classList.add('done');
       qc.className='c q hit';qc.innerHTML=cellSVG(item.choices[i].c);
-      msg.textContent=(tries?'Got it. ':'First try. ')+'The real test has 20 of these, mixed with other kinds.';
+      msg.textContent=(tries?'Got it. ':'First try. ')+'The real test has 30 of these, mixed with other kinds.';
     }else{
       tries++;b.classList.add('no');b.disabled=true;
       msg.textContent='Not that one. Try another tile.';
@@ -73,8 +73,10 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
 /* group of 100 */
 (function(){
   const r=document.getElementById('room');if(!r)return;
-  let h='';for(let i=0;i<100;i++){h+=`<i class="${i===90?'me':i<91?'':'up'}"></i>`;}
+  const P=window.BF_PCT||{ahead:91,top:9,country:90,countryTop:10};
+  let h='';for(let i=0;i<100;i++){h+=`<i class="${i===P.ahead-1?'me':i<P.ahead?'':'up'}"></i>`;}
   r.innerHTML=h;
+  r.setAttribute('aria-label',`A group of 100 people: ${P.ahead} outscored, one marked as the test taker, ${100-P.ahead-1} ahead`);
 })();
 
 /* famous minds: full-body cutouts */
@@ -108,7 +110,7 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
 /* certificate sample: click to pop out (native modal dialog) */
 (function(){
   const h=document.getElementById('certSample');if(!h)return;
-  const data={name:'Alex Morgan',score:120,cls:'Above average',date:'November 12, 2026',id:'4829 1375',items:20};
+  const data={name:'Alex Morgan',score:120,cls:'Above average',date:'November 12, 2026',id:'4829 1375',items:40};
   h.innerHTML=certHTML(data)+'';
   const dlg=document.createElement('dialog');dlg.className='cert-dlg';dlg.setAttribute('aria-label','Certificate');
   dlg.innerHTML='<button type="button" class="cert-x" aria-label="Close certificate"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="cert-dlg-body">'+certHTML(data)+'</div>';
@@ -144,4 +146,47 @@ function barRow(n,v,c){return `<div class="bar"><span>${n}</span><div class="trk
   if(reduce||!('IntersectionObserver' in window))return;
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);run(e.target);}}),{threshold:.6});
   els.forEach(el=>io.observe(el));
+})();
+
+/* mobile section menu toggle */
+(function(){
+  var b=document.querySelector('.nav-burger'),n=document.getElementById('navLinks');if(!b||!n)return;
+  function set(o,back){n.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false');if(!o&&back)b.focus();}
+  b.addEventListener('click',function(){set(!n.classList.contains('open'));});
+  n.addEventListener('click',function(e){if(e.target.closest('a,button'))set(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open'))set(false,true);});
+  document.addEventListener('click',function(e){if(n.classList.contains('open')&&!e.target.closest('.nav-links,.nav-burger'))set(false);});
+  window.addEventListener('resize',function(){if(innerWidth>900)set(false);});
+})();
+(function(){
+  var bar=document.getElementById('stickyCta'),hero=document.querySelector('.hero-btns .js-start');
+  if(!bar||!hero||!('IntersectionObserver' in window))return;
+  function set(on){bar.classList.toggle('show',on);bar.setAttribute('aria-hidden',on?'false':'true');var b=bar.firstElementChild;if(b)b.tabIndex=on?0:-1;}
+  new IntersectionObserver(function(es){var e=es[0];set(!e.isIntersecting&&e.boundingClientRect.top<0);}).observe(hero);
+})();
+
+;(function(){
+  var r=document.getElementById('revs'),p=document.getElementById('revPrev'),n=document.getElementById('revNext');
+  if(!r||!p||!n)return;
+  function step(d){var a=r.querySelector('article');if(!a)return;var w=a.getBoundingClientRect().width+12;
+    if(d>0&&r.scrollLeft+r.clientWidth>=r.scrollWidth-4)r.scrollTo({left:0});
+    else if(d<0&&r.scrollLeft<=4)r.scrollTo({left:r.scrollWidth});
+    else r.scrollBy({left:d*w});}
+  p.onclick=function(){step(-1)};n.onclick=function(){step(1)};
+  var t=null,still=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function go(){if(still||t)return;t=setInterval(function(){step(1)},5000)}
+  function stop(){clearInterval(t);t=null}
+  ['mouseenter','focusin','touchstart'].forEach(function(e){r.parentNode.addEventListener(e,stop,{passive:true})});
+  r.parentNode.addEventListener('mouseleave',go);
+  go();
+})();
+
+/* placeholder percentile figures (see pct.js): every "better than X%" spot on the landing page shares one value */
+(function(){
+  const P=window.BF_PCT;if(!P)return;
+  document.querySelectorAll('[data-pct]').forEach(e=>{
+    const k=e.dataset.pct;
+    e.textContent=k==='ahead'?P.ahead+'%':k==='top'?'Top '+P.top+'%':k==='ctop'?'Top '+P.countryTop+'%':'You scored higher than '+P.ahead+'% of Neurometric test takers.';
+  });
+  document.querySelectorAll('[data-pct-ring]').forEach(c=>{const C=2*Math.PI*20;c.setAttribute('stroke-dasharray',(P.ahead/100*C).toFixed(1)+' '+C.toFixed(1));});
 })();
