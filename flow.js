@@ -42,6 +42,14 @@
       const d=S.local();d.linked=d.linked||[];if(!d.linked.includes(email)){d.linked.push(email);S.saveLocal(d);}
       try{await fetch(LINK_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});}catch(e){}
     },
+    optedOut(){return !!S.local().optOut;},
+    async setOptOut(out){
+      const d=S.local();d.optOut=!!out;S.saveLocal(d);
+      const emails=[...new Set([...(d.leads||[]),...(d.linked||[]),(S.user()||{}).email].filter(e=>e&&e!==DEMO.email).map(e=>String(e).toLowerCase()))];
+      let ok=true;
+      for(const email of emails){try{const r=await fetch(FN+'unsubscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,subscribe:!out})});if(!r.ok)ok=false;}catch(e){ok=false;}}
+      return ok;
+    },
     isPaid(){
       const d=S.local();if(!d.paid)return false;if(S.mode()!=='live')return true;
       const e=String((S.user()||{}).email||'').toLowerCase();return (d.paidEmails||[]).includes(e);

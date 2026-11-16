@@ -376,6 +376,8 @@
         <section class="hm-card"><div class="hm-k">Membership</div>
         ${pd?`<p class="hm-status on">Active</p><p class="hm-note">Full access to every course and exercise.${renew?` Current period ends ${E(renew.toLocaleDateString((window.BF_LOC?BF_LOC():'en-GB'),{day:'numeric',month:'long'}))}, then $4.99 every week until cancelled.`:''}</p><div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="cancel">Cancel membership</button></div>`
         :`<p class="hm-status">Free</p><p class="hm-note">Your results and the first lessons are free. A membership unlocks everything: $0.99 today, then $4.99 every week until you cancel.</p><div class="hm-row"><button class="btn btn-primary btn-sm" type="button" data-h="trial">Get full access</button></div>`}</section></div>
+      <section class="hm-card"><div class="hm-k">Emails</div><p class="hm-note">${S().optedOut()?'You are unsubscribed. We will not send you marketing or reminder emails.':'We may email you your certificate, reminders and offers.'} Receipts and account security messages are always sent.</p>
+        <div class="hm-row"><button class="btn btn-line btn-sm" type="button" data-h="${S().optedOut()?'resub':'unsub'}">${S().optedOut()?'Subscribe again':'Unsubscribe from emails'}</button></div></section>
       <section class="hm-card"><div class="hm-k">Your data</div><p class="hm-note">${mode==='live'?'Results and progress are saved to your account.':'Results and progress are saved in this browser.'} You can delete your account and everything in it at any time.</p>
         <div class="hm-row">${mode==='live'?'<button class="btn btn-line btn-sm" type="button" data-h="manage">Delete account</button>':''}<button class="btn btn-line btn-sm" type="button" data-h="logout">${mode==='live'?'Log out':'Leave demo'}</button></div></section>`;
   }
@@ -423,6 +425,7 @@
     if(h==='levelup'){const p=sess.id.split('-');p[2]=+p[2]+1;return startEx(p.join('-'));}
     if(h==='trial')return trialBox();
     if(h==='startTrial'){box=null;if(window.BF_PAY&&BF_PAY.start()){draw();return;}if(S().mode()==='demo'){S().unlock();toast='Demo membership active (no payment taken).';}else toast='Checkout is not available right now. Please try again later.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2600);return;}
+    if(h==='unsub'||h==='resub'){const out=h==='unsub';S().setOptOut(out).then(ok=>{toast=ok?(out?'You are unsubscribed from emails.':'You are subscribed to emails again.'):'Saved on this device, but we could not reach the server. Please try again.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},3000);});return;}
     if(h==='doCancel'){const d=S().local();if(S().mode()==='demo'){d.paid=false;delete d.since;S().saveLocal(d);toast='Demo membership removed.';}else toast='To stop renewal, cancel through the payment provider using the link in your payment receipt email.';box=null;draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},5000);return;}
     if(h==='retake'){close();const b=document.querySelector('.js-start');if(b)b.click();return;}
     if(h==='cert'){close();location.hash='#cert';const b=document.querySelector('[data-cert],.js-cert');if(b)b.click();return;}

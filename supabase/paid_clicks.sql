@@ -14,3 +14,10 @@ create table if not exists click_links (
 );
 create index if not exists click_links_email_idx on click_links (email);
 alter table click_links enable row level security;
+
+-- Email opt-outs. Any mailer must skip addresses listed here.
+create table if not exists unsubscribes (
+  email text primary key,
+  created_at timestamptz default now()
+);
+alter table unsubscribes enable row level security;

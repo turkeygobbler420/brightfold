@@ -46,3 +46,4 @@ GitHub Pages (`turkeygobbler420.github.io/brightfold`) serves the static site. I
 - Remove the TEMP DEV skip button in flow.js before launch.
 - Account sync: signed-in users call `status` with their Bearer token; it returns `{paid}` if any click linked to their email was paid. Paid state in the browser is stored per email (`paidEmails`).
 - Cancelling renewals happens at the payment provider; the in-app Cancel only explains this (and clears demo accounts).
+- Unsubscribe: Settings > Emails posts to the `unsubscribe` function (table `unsubscribes`). Deploy it with `supabase functions deploy unsubscribe --no-verify-jwt`. For email links set secret `UNSUB_SECRET` and use `.../functions/v1/unsubscribe?email=<email>&t=<hex HMAC-SHA256 of lowercase email>`. Any mailer must skip addresses in `unsubscribes`.
