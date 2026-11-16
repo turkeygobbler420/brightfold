@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Courses | Mindmetric</title>
+<meta name="description" content="Structured courses to train your thinking.">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mindmetric">
+
+
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Libre+Franklin:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="base.css?v=20261284b">
+<link rel="stylesheet" href="landing.css?v=20261284b">
+<link rel="stylesheet" href="app.css?v=20261284b" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="app.css?v=20261284b"></noscript>
+<link rel="stylesheet" href="auth.css?v=20261284b" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="auth.css?v=20261284b"></noscript>
+<link rel="stylesheet" href="home.css?v=20261284b" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="home.css?v=20261284b"></noscript>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="gm-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke-width="2.6" style="stroke:var(--ink)"/>
+    </pattern>
+  </defs>
+</svg>
+
+<a class="skip" href="#top">Skip to content</a>
+<div id="landing">
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Mindmetric home">
+      <svg viewBox="0 0 100 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 8C44 2 32 2 27 9C18 8 10 16 12 25C5 30 5 42 12 47C10 56 18 64 27 62C32 70 44 72 50 66C56 72 68 70 73 62C82 64 90 56 88 47C95 42 95 30 88 25C90 16 82 8 73 9C68 2 56 2 50 8Z" fill="#f9df6d"/><path d="M50 10V64" stroke="#fff" stroke-width="3" fill="none"/><path d="M28 42L44 28L60 38L74 24" fill="none" stroke="#121212" stroke-width="2.5"/><g fill="#121212"><circle cx="28" cy="42" r="4.5"/><circle cx="44" cy="28" r="4.5"/><circle cx="60" cy="38" r="4.5"/><circle cx="74" cy="24" r="4.5"/></g></svg>
+      <span>Mindmetr<span class="idot">ı</span>c</span>
+    </a>
+    <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+    <nav class="nav-links" id="navLinks" aria-label="Sections">
+      <a href="/#how">How it works</a><a href="/#reviews">Reviews</a><a href="/#plans">Pricing</a><button class="btn btn-sm nav-login" type="button">Log in</button><button class="btn btn-primary nav-m-start js-start" type="button">Start My IQ Test</button>
+    </nav>
+    <button class="btn btn-primary btn-sm js-start" type="button">Start My IQ Test</button>
+  </div>
+</header>
+<main id="top"><section class="sec"><div class="wrap" style="max-width:640px;text-align:center;padding:64px 0">
+<h1>Courses</h1><p class="lead">Opening your courses…</p><p class="fine">Structured courses to train your thinking.</p>
+<p><button class="btn btn-primary" type="button" id="acBtn">Open courses</button> <a class="btn" href="/">Back to home</a></p>
+</div></section></main></div>
+<div id="shell"></div>
+<div class="cheer" id="cheer" role="status" aria-live="polite"></div>
+<script defer src="pct.js?v=20261284b"></script>
+<script defer src="modal.js?v=20261284b"></script>
+<script defer src="quiz-i18n.js?v=20261284b"></script>
+<script defer src="i18n-dom.js?v=20261284b"></script>
+<script defer src="lang.js?v=20261284b"></script>
+<script defer src="data.js?v=20261284b"></script>
+<script defer src="illus.js?v=20261284b"></script>
+<script defer src="offers.js?v=20261293b"></script>
+<script defer src="engine.js?v=20261296bcd"></script>
+<script defer src="flow.js?v=20261298bcde"></script>
+<script defer src="landing.js?v=20261284b"></script>
+<script defer src="config.js?v=20261284b"></script>
+<script defer src="home.js?v=20261297bx"></script>
+<script defer src="auth.js?v=20261290b"></script>
+<script>
+(function(){var done=false,ACT=function(){HOME('courses')};
+function ready(){return window.BF_HOME&&window.BF_AUTH!==undefined||document.querySelector('.js-start');}
+function HOME(tab){var A=window.BF_AUTH,H=window.BF_HOME;if(!H)return;
+ var u=A&&A.user&&A.user(),d=window.BF_STORE&&window.BF_STORE.demoUser&&window.BF_STORE.demoUser();
+ if(u||d){done=true;H.open(tab);}else if(A&&A.manage){done=true;var b=document.querySelector('.nav-login');if(b)b.click();}}
+function MANAGE(){var A=window.BF_AUTH;if(!A)return;done=true;if(A.user&&A.user())A.manage();else{var b=document.querySelector('.nav-login');if(b)b.click();}}
+function START(){var b=document.querySelector('.js-start');if(b&&window.BF_STORE){done=true;b.click();}}
+function PAY(){var P=window.BF_PAY;if(P&&P.start()){done=true;}}
+window.__run=function(){done=false;ACT();};
+document.getElementById('acBtn').onclick=window.__run;
+var n=0,t=setInterval(function(){if(!done)ACT();if(done||++n>40)clearInterval(t);},250);})();
+</script>
