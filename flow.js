@@ -136,7 +136,7 @@
      pop-out window sized like a card form (falls back to this tab if pop-ups are blocked). */
   /* Polls the server (filled by the network's postback) and unlocks the results once the click is marked paid.
      Closing the pop-out never unlocks; polling continues 45s after it closes, 15 min max. */
-  const STATUS_API='https://brightfold-nine.vercel.app/api/status';
+  const STATUS_API='https://llyanlleeynuznywttjg.supabase.co/functions/v1/status';
   let payPoll=null;
   function watchPayment(win,msg){
     clearInterval(payPoll);

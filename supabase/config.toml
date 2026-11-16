@@ -1,0 +1,6 @@
+# Postback comes from the affiliate network and status from a browser: neither can send a Supabase JWT.
+[functions.postback]
+verify_jwt = false
+
+[functions.status]
+verify_jwt = false

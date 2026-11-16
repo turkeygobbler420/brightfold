@@ -9,7 +9,7 @@ Nothing here is live until this branch is merged to `main` and deployed.
    Redirect is ON (`ENABLE_REDIRECT: true`). Set it to false to go back to the mock paywall.
 3. When the offer converts, the network calls our postback:
 
-       https://<domain>/api/postback?click_id={sub1}&payout={payout_amount}&token=<POSTBACK_TOKEN>
+       https://<domain>/api/postback?click_id={sub1}&payout=24&token=<POSTBACK_TOKEN>
 
    `api/postback.js` validates it and logs it (Vercel Logs, search "postback").
    With `META_PIXEL_ID` + `META_ACCESS_TOKEN` set it also sends a Meta Conversions API `Purchase`.
@@ -30,7 +30,7 @@ Nothing here is live until this branch is merged to `main` and deployed.
 
 ## Paid-unlock flow
 1. Checkout modal opens the provider in a pop-out; our click id travels as `sub4` (the tracker overwrites sub1; sub2 feeds the checkout's email field).
-2. Network postback (set `click_id={sub4}` once the network confirms the macro): `https://brightfold-nine.vercel.app/api/postback?click_id={sub4}&payout={payout_amount}&token=<POSTBACK_TOKEN>` -> upserts into Supabase `paid_clicks` (`supabase/paid_clicks.sql`).
+2. Network postback (set `click_id={sub4}` once the network confirms the macro): `https://brightfold-nine.vercel.app/api/postback?click_id={sub4}&payout=24&token=<POSTBACK_TOKEN>` -> upserts into Supabase `paid_clicks` (`supabase/paid_clicks.sql`).
 3. `flow.js` polls `/api/status?click_id=` every 3s and unlocks on `{paid:true}` (cosmetic unlock; server holds the truth).
 Vercel env: SUPABASE_URL, SUPABASE_SERVICE_KEY, POSTBACK_TOKEN, optional STATUS_ORIGIN.
 
@@ -39,3 +39,16 @@ Vercel env: SUPABASE_URL, SUPABASE_SERVICE_KEY, POSTBACK_TOKEN, optional STATUS_
 - Meta pixel ID: sub3 vs sub15 still unconfirmed.
 - Offer wording ($1 trial / "not charged" on the checkout vs $0.99 + $4.99/week in our modal) must match.
 - Run supabase/paid_clicks.sql, set env vars, then deploy main to Vercel.
+
+## Supabase Edge Function receiver (works with GitHub Pages hosting)
+Functions: `supabase/functions/postback`, `supabase/functions/status` (JWT verification off via `supabase/config.toml`).
+
+Postback URL for the network (every conversion = $24):
+`https://llyanlleeynuznywttjg.supabase.co/functions/v1/postback?click_id={sub4}&payout=24&token=<POSTBACK_TOKEN>`
+
+Setup (once):
+1. Run `supabase/paid_clicks.sql` in the Supabase SQL editor.
+2. `supabase login` then `supabase link --project-ref llyanlleeynuznywttjg`
+3. `supabase secrets set POSTBACK_TOKEN=<token>` (optional `STATUS_ORIGIN`)
+4. `supabase functions deploy postback --no-verify-jwt` and `supabase functions deploy status --no-verify-jwt`
+5. Test: open the postback URL with a real-looking click_id, then `.../functions/v1/status?click_id=<same>` should return `{"paid":true}`.
