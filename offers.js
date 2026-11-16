@@ -12,12 +12,7 @@
       '26114': { name: 'US Green Checkout VOD (CC), 24 USD CPA',                        base: 'https://avdiupt.com/clickout/26114/361472/' },
       '26199': { name: 'GLO WW Green Checkout VOD (CC), 80% PPS',                       base: 'https://opniivsac.com/clickout/26199/361473/' },
       '26200': { name: 'GLO WW Digital Checkout (CC), 80% PPS',                         base: 'https://apritrun.com/clickout/26200/361474/' }
-    },
-    // Embedded (iframe) checkout SDK config. DEMO=true shows a demo notice + Pay that completes the handshake;
-    // with DEMO:true only tester sessions (?checkout=1) see the embed — other visitors keep the CPA offer path.
-    // DEMO=false requires PROVIDER_URL (provider-hosted payment page); Pay then sends sub4/sub15 and unlocks
-    // only after /api/status confirms the postback (never on the iframe message alone).
-    EMBED: { ENABLED: true, DEMO: true, PROVIDER_URL: '', AMOUNT: '1.00', TRIAL_DAYS: 7, INTERVAL: '29.99$' }
+    }
   };
 
   function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -46,7 +41,6 @@
     fbq('track', 'PageView');
   }
 
-  window.BF_EMBED_CONFIG = CONFIG.EMBED;
   window.bfTrack = {
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
