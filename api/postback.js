@@ -1,7 +1,7 @@
 // Affiliate network server-to-server postback.
 //
 // Network postback URL (set in the network dashboard):
-//   https://<your-domain>/api/postback?click_id={sub4}&payout=24&token=<POSTBACK_TOKEN>
+//   https://<your-domain>/api/postback?click_id={sub8}&payout=24&token=<POSTBACK_TOKEN>
 //
 // Env vars (Vercel -> Settings -> Environment Variables):
 //   POSTBACK_TOKEN    optional but recommended; requests without a matching ?token= are rejected

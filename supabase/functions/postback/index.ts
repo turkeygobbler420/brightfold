@@ -1,6 +1,6 @@
 // Supabase Edge Function: affiliate postback receiver (replaces Vercel /api/postback).
 // Network postback URL:
-//   https://llyanlleeynuznywttjg.supabase.co/functions/v1/postback?click_id={sub4}&payout=24&token=<POSTBACK_TOKEN>
+//   https://llyanlleeynuznywttjg.supabase.co/functions/v1/postback?click_id={sub8}&payout=24&token=<POSTBACK_TOKEN>
 // Secrets: POSTBACK_TOKEN (supabase secrets set POSTBACK_TOKEN=...). SUPABASE_URL and
 // SUPABASE_SERVICE_ROLE_KEY are injected automatically. Deploy with --no-verify-jwt (see config.toml).
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
