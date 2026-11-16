@@ -42,6 +42,14 @@
       const d=S.local();d.linked=d.linked||[];if(!d.linked.includes(email)){d.linked.push(email);S.saveLocal(d);}
       try{await fetch(LINK_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});}catch(e){}
     },
+    cancelRequested(){return S.local().cancelAt||null;},
+    async requestCancel(){
+      const d=S.local();d.cancelAt=new Date().toISOString();S.saveLocal(d);
+      const id=window.bfTrack&&window.bfTrack.clickId,emails=[...new Set([...(d.paidEmails||[]),...(d.linked||[]),(S.user()||{}).email].filter(e=>e&&e!==DEMO.email).map(e=>String(e).toLowerCase()))];
+      let ok=!!id&&emails.length>0;
+      for(const email of emails){try{const r=await fetch(FN+'cancel',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});if(!r.ok)ok=false;}catch(e){ok=false;}}
+      return ok;
+    },
     optedOut(){return !!S.local().optOut;},
     async setOptOut(out){
       const d=S.local();d.optOut=!!out;S.saveLocal(d);
@@ -55,7 +63,7 @@
       const e=String((S.user()||{}).email||'').toLowerCase();return (d.paidEmails||[]).includes(e);
     },
     unlock(){
-      const d=S.local();d.paid=true;d.paidEmails=[...new Set([...(d.paidEmails||[]),...(d.linked||[])])];d.since=d.since||new Date().toISOString();S.saveLocal(d);
+      const d=S.local();delete d.cancelAt;d.paid=true;d.paidEmails=[...new Set([...(d.paidEmails||[]),...(d.linked||[])])];d.since=d.since||new Date().toISOString();S.saveLocal(d);
       try{window.dispatchEvent(new Event('bf:paid'));}catch(e){}
     },
     /* signed in: link this browser's click to the account email, then ask the server whether any linked click is paid */

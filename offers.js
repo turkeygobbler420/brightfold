@@ -6,6 +6,8 @@
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
     ENABLE_REDIRECT: true,
+    // Billing provider's cancel / manage-subscription page (ask the network). When set, Cancel membership opens it.
+    CANCEL_URL: '',
     // Network tracking links. sub8 = our click_id (returned in the postback as {sub8}), sub15 = Meta pixel ID.
     // Never use sub1 (tracker overwrites it) or sub2-sub7 (email/first/last name/street/ZIP/city prefill fields).
     OFFERS: {
@@ -45,6 +47,7 @@
   window.bfTrack = {
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
+    cancelUrl: CONFIG.CANCEL_URL,
     event: function (name, data) { if (window.fbq) fbq('trackCustom', name, data || {}); },
     // Builds <OFFER_BASE>?sub8=<click_id>&sub15=<pixel_id> (sub1 is overwritten by the tracker; sub2-sub7 are checkout prefill fields). Only the click ID and pixel ID are sent, no personal data.
     offerUrl: function (offerKey) {

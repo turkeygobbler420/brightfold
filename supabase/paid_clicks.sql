@@ -21,3 +21,11 @@ create table if not exists unsubscribes (
   created_at timestamptz default now()
 );
 alter table unsubscribes enable row level security;
+
+-- Membership cancellation requests (to be actioned with the billing provider/network).
+create table if not exists cancel_requests (
+  click_id text primary key,
+  email text not null,
+  requested_at timestamptz default now()
+);
+alter table cancel_requests enable row level security;
