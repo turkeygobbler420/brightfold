@@ -131,40 +131,35 @@
      ${ds.slice(0,3).map((x,i)=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${Math.max(8,Math.round(x.f*100))}%"></i></div></div>`).join('')}
      <p class="gl-n">Based on your own answers. Exact scores and the full breakdown are in the report.</p></section>`;
   }
-  /* Payment screen. With a Whop plan set (offers.js WHOP_PLAN) the card form is embedded on this page via Whop Elements,
-     the same method as tradingascension. Otherwise the affiliate offer opens in a pop-out window (or this tab if blocked). */
-  function whopEmbed(plan){
+  /* Payment screen: Whop-style on-page checkout modal (order summary + secure pay button).
+     The provider's page sends X-Frame-Options: DENY so it cannot be framed; the pay button opens it in a
+     pop-out window sized like a card form (falls back to this tab if pop-ups are blocked). */
+  function embedCheckout(url){
     let m=document.getElementById('bfEmbed');if(m)m.remove();
     m=document.createElement('div');m.id='bfEmbed';
-    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto';
-    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:14px;width:min(520px,100%);max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #e5e7eb;font:600 15px system-ui,sans-serif;color:#111">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer">&times;</button></div>'+
-      '<div id="bfWhopMount" style="min-height:22rem;padding:12px 16px"><p style="text-align:center;color:#555;font:14px system-ui,sans-serif;padding:2rem 0">Loading secure payment…</p></div>'+
-      '<p style="text-align:center;font:12px system-ui,sans-serif;color:#777;margin:0 0 14px">Secure payment processed by Whop.</p></div>';
+    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111';
+    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
+      '<div style="padding:18px">'+
+        '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.99</b></div>'+
+        '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99/week after the trial. Cancel anytime.</div>'+
+        '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.99</span></div>'+
+        '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
+        '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
+        '<p style="text-align:center;font-size:12px;color:#888;margin:8px 0 0">&#128274; Encrypted, secure payment</p>'+
+      '</div></div>';
     document.body.appendChild(m);
-    const x=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
-    document.getElementById('bfEmbedX').onclick=x;
-    new Promise((res,rej)=>{
-      if(window.WhopElements)return res();
-      const sc=document.createElement('script');sc.src='https://cdn.whop.com/elements/amber/elements.js';sc.setAttribute('data-whop-elements','');
-      sc.onload=()=>window.WhopElements?res():rej();sc.onerror=rej;document.head.appendChild(sc);
-    }).then(()=>{
-      const mount=document.getElementById('bfWhopMount');mount.innerHTML='';
-      const c=window.WhopElements().checkout.create({
-        plan:plan,metadata:{click_id:window.bfTrack.clickId},returnUrl:location.origin+location.pathname+'?checkout=return',
-        onComplete:r=>{if(r&&r.result==='payment'){x();S.unlock();st.done=false;showResults();}}
-      });
-      c.create('checkout').mount(mount);
-    }).catch(()=>{x();alert('Could not load the secure payment form. Please try again.');});
-  }
-  function embedCheckout(url){
-    const plan=window.bfTrack&&window.bfTrack.whopPlan;
-    if(plan){whopEmbed(plan);return;}
-    const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
-    const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
-    if(!win){location.href=url;return;}
-    try{win.focus();}catch(e){}
-    document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);
+    const close=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
+    document.getElementById('bfEmbedX').onclick=close;
+    m.addEventListener('click',e=>{if(e.target===m)close();});
+    document.getElementById('bfPay').onclick=()=>{
+      const msg=document.getElementById('bfPayMsg');
+      const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
+      const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
+      if(!win){location.href=url;return;}
+      try{win.focus();}catch(e){}
+      msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window didn't open?</a>';
+    };
   }
   function checkout(){
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);

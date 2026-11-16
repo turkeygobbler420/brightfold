@@ -2,9 +2,6 @@
 (function () {
   var CONFIG = {
     PIXEL_ID: '',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
-    // Whop embedded checkout (same method as tradingascension). Paste the Whop plan ID (plan_...) for the $0.99 trial here.
-    // Empty = use the affiliate offer below instead.
-    WHOP_PLAN: '',
     ACTIVE_OFFER: '26199', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
@@ -47,7 +44,6 @@
   window.bfTrack = {
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
-    whopPlan: CONFIG.WHOP_PLAN,
     event: function (name, data) { if (window.fbq) fbq('trackCustom', name, data || {}); },
     // Builds <OFFER_BASE>?sub1=<click_id>&sub15=<pixel_id>. Only the click ID and pixel ID are sent, no personal data.
     offerUrl: function (offerKey) {
