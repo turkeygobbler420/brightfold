@@ -131,19 +131,14 @@
      ${ds.slice(0,3).map((x,i)=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${Math.max(8,Math.round(x.f*100))}%"></i></div></div>`).join('')}
      <p class="gl-n">Based on your own answers. Exact scores and the full breakdown are in the report.</p></section>`;
   }
-  /* Embedded payment screen: the offer's checkout opens in an on-page frame. If the processor refuses framing, the "open in a new tab" link is the fallback. */
+  /* Payment screen: opens the processor's real checkout in a pop-out window (so it renders exactly as the processor serves it);
+     if the browser blocks the pop-out, the current tab goes to the checkout instead. */
   function embedCheckout(url){
-    let m=document.getElementById('bfEmbed');if(m)m.remove();
-    m=document.createElement('div');m.id='bfEmbed';
-    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px';
-    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:14px;width:min(520px,100%);height:min(780px,100%);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)">'+
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #e5e7eb;font:600 14px system-ui,sans-serif;color:#111">Secure checkout<span><a id="bfEmbedNew" href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="font-weight:500;margin-right:14px;color:#4f46e5">Open in new tab</a><button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:22px;line-height:1;cursor:pointer">&times;</button></span></div>'+
-      '<iframe id="bfEmbedF" title="Secure checkout" allow="payment *; fullscreen" referrerpolicy="strict-origin-when-cross-origin" style="flex:1;width:100%;border:0"></iframe></div>';
-    document.body.appendChild(m);
-    document.getElementById('bfEmbedF').src=url;
-    const x=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
-    document.getElementById('bfEmbedX').onclick=x;
-    m.addEventListener('click',e=>{if(e.target===m)x();});
+    const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
+    const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
+    if(!win){location.href=url;return;}
+    try{win.focus();}catch(e){}
+    document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);
   }
   function checkout(){
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);
