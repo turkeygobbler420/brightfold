@@ -162,34 +162,6 @@
       busy=false;
     },3000);
   }
-  function embedCheckout(url){
-    let m=document.getElementById('bfEmbed');if(m)m.remove();
-    m=document.createElement('div');m.id='bfEmbed';
-    m.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,14,30,.72);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111';
-    m.innerHTML='<div role="dialog" aria-label="Secure checkout" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:15px">Secure checkout<button id="bfEmbedX" type="button" aria-label="Close" style="border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button></div>'+
-      '<div style="padding:18px">'+
-        '<div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px"><span>IQ score report</span><b>$0.99</b></div>'+
-        '<div style="font-size:13px;color:#666;margin-bottom:14px">Then $4.99/week after the trial. Cancel anytime.</div>'+
-        '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding:12px 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:16px"><span>Due today</span><span>$0.99</span></div>'+
-        '<button id="bfPay" type="button" style="width:100%;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:16px;font-weight:600;cursor:pointer">Continue to secure payment</button>'+
-        '<p id="bfPayMsg" style="text-align:center;font-size:13px;color:#555;margin:12px 0 0;min-height:18px"></p>'+
-        '<p style="text-align:center;font-size:12px;color:#888;margin:8px 0 0">&#128274; Encrypted, secure payment</p>'+
-      '</div></div>';
-    document.body.appendChild(m);
-    const close=()=>{m.remove();document.querySelectorAll('.co-b').forEach(b=>b.disabled=false);};
-    document.getElementById('bfEmbedX').onclick=close;
-    m.addEventListener('click',e=>{if(e.target===m)close();});
-    document.getElementById('bfPay').onclick=()=>{
-      const msg=document.getElementById('bfPayMsg');
-      const w=Math.min(520,screen.availWidth||520),h=Math.min(820,screen.availHeight||820);
-      const win=window.open(url,'bfCheckout','popup=yes,width='+w+',height='+h+',left='+Math.max(0,((screen.availWidth||w)-w)/2)+',top=40');
-      if(!win){location.href=url;return;}
-      try{win.focus();}catch(e){}
-      watchPayment(win,msg);
-      msg.innerHTML='Complete your payment in the secure window. <a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener" style="color:#4f46e5">Window did not open?</a>';
-    };
-  }
   function checkout(){
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);
     const peer=(src,nm,iq)=>{const sc=(iq-100)/60;return `<div class="peer"><span class="pl">IQ ${iq}</span><div class="pc" style="aspect-ratio:${(3/(4*sc)).toFixed(3)}"><img src="${src}" alt="" loading="lazy"></div><span class="pn">${nm}</span></div>`;};
@@ -212,27 +184,23 @@
         <div class="co-pay"><div class="total"><span>Total due:</span><b><s>$6.60</s> $0.99</b></div>
          <button class="btn btn-primary co-b" data-m="express" type="button">Express checkout</button>
          <button class="btn btn-line co-b" data-m="card" type="button">Credit or debit card</button>
-         <p class="co-demo" id="coDemo">Demo checkout. No payment is taken and no card details are collected.</p></div>
+         </div>
         <p class="fine">Get a 7-day trial for just $0.99. <b>After the trial, we’ll charge $4.99 every week until you cancel.</b></p>
        </div></div></div></div>`;
     let k=0;sellT=setInterval(()=>{const t=$('coTick');if(!t)return clearInterval(sellT);t.classList.remove('in');void t.offsetWidth;t.innerHTML=sold(++k);t.classList.add('in');},5200);
     const paint=()=>{const e=$('coT');if(!e)return clearInterval(offerT);e.textContent=fmt(left);if(left>0){left--;ls.set('bf_offer',left);}};
     paint();offerT=setInterval(paint,1000);
     let n=18397;const nt=setInterval(()=>{const e=$('coN');if(!e)return clearInterval(nt);n+=Math.floor(rnd(1,4));e.textContent=n.toLocaleString('en-US');},3500);
-    const offer=window.bfTrack&&window.bfTrack.offerUrl();
-    if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
-    /* Embed config gate: real mode (DEMO:false + PROVIDER_URL) takes over checkout;
-       while DEMO:true only tester sessions (?checkout=1, remembered as bf_checkout)
-       see the embed demo — everyone else keeps the CPA offer path. */
+    /* Embedded checkout is the only payment path. DEMO=true (current): Pay completes
+       the handshake locally (no payment taken yet). DEMO=false + PROVIDER_URL: the
+       iframe navigates to the provider-hosted page and unlock comes from /api/status
+       postback truth (watchPayment) — never from the iframe message alone. */
     const cfgE=window.BF_EMBED_CONFIG||null;
-    const embedOK=!!(cfgE&&cfgE.ENABLED&&window.BFEmbed&&(cfgE.DEMO===false||(()=>{try{return sessionStorage.getItem('bf_checkout')==='1';}catch(e){return false;}})()));
     var embedHandle=null;
     const closeEmbed=()=>{if(embedHandle){try{embedHandle.destroy();}catch(e){}embedHandle=null;}const mm=document.getElementById('bfEmbed');if(mm)mm.remove();};
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
       window.bfTrack.event('GoToCheckout',{value:0.99,currency:'USD'});
-      if(!embedOK){
-        if(offer){embedCheckout(offer);return;}
-      }else{
+      if(cfgE&&cfgE.ENABLED&&window.BFEmbed){
         try{
           closeEmbed();
           const m=document.createElement('div');m.id='bfEmbed';
@@ -247,17 +215,26 @@
             returnUrl:location.origin+location.pathname,
             /* REAL mode never unlocks on the iframe message — the paid state comes
                from /api/status (postback truth) via watchPayment. DEMO mode unlocks
-               locally: it is an explicitly-labelled demo (no payment is taken). */
+               locally (transitional until a processor is configured). */
             onComplete:function(res){
               closeEmbed();
               if(res&&res.result==='payment'){
                 clearInterval(sellT);clearInterval(offerT);clearInterval(nt);
-                if(cfgE.DEMO===false){watchPayment(null,'');}
+                if(cfgE.DEMO===false){watchPayment({closed:false},'');}
                 else{S.unlock();st.done=false;showResults();}
               }
             },
-            /* iframe 404 / blocked / handshake timeout → CPA pop-out fallback. */
-            onMountFailed:function(){closeEmbed();if(offer){embedCheckout(offer);}},
+            /* iframe 404 / blocked / handshake timeout → keep the modal open with a
+               retryable error (no pop-out fallback exists anymore). */
+            onMountFailed:function(){
+              closeEmbed();
+              const mm=document.getElementById('bfEmbed');
+              if(!mm)return;
+              mm.innerHTML='<div role="dialog" aria-label="Checkout unavailable" style="background:#fff;border-radius:16px;width:min(440px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;padding:28px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#111">'+
+                '<p style="font-weight:600;font-size:16px;margin:0 0 8px">Checkout is temporarily unavailable.</p>'+
+                '<p style="font-size:14px;color:#666;margin:0 0 18px">Please close this window and try again in a moment.</p>'+
+                '<button onclick="document.getElementById(\'bfEmbed\').remove()" type="button" style="padding:10px 22px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Close</button></div>';
+            },
             theme:'light'
           });
           embedHandle.create('checkout').mount(document.getElementById('bfEmbedHost'));
@@ -266,10 +243,11 @@
           return;
         }catch(e){
           closeEmbed();
-          if(offer){embedCheckout(offer);return;}
         }
         return;
       }
+      /* BFEmbed itself failed to load (rare): legacy Processing… unlock so the flow
+         still completes. */
       document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
       setTimeout(()=>{clearInterval(sellT);clearInterval(offerT);clearInterval(nt);S.unlock();st.done=false;showResults();},1300);
     });

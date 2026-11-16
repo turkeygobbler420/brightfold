@@ -46,7 +46,7 @@
               params.set('host', ORIGIN);
               params.set('theme', (opts.theme || 'light'));
               params.set('rel', 'bf-1');
-              params.set('v', '20261285');
+              params.set('v', '20261286');
               iframe.src = new URL('checkout/embed.html', BASE).toString() + '?' + params.toString();
               /* No allow-top-navigation / allow-popups-to-escape-sandbox / clipboard-write:
                  in REAL mode the provider document runs in this frame and must not
