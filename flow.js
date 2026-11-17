@@ -313,7 +313,7 @@
   /* dev-only skip button: invisible unless opened with ?dev=1 (remembered for the browser session) */
   (function(){
     let on=false;
-    try{if(new URLSearchParams(location.search).get('dev')==='1')sessionStorage.setItem('bf_dev','1');on=sessionStorage.getItem('bf_dev')==='1';}catch(e){}
+    try{if(new URLSearchParams(location.search).get('dev')==='0')localStorage.removeItem('bf_dev');if(new URLSearchParams(location.search).get('dev')==='1')localStorage.setItem('bf_dev','1');on=localStorage.getItem('bf_dev')==='1';}catch(e){}
     if(!on)return;
     const b=document.createElement('button');b.type='button';b.hidden=true;
     b.style.cssText='position:fixed;right:12px;top:12px;z-index:2147483600;padding:8px 12px;border-radius:8px;border:2px dashed #c00;background:#fff;color:#c00;font:600 12px system-ui,sans-serif;cursor:pointer';
