@@ -321,7 +321,7 @@
       if(!st)return;
       if(document.getElementById('emF')){st.email='dev@example.test';st.result=calc();close();checkout();}
       else if(st.flow){close();emailScreen();}
-      else{st.ans=st.ans.map(a=>a===null?0:a);close();analyze();}
+      else{st.ans=st.ans.map(a=>a===null?0:a);close();analyze();close();emailScreen();}
     };
     document.body.appendChild(b);
     setInterval(()=>{
@@ -330,7 +330,7 @@
       const calc=st&&st.flow&&document.getElementById('rf');
       const em=st&&document.getElementById('emF');
       b.hidden=!(quiz||calc||em);
-      b.textContent=em?'DEV: skip email':calc?'DEV: skip calculating':'DEV: skip quiz';
+      b.textContent=em?'DEV: skip email':calc?'DEV: skip calculating':'DEV: skip quiz + calculating';
     },300);
   })();
 })();
