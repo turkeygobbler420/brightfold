@@ -953,3 +953,12 @@ html[data-motion="off"] .cheer.on{opacity:1;transform:translate(-50%,0)}
 .co-tix-b em.now{background:#fff;color:#1f5f33}
 .co-tix::before,.co-tix::after{content:"";position:absolute;top:calc(50% - 24px);width:18px;height:18px;border-radius:50%;background:var(--bg);border:1.5px solid #a9d6a9}
 .co-tix::before{left:-10px}.co-tix::after{right:-10px}
+
+/* section pills: all text black on lighter fills */
+#app .chip,#app .qhead .chip,#app .chip.c-green,#app .qhead .chip.c-purple{color:#121212;text-shadow:none}
+#app .qhead .chip.c-purple{background:#c9a3d6}
+#app .qhead .chip.c-yellow{background:#f2c94c}
+#app .qhead .chip.c-green{background:#a9c964}
+#app .qhead .chip.c-blue{background:#8fb0f0}
+#app .qhead .chip.c-orange{background:#f4a261}
+#app .qhead .chip.c-pink{background:#f08db3}
