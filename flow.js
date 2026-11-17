@@ -172,6 +172,15 @@
       const r=calc();st.result=r;
       await Promise.race([Promise.all([S.saveLead(v),S.saveResult(r),S.link(v)]),new Promise(ok=>setTimeout(ok,1200))]);
       checkout();};
+    fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).then(d=>{
+      if(!d||!(d.then>0)||!document.getElementById('coP'))return;
+      const f=n=>{try{return new Intl.NumberFormat('en-US',{style:'currency',currency:d.currency||'USD'}).format(n);}catch(e){return '$'+n.toFixed(2);}};
+      const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
+      const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
+      set('coP',(d.today>0?t:'Free')+'<small>today</small>');
+      set('coN','Then '+f(d.then)+'/'+per+(d.trial?' after '+d.trial+'-day trial':'')+' &middot; shown in your currency below');
+      set('coS',d.today>0?t+' today':'Free today');set('coB',(d.today>0?t+' today':'Free today')+', then '+f(d.then)+'/'+per);
+    }).catch(()=>{});
     window.scrollTo(0,0);
   }
 
@@ -274,7 +283,7 @@
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
     $('tMain').innerHTML=`<div class="co">
       <div class="co-user"><span class="av">${E((st.email||'?')[0].toUpperCase())}</span><span>${E(st.email||'')}</span></div>
-      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report is unlocked</span><strong>Ready<small>pay below</small></strong></div><div class="co-tix-b"><em class="now">Price shown in your local currency below</em></div></div>
+      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report is unlocked</span><strong id="coP">Ready<small>pay below</small></strong></div><div class="co-tix-b"><em class="now" id="coN">Price shown in your local currency below</em></div></div>
       <h2 class="co-h">Congratulations! Your score is ready!</h2>
       ${glimpse()}
       <div class="gate"><div class="g-grid">
@@ -283,7 +292,7 @@
         <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>${ITEMS.length}</b><span>Questions answered</span></div><div><b>${DOMAINS.length}</b><span>Skill areas measured</span></div></div>
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
-        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
+        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr" id="coS">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay">
          <div id="bfPayMsg" style="margin:8px 0;color:#555;font-size:13px"></div><div id="bfCk" style="min-height:260px"></div></div>
        </div></div></div></div>`;
@@ -293,7 +302,7 @@
     else payMsg('Checkout is unavailable right now');
     const top=document.querySelector('#app .t-top');
     if(top&&!$('coBar')){const bar=document.createElement('div');bar.id='coBar';bar.className='co-bar';
-      bar.innerHTML='<span><b>Your IQ report is ready</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
+      bar.innerHTML='<span><b id="coB">Your IQ report is ready</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
       top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.getElementById('bfCk');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
     window.scrollTo(0,0);
