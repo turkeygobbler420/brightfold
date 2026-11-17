@@ -273,7 +273,7 @@
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
     $('tMain').innerHTML=`<div class="co">
       <div class="co-user"><span class="av">${E((st.email||'?')[0].toUpperCase())}</span><span>${E(st.email||'')}</span></div>
-      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report price is unlocked</span><strong>$0<small>today only</small></strong></div><div class="co-tix-b"><em class="now">Today: $0.00</em></div></div>
+      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report is unlocked</span><strong>Ready<small>pay below</small></strong></div><div class="co-tix-b"><em class="now">Price shown in your local currency below</em></div></div>
       <h2 class="co-h">Congratulations! Your score is ready!</h2>
       ${glimpse()}
       <div class="gate"><div class="g-grid">
@@ -282,24 +282,24 @@
         <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>${ITEMS.length}</b><span>Questions answered</span></div><div><b>${DOMAINS.length}</b><span>Skill areas measured</span></div></div>
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
-        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.00</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
-        <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.00</b></div>
+        <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
+        <div class="co-pay">
          <div id="bfPayMsg" style="margin:8px 0;color:#555;font-size:13px"></div><div id="bfCk" style="min-height:260px"></div></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
-    if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer,true);}
+    if(offer){window.bfTrack.event('GoToCheckout',{});embedCheckout(offer,true);}
     else payMsg('Checkout is unavailable right now');
     const top=document.querySelector('#app .t-top');
     if(top&&!$('coBar')){const bar=document.createElement('div');bar.id='coBar';bar.className='co-bar';
-      bar.innerHTML='<span><b>$0.00 today only</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
+      bar.innerHTML='<span><b>Your IQ report is ready</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
       top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.getElementById('bfCk');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
     window.scrollTo(0,0);
   }
 
   /* membership checkout from the account area (same flow, no quiz): returns false when no real checkout is configured */
-  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(o);return true;}};
+  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{});embedCheckout(o);return true;}};
   const syncSoon=()=>setTimeout(()=>S.syncMembership(),0);
   window.addEventListener('load',syncSoon);
 
