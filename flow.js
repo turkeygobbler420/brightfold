@@ -172,15 +172,6 @@
       const r=calc();st.result=r;
       await Promise.race([Promise.all([S.saveLead(v),S.saveResult(r),S.link(v)]),new Promise(ok=>setTimeout(ok,1200))]);
       checkout();};
-    fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).then(d=>{
-      if(!d||!(d.then>0)||!document.getElementById('coP'))return;
-      const f=n=>{try{return new Intl.NumberFormat('en-US',{style:'currency',currency:d.currency||'USD'}).format(n);}catch(e){return '$'+n.toFixed(2);}};
-      const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
-      const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
-      set('coP',(d.today>0?t:'Free')+'<small>today</small>');
-      set('coN','Then '+f(d.then)+'/'+per+(d.trial?' after '+d.trial+'-day trial':'')+' &middot; shown in your currency below');
-      set('coS',d.today>0?t+' today':'Free today');set('coB',(d.today>0?t+' today':'Free today')+', then '+f(d.then)+'/'+per);
-    }).catch(()=>{});
     window.scrollTo(0,0);
   }
 
@@ -305,6 +296,16 @@
       bar.innerHTML='<span><b id="coB">Your IQ report is ready</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
       top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.getElementById('bfCk');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
+    fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).then(d=>{
+      if(!d||!(d.then>0)||!document.getElementById('coP'))return;
+      const f=n=>{try{return new Intl.NumberFormat('en-US',{style:'currency',currency:d.currency||'USD'}).format(n);}catch(e){return '$'+n.toFixed(2);}};
+      const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
+      const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
+      const td=d.today>0?t+' today':'Free today';
+      set('coP',(d.today>0?t:'Free')+'<small>today</small>');
+      set('coN','Then '+f(d.then)+'/'+per+(d.trial?' after '+d.trial+'-day trial':'')+' &middot; shown in your currency below');
+      set('coS',td);set('coB',td+', then '+f(d.then)+'/'+per);
+    }).catch(()=>{});
     window.scrollTo(0,0);
   }
 
