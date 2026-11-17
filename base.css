@@ -149,4 +149,6 @@ footer.closing .wrap{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:sp
 .logo svg{width:40px;height:30px}
 .logo>span:not(.idot){background:linear-gradient(transparent 72%,var(--yellow) 72%,var(--yellow) 94%,transparent 94%);padding:0 .06em;border-radius:2px}
 
-.js-start:focus,.js-start:focus-visible{outline:none}
+/* programmatically focused screen buttons: no ring on touch/mobile; keyboard ring stays on desktop */
+@media (max-width:900px),(hover:none){#welGo:focus,#welGo:focus-visible,#moGo:focus,#moGo:focus-visible,#cpGo:focus,#cpGo:focus-visible,#gateGo:focus,#gateGo:focus-visible{outline:none}}
+.btn{-webkit-tap-highlight-color:transparent}
