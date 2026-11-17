@@ -296,8 +296,17 @@
       bar.innerHTML='<span><b id="coB">Your IQ report is ready</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
       top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.getElementById('bfCk');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
+    window.__bfExact=false;
+    if(!window.__bfWhopPx){window.__bfWhopPx=1;window.addEventListener('message',e=>{
+      if(e.origin!=='https://cdn.whop.com')return;const d=e.data,o=d&&d.whop==='resource-open'&&d.options;
+      if(!o||!o.currency||!(o.amount>0)||!document.getElementById('coP'))return;
+      try{const nf=new Intl.NumberFormat(navigator.language||'en-US',{style:'currency',currency:String(o.currency).toUpperCase()});
+        const t=nf.format(o.amount/Math.pow(10,nf.resolvedOptions().maximumFractionDigits));window.__bfExact=true;
+        const set=(i,h)=>{const x=document.getElementById(i);if(x)x.innerHTML=h;};
+        set('coP',t+'<small>today</small>');set('coS',t+' today');set('coB',t+' today');}catch(_){}
+    });}
     fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).then(async d=>{
-      if(!d||!(d.then>0)||!document.getElementById('coP'))return;
+      if(!d||!(d.then>0)||!document.getElementById('coP')||window.__bfExact)return;
       let cc='';try{cc=(sessionStorage.getItem('bf_geo')||'').toUpperCase();}catch(e){}
       const loc=navigator.language||'en-US';if(!/^[A-Z]{2}$/.test(cc)){const m=/[-_]([A-Za-z]{2})$/.exec(loc);cc=m?m[1].toUpperCase():'';}
       const EU='AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' '),M={};EU.forEach(c=>M[c]='EUR');
