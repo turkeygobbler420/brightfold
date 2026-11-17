@@ -345,6 +345,7 @@
   (function(){
     let on=false;
     try{if(new URLSearchParams(location.search).get('dev')==='0')localStorage.removeItem('bf_dev');if(new URLSearchParams(location.search).get('dev')==='1')localStorage.setItem('bf_dev','1');on=localStorage.getItem('bf_dev')==='1';}catch(e){}
+    if(!on&&/^(localhost|127\.0\.0\.1|\[::1\]|.*\.localhost|.*\.test)$/.test(location.hostname)&&new URLSearchParams(location.search).get('dev')!=='0')on=true;
     if(!on)return;
     const b=document.createElement('button');b.type='button';b.hidden=true;
     b.style.cssText='position:fixed;right:12px;top:12px;z-index:2147483600;padding:8px 12px;border-radius:8px;border:2px dashed #c00;background:#fff;color:#c00;font:600 12px system-ui,sans-serif;cursor:pointer';
@@ -355,7 +356,7 @@
       else{st.ans=st.ans.map(a=>a===null?0:a);close();analyze();close();emailScreen();}
     };
     document.body.appendChild(b);
-const c=document.createElement('button');c.type='button';c.hidden=true;c.textContent='DEV: straight to checkout';c.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147483600;padding:8px 12px;border-radius:8px;border:2px dashed #c00;background:#fff;color:#c00;font:600 12px system-ui,sans-serif;cursor:pointer';c.onclick=()=>{if(!st)return;st.flow=1;try{halt();}catch(e){}st.ans=st.ans.map(a=>a===null?0:a);st.email='dev@example.test';st.result=calc();close();checkout();};document.body.appendChild(c);setInterval(()=>{const app=$('app');c.hidden=!(st&&!st.done&&((!st.flow&&app&&!app.hidden)||document.getElementById('rf')||document.getElementById('emF')));},300);
+const c=document.createElement('button');c.type='button';c.hidden=true;c.textContent='DEV: straight to checkout';c.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147483600;padding:8px 12px;border-radius:8px;border:2px dashed #c00;background:#fff;color:#c00;font:600 12px system-ui,sans-serif;cursor:pointer';c.onclick=()=>{if(!st)return;st.flow=1;try{halt();}catch(e){}st.ans=st.ans.map(a=>a===null?0:a);st.email='dev@example.test';st.result=calc();close();checkout();};document.body.appendChild(c);setInterval(()=>{const app=$('app');c.hidden=!!(document.querySelector('.co')||(st&&st.done));},300);
     setInterval(()=>{
       const app=$('app');
       const quiz=st&&!st.done&&!st.flow&&app&&!app.hidden;
