@@ -127,8 +127,8 @@
     const two=(title,a,b,fn)=>{const o=ov(`<span class="fq-bar"></span><h3>${title}</h3><div class="fq-opts"><button class="fq-o" data-v="0">${E(a)}</button><button class="fq-o" data-v="1">${E(b)}</button></div>`);
       o.querySelectorAll('.fq-o').forEach(x=>x.onclick=()=>{fn(+x.dataset.v);close();paused=false;});};
     const STOPS=[
-      [83,()=>{two('Have you ever taken an IQ test?','Yes','No',v=>{st.tookIQ=!v;});}],
-      [90,()=>{const flip=Math.random()<.5;const A=flip?st.word:decoyW,B=flip?decoyW:st.word;two('The word you memorized was…',A,B,v=>{st.recallWord=(v?B:A)===st.word;});}]
+      [33,()=>{two('Have you ever taken an IQ test?','Yes','No',v=>{st.tookIQ=!v;});}],
+      [66,()=>{const flip=Math.random()<.5;const A=flip?st.word:decoyW,B=flip?decoyW:st.word;two('The word you memorized was…',A,B,v=>{st.recallWord=(v?B:A)===st.word;});}]
     ];
     let p=0,paused=false,si=0;
     const draw=()=>{const v=Math.min(100,p);$('rf').style.strokeDashoffset=R*(1-v/100);$('rp').textContent=Math.floor(v)+'%';$('ring').setAttribute('aria-valuenow',Math.floor(v));
@@ -176,8 +176,8 @@
     return `<section class="gl" aria-label="A glimpse of your profile"><p class="gl-k">A glimpse of your profile</p>
      <p class="gl-s"><span>&#9733; Strongest: ${E(ds[0].name)}</span></p>
      <div class="gl-b"><span>Your estimated IQ</span><b aria-hidden="true">1&#8226;&#8226;</b><i>Unlocks with your report</i></div>
-     ${ds.slice(0,3).map((x,i)=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${Math.max(8,Math.round(x.f*100))}%"></i></div></div>`).join('')}
-     <p class="gl-n">Based on your own answers. Exact scores and the full breakdown are in the report.</p></section>`;
+     ${ds.slice(0,2).map(x=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${75+Math.floor(Math.random()*16)}%"></i></div></div>`).join('')}
+     </section>`;
   }
   /* Payment screen: Whop-style on-page checkout modal (order summary + secure pay button).
      The provider's page sends X-Frame-Options: DENY so it cannot be framed; the pay button opens it in a
@@ -257,7 +257,7 @@
     });
     const top=document.querySelector('#app .t-top');
     if(top&&!$('coBar')){const bar=document.createElement('div');bar.id='coBar';bar.className='co-bar';
-      bar.innerHTML='<span><b>$0.00 today only</b> <i>then $4.99/week until you cancel</i></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
+      bar.innerHTML='<span><b>$0.00 today only</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
       top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.querySelector('.co-b');if(b)b.click();};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
     window.scrollTo(0,0);
