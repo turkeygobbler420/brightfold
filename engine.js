@@ -49,7 +49,7 @@ function startTest(){
   welcomeScreen();
 }
 document.querySelectorAll('.js-start').forEach(b=>b.addEventListener('click',startTest));
-$('exitLink').addEventListener('click',e=>{e.preventDefault();leave();});
+$('exitLink').addEventListener('click',e=>{e.preventDefault();try{leave();}catch(_){}location.assign('/');});
 function leave(){clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);if(st){st.done=true;st.view=null;}dock();$('app').hidden=true;$('landing').hidden=false;window.scrollTo(0,0);}
 
 const DCOL={fluid:'purple',quant:'yellow',verbal:'green',spatial:'blue',memory:'orange',speed:'pink'};
