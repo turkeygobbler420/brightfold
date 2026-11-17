@@ -274,7 +274,7 @@
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
     $('tMain').innerHTML=`<div class="co">
       <div class="co-user"><span class="av">${E((st.email||'?')[0].toUpperCase())}</span><span>${E(st.email||'')}</span></div>
-      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report is unlocked</span><strong id="coP">Ready<small>pay below</small></strong></div><div class="co-tix-b"><em class="now" id="coN">Price shown in your local currency below</em></div></div>
+      <div class="co-tix"><div class="co-tix-t"><span>Your IQ report is unlocked</span><strong id="coP">Ready<small>pay below</small></strong></div><div class="co-tix-b"></div></div>
       <h2 class="co-h">Congratulations! Your score is ready!</h2>
       ${glimpse()}
       <div class="gate"><div class="g-grid">
@@ -303,13 +303,13 @@
       const EU='AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' '),M={};EU.forEach(c=>M[c]='EUR');
       'ZA:ZAR,GB:GBP,AU:AUD,CA:CAD,NZ:NZD,IN:INR,NG:NGN,KE:KES,GH:GHS,AE:AED,SA:SAR,SG:SGD,MY:MYR,PH:PHP,ID:IDR,TH:THB,VN:VND,JP:JPY,KR:KRW,HK:HKD,TW:TWD,CN:CNY,BR:BRL,MX:MXN,AR:ARS,CL:CLP,CO:COP,PE:PEN,CH:CHF,SE:SEK,NO:NOK,DK:DKK,PL:PLN,CZ:CZK,HU:HUF,RO:RON,BG:BGN,TR:TRY,IL:ILS,EG:EGP,PK:PKR,BD:BDT,UA:UAH'.split(',').forEach(x=>{M[x.slice(0,2)]=x.slice(3);});
       let cur=d.currency||'USD',rate=1,approx=false;const want=M[cc];
-      if(want&&want!==cur){try{const fx=await fetch('https://open.er-api.com/v6/latest/'+cur).then(r=>r.json());const x=fx&&fx.rates&&fx.rates[want];if(x>0){rate=x*1.02;cur=want;approx=true;}}catch(e){}}
+      if(want&&want!==cur){try{const fx=await fetch('https://open.er-api.com/v6/latest/'+cur).then(r=>r.json());const x=fx&&fx.rates&&fx.rates[want];if(x>0){rate=x*1.0206;cur=want;approx=true;}}catch(e){}}
       const f=n=>{try{return (approx?'≈ ':'')+new Intl.NumberFormat(loc,{style:'currency',currency:cur}).format(n*rate);}catch(e){return '$'+n.toFixed(2);}};
       const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
       const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
       const td=d.today>0?t+' today':'Free today';
       set('coP',(d.today>0?t:'Free')+'<small>today</small>');
-      set('coN','Then '+f(d.then)+'/'+per+(d.trial?' after '+d.trial+'-day trial':''));
+      
       set('coS',td);set('coB',td);
     }).catch(()=>{});
     window.scrollTo(0,0);
