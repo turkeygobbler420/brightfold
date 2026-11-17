@@ -90,7 +90,7 @@
 
   function render(v){
     view=v;dlg.innerHTML=X+'<div class="auth-in">'+FORMS[v]()+'</div>';
-    const f=$('input');if(f&&v!=='account')setTimeout(()=>f.focus(),30);
+    const f=$('input');if(f&&v!=='account')setTimeout(()=>f.focus({preventScroll:true}),30);
     const h=dlg.querySelector('[data-hist]');
     if(h&&window.BF_STORE)window.BF_STORE.results().then(rs=>{
       h.innerHTML=rs.length?'<ul>'+rs.slice(0,8).map(r=>`<li><b>${esc(r.score)}</b><span>${esc(r.raw)}/${esc(r.items)} correct</span><time>${esc(new Date(r.at).toLocaleDateString((window.BF_LOC?BF_LOC():'en-GB'),{day:'numeric',month:'short',year:'numeric'}))}</time></li>`).join('')+'</ul>':'<p class="auth-sub">No results yet. Take the test and your score will appear here.</p>';

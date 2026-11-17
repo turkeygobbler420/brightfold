@@ -161,7 +161,7 @@ function wordScreen(){
   $('tMain').innerHTML=`<div class="mo" role="status"><p class="label">${Xl('wordLabel')}</p><h2>${Xl('wordTitle')}</h2>
    <p>${Xl('wordAsk')}</p><div class="word">${st.word}</div>
    <p class="hold">${Xl('wordHold')}</p><button class="btn btn-primary" id="moGo">${Xl('wordGo')}</button></div>`;
-  $('moGo').onclick=()=>{st.hold=false;render();window.scrollTo({top:0});};$('moGo').focus();
+  $('moGo').onclick=()=>{st.hold=false;render();window.scrollTo({top:0});};$('moGo').focus({preventScroll:true});
 }
 function recallScreen(){
   clearTimeout(autoTimer);st.hold=true;st.view=recallScreen;dock();$('tCount').textContent=Xl('bonus');
@@ -230,7 +230,7 @@ function checkpoint(n){
   if(k===0)meterPct=PLACEHOLDER_AHEAD_PCT;
   if(meterPct!=null)requestAnimationFrame(()=>requestAnimationFrame(()=>{const m=$('moMeter');if(m)m.style.transform=`scaleX(${meterPct/100})`;}));
   noteCount();
-  $('cpGo').onclick=()=>{st.hold=false;go(n);};$('cpGo').focus();window.scrollTo({top:0});
+  $('cpGo').onclick=()=>{st.hold=false;go(n);};$('cpGo').focus({preventScroll:true});window.scrollTo({top:0});
 }
 
 /* memory */
@@ -241,7 +241,7 @@ function memoryHTML(it){
 }
 function startMemory(it){
   if(st.seen[st.i])return;
-  st.seen[st.i]='shown';render();setTimeout(()=>$('memIn')&&$('memIn').focus(),30);
+  st.seen[st.i]='shown';render();setTimeout(()=>$('memIn')&&$('memIn').focus({preventScroll:true}),30);
 }
 function wireMemory(it){
   if(st.seen[st.i]==='run')st.seen[st.i]=null;
@@ -319,7 +319,7 @@ function finish(){
     </div></div></div>`;
   document.querySelectorAll('#app input[name="plan"]').forEach(r=>r.addEventListener('change',()=>{const p=PLANS[r.value];$('gateTot').textContent=p[1];$('gateFine').textContent=p[2]+'. Cancel any time.';}));
   $('gateGo').onclick=()=>{st.done=false;showResults();};
-  $('gateGo').focus();window.scrollTo(0,0);
+  $('gateGo').focus({preventScroll:true});window.scrollTo(0,0);
 }
 
 /* BF_IQ: the one score rule. Share correct maps linearly to IQ, 50% -> 100, 15 points per 20%, clamped 62..145. */

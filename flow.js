@@ -165,7 +165,7 @@
       <p class="em-err" id="emErr" role="alert"></p>
       <p class="em-fine">Mindmetric keeps your personal information confidential. By clicking “Continue” you acknowledge that you have read, understood and accepted our terms and privacy policy.</p>
       <button class="btn btn-primary em-go" type="submit">Continue</button></form></div>`;
-    const inp=$('emIn');inp.focus();
+    const inp=$('emIn');inp.focus({preventScroll:true});
     $('emF').onsubmit=async e=>{e.preventDefault();const v=inp.value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)||v.toLowerCase()===DEMO.email){$('emErr').textContent='Enter a valid email address.';inp.focus();return;}
       $('emErr').textContent='';st.email=v;const b=e.target.querySelector('button');b.disabled=true;b.textContent='Please wait…';
