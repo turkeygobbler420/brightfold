@@ -50,8 +50,28 @@
   // PostHog analytics. Visitor id = our click id, so the server-side purchase event (postback) joins the same person.
   if (CONFIG.POSTHOG_KEY) {
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties reset get_distinct_id get_session_id set_config startSessionRecording stopSessionRecording opt_in_capturing opt_out_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', bootstrap: { distinctID: clickId }, loaded: function (ph) { ph.identify(clickId); } });
+    posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', opt_out_capturing_by_default: safeGet('bf_consent') !== 'yes', bootstrap: { distinctID: clickId }, loaded: function (ph) { ph.identify(clickId); } });
   }
+  // Cookie / analytics consent banner. Nothing is captured until the visitor accepts.
+  (function () {
+    if (!CONFIG.POSTHOG_KEY || safeGet('bf_consent')) return;
+    function show() {
+      var d = document.createElement('div');
+      d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Cookie consent');
+      d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:520px;margin:0 auto;padding:14px 16px;background:var(--surface,#fff);color:var(--ink,#121212);border:1px solid rgba(0,0,0,.15);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif';
+      d.innerHTML = '<div style="margin-bottom:10px">We use cookies for anonymous analytics to see where people drop off and improve the quiz. You can decline and the site works the same.</div><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:transparent;color:inherit;font:inherit;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:var(--accent,#121212);color:var(--accent-ink,#fff);font:inherit;cursor:pointer">Accept</button></div>';
+      d.addEventListener('click', function (e) {
+        var c = e.target && e.target.getAttribute && e.target.getAttribute('data-c');
+        if (!c) return;
+        safeSet('bf_consent', c);
+        try { if (c === 'yes' && window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {}
+        d.remove();
+      });
+      document.body.appendChild(d);
+    }
+    if (document.body) show(); else document.addEventListener('DOMContentLoaded', show);
+  })();
+
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
   window.BF_EV = function (name, props) { try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {} };
 
