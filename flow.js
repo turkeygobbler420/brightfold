@@ -19,8 +19,16 @@
     saveLocal(d){ls.set('bf_data',d);},
     async saveLead(email){
       const d=S.local();if(!d.leads.includes(email))d.leads.push(email);S.saveLocal(d);
-      const a=window.BF_AUTH,sb=a&&a.sb&&a.sb();
-      if(sb){try{await sb.rpc('capture_lead',{p_email:email});}catch(e){}}
+      /* Direct RPC with the public anon key so capture never depends on the auth client being loaded. */
+      const c=window.BF_SUPABASE,q=new URLSearchParams(location.search),t=window.bfTrack||{};
+      const sc=(st&&st.result&&st.result.score)||null;
+      if(c&&c.url){try{await fetch(c.url+'/rest/v1/rpc/capture_lead',{method:'POST',keepalive:true,
+        headers:{'content-type':'application/json',apikey:c.anonKey,authorization:'Bearer '+c.anonKey},
+        body:JSON.stringify({p_email:email,p_click_id:t.clickId||null,p_utm_source:q.get('utm_source')||q.get('src')||null,p_utm_medium:q.get('utm_medium'),
+          p_utm_campaign:q.get('utm_campaign'),p_referrer:document.referrer||null,p_device:/Mobi|Android/i.test(navigator.userAgent)?'mobile':'desktop',
+          p_lang:(navigator.language||'').slice(0,10),p_score:sc})});}catch(e){}}
+      try{if(window.BF_EV)BF_EV('email_submitted',{has_click_id:!!t.clickId});
+        if(window.posthog&&posthog.setPersonProperties)posthog.setPersonProperties({email:email});}catch(e){}
     },
     async saveResult(r){
       const d=S.local();d.results.unshift({...r,at:new Date().toISOString()});d.results=d.results.slice(0,20);S.saveLocal(d);
