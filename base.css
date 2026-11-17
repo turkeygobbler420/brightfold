@@ -148,3 +148,5 @@ footer.closing .wrap{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:sp
 .logo .idot::after{content:"";position:absolute;left:50%;top:-.02em;width:.21em;height:.21em;margin-left:-.105em;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 1.5px var(--ink)}
 .logo svg{width:40px;height:30px}
 .logo>span:not(.idot){background:linear-gradient(transparent 72%,var(--yellow) 72%,var(--yellow) 94%,transparent 94%);padding:0 .06em;border-radius:2px}
+
+.js-start:focus,.js-start:focus-visible{outline:none}
