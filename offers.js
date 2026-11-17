@@ -52,7 +52,7 @@
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties reset get_distinct_id get_session_id set_config startSessionRecording stopSessionRecording opt_in_capturing opt_out_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', opt_out_capturing_by_default: safeGet('bf_consent') !== 'yes', bootstrap: { distinctID: clickId }, loaded: function (ph) { ph.identify(clickId); } });
   }
-  // Cookie / analytics consent banner. Nothing is captured until the visitor accepts.
+  // Cookie / analytics consent. EU/UK (or unknown country): forced banner, nothing captured until accepted. Elsewhere: consent is automatic, no banner.
   (function () {
     if (!CONFIG.POSTHOG_KEY || safeGet('bf_consent') === 'yes') return;
     function show() {
@@ -71,7 +71,20 @@
       d._o = document.body.style.overflow; document.body.style.overflow = 'hidden';
       document.body.appendChild(d);
     }
-    if (document.body) show(); else document.addEventListener('DOMContentLoaded', show);
+    function bfGeo(cb){var done=false,EU='AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB IS LI NO CH';
+    function fin(c){if(done)return;done=true;cb(c);}
+    try{var s=sessionStorage.getItem('bf_geo');if(s)return fin(s);}catch(e){}
+    function save(c){c=(c||'').toUpperCase();if(!/^[A-Z]{2}$/.test(c))return '';try{sessionStorage.setItem('bf_geo',c);}catch(e){}return c;}
+    function get(u,p){var ac=window.AbortController?new AbortController():null;var t=setTimeout(function(){ac&&ac.abort();},3500);return fetch(u,{cache:'no-store',signal:ac&&ac.signal}).then(function(r){return r.text();}).then(function(x){clearTimeout(t);return p(x);});}
+    get('https://www.cloudflare.com/cdn-cgi/trace',function(x){var m=/^loc=([A-Za-z]{2})/m.exec(x);return save(m&&m[1]);})
+      .then(function(c){if(c)return c;throw 0;})
+      .catch(function(){return get('https://api.country.is/',function(x){return save(JSON.parse(x).country);});})
+      .then(fin,function(){fin('');});
+    bfGeo.eu=function(c){return !c||EU.indexOf(c)>-1;};
+  }
+    function auto() { safeSet('bf_consent', 'yes'); try { if (window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {} }
+    function go() { bfGeo(function (c) { if (bfGeo.eu(c)) show(); else auto(); }); }
+    if (document.body) go(); else document.addEventListener('DOMContentLoaded', go);
   })();
 
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
