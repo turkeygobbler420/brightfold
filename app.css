@@ -946,7 +946,7 @@ html[data-motion="off"] .cheer.on{opacity:1;transform:translate(-50%,0)}
 .co-tix{position:relative;width:100%;box-sizing:border-box;background:#e3f4e3;border:1.5px solid #a9d6a9;border-radius:18px;padding:16px 20px;color:#1f5f33}
 .co-tix-t{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:2px dashed #9fcf9f}
 .co-tix-t span{font-size:17px;font-weight:600;line-height:1.25;max-width:55%}
-.co-tix-t strong{font-family:var(--f-display);font-size:48px;line-height:1;display:flex;align-items:baseline;gap:6px}
+.co-tix-t strong{font-family:var(--f-display);font-size:30px;line-height:1;display:flex;align-items:baseline;gap:6px}
 .co-tix-t small{font:700 13px system-ui;letter-spacing:.04em;text-transform:uppercase;max-width:60px;line-height:1.1}
 .co-tix-b{display:flex;gap:10px;justify-content:center;padding-top:12px;flex-wrap:wrap}
 .co-tix-b em{font-style:normal;font-size:14px;font-weight:600;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.55);color:#4b6b55}
