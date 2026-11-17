@@ -176,7 +176,7 @@
     return `<section class="gl" aria-label="A glimpse of your profile"><p class="gl-k">A glimpse of your profile</p>
      <p class="gl-s"><span>&#9733; Strongest: ${E(ds[0].name)}</span></p>
      <div class="gl-b"><span>Your estimated IQ</span><b aria-hidden="true">1&#8226;&#8226;</b><i>Unlocks with your report</i></div>
-     ${ds.slice(0,2).map(x=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${75+Math.floor(Math.random()*16)}%"></i></div></div>`).join('')}
+     ${ds.slice(0,3).map(x=>`<div class="gl-r c-${DCOL[x.id]}"><span>${E(x.name)}</span><div><i style="width:${75+Math.floor(Math.random()*16)}%"></i></div></div>`).join('')}
      </section>`;
   }
   /* Payment screen: Whop-style on-page checkout modal (order summary + secure pay button).
