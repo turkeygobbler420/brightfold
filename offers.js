@@ -5,7 +5,7 @@
     POSTHOG_KEY: 'phc_nH8eGAJ9eLULrNyGSKs3zKB2q6ctsKQbtg7WTqZNiMPZ',
     POSTHOG_HOST: 'https://us.i.posthog.com',
     PIXEL_ID: '',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
-    ACTIVE_OFFER: '26199', // key into OFFERS
+    ACTIVE_OFFER: 'whop', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
     ENABLE_REDIRECT: true,
@@ -14,6 +14,8 @@
     // Network tracking links. sub8 = our click_id (returned in the postback as {sub8}), sub15 = Meta pixel ID.
     // Never use sub1 (tracker overwrites it) or sub2-sub7 (email/first/last name/street/ZIP/city prefill fields).
     OFFERS: {
+      // Our own Whop checkout. direct = open as-is (no affiliate sub8/sub15 params).
+      'whop':  { name: 'Whop checkout (own)', base: 'https://whop.com/checkout/plan_gZemshu7CN47f', direct: true },
       '25388': { name: 'US DailyOffer Shop Pay Only Shipping Prefill (CC), 24 USD CPA', base: 'https://vadvpl.com/clickout/25388/361471/', unsubscribe: 'https://unsubscribe.mailsolvo.com/unsubscribe/34837f666bc711f18cb502042bbd4231' },
       '26114': { name: 'US Green Checkout VOD (CC), 24 USD CPA',                        base: 'https://avdiupt.com/clickout/26114/361472/' },
       '26199': { name: 'GLO WW Green Checkout VOD (CC), 80% PPS',                       base: 'https://opniivsac.com/clickout/26199/361473/' },
@@ -94,6 +96,7 @@
       if (!enabled && !offerKey) return null;
       var offer = CONFIG.OFFERS[offerKey || CONFIG.ACTIVE_OFFER];
       if (!offer) return null;
+      if (offer.direct) return offer.base;
       var u = new URL(offer.base);
       u.searchParams.set('sub8', clickId);
       if (CONFIG.PIXEL_ID) u.searchParams.set('sub15', CONFIG.PIXEL_ID);
