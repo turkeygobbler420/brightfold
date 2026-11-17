@@ -58,21 +58,21 @@
 <script defer src="illus.js?v=20261284b"></script>
 <script defer src="offers.js?v=20261119"></script>
 <script defer src="engine.js?v=20261296bcdeghi"></script>
-<script defer src="flow.js?v=20261709"></script>
+<script defer src="flow.js?v=20261710"></script>
 <script defer src="landing.js?v=20261284b"></script>
 <script defer src="config.js?v=20261284b"></script>
-<script defer src="home.js?v=20261299bx"></script>
+<script defer src="home.js?v=20261299by"></script>
 <script defer src="auth.js?v=20261299b"></script>
 <script>
-(function(){var done=false,ACT=function(){PAY()};
+(function(){var done=false,armed=false,ACT=function(){if(armed)PAY()};
 function ready(){return window.BF_HOME&&window.BF_AUTH!==undefined||document.querySelector('.js-start');}
 function HOME(tab){var A=window.BF_AUTH,H=window.BF_HOME;if(!H)return;
  var u=A&&A.user&&A.user(),d=window.BF_STORE&&window.BF_STORE.demoUser&&window.BF_STORE.demoUser();
  if(u||d){done=true;H.open(tab);}else if(A&&A.manage){done=true;var b=document.querySelector('.nav-login');if(b)b.click();}}
 function MANAGE(){var A=window.BF_AUTH;if(!A)return;done=true;if(A.user&&A.user())A.manage();else{var b=document.querySelector('.nav-login');if(b)b.click();}}
 function START(){var b=document.querySelector('.js-start');if(b&&window.BF_STORE){done=true;b.click();}}
-function PAY(){var P=window.BF_PAY;if(P&&P.start()){done=true;}}
-window.__run=function(){done=false;ACT();};
+function PAY(){var P=window.BF_PAY;if(P&&P.start(true)){done=true;}}
+window.__run=function(){armed=true;done=false;n=0;ACT();if(!done&&!t)t=setInterval(tick,250);};
 document.getElementById('acBtn').onclick=window.__run;
-var n=0,t=setInterval(function(){if(!done)ACT();if(done||++n>40)clearInterval(t);},250);})();
+var n=0,t=0;function tick(){if(!done)ACT();if(done||++n>40){clearInterval(t);t=0;}}})();
 </script>

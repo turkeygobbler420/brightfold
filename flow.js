@@ -233,17 +233,18 @@
     document.addEventListener('visibilitychange',payChk);window.addEventListener('focus',payChk);window.addEventListener('pageshow',payChk);
     payT=setTimeout(check,1500);
   }
-  function embedCheckout(url,inline){
+  function embedCheckout(url,inline,explicit){
     /* link the click id to the email(s) in use, then send the visitor straight to the hosted checkout */
     const u=S.user();[st&&st.email,u&&u.email].forEach(e=>{if(e&&e!==DEMO.email)S.link(e);});
     const m=/\/checkout\/(plan_\w+)/.exec(url||'');
     if(!m){pend.set();location.href=url;return;}
-    whopEmbed(m[1],url,inline);
+    whopEmbed(m[1],url,inline,explicit);
   }
   /* Whop embedded checkout (modal on our page). Unlock still comes from the webhook via watchPayment polling. */
-  function whopEmbed(plan,url,inline){
+  function whopEmbed(plan,url,inline,explicit){
     if(document.getElementById('bfEmbed'))return;
-    if(inline&&!document.getElementById('bfCk'))inline=false;
+    if(!inline&&!explicit)return; /* popup only ever opens from an explicit click on a pay/continue button */
+    if(inline&&!document.getElementById('bfCk'))return; /* inline checkout screen gone: never fall back to a popup */
     const ov=inline?null:document.createElement('div');if(ov){ov.id='bfEmbed';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
     ov.style.cssText='position:fixed;inset:0;z-index:2147482000;background:rgba(0,0,0,.6);overflow:auto;padding:16px;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif';
     ov.innerHTML='<div style="max-width:480px;margin:0 auto;background:#fff;color:#121212;border-radius:14px;padding:16px;position:relative"><button id="bfCkX" type="button" aria-label="Close" style="position:absolute;right:10px;top:8px;border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button><div id="bfPayMsg" style="margin:0 28px 10px 0;color:#555">Secure checkout</div><div id="bfCk" style="min-height:240px"></div></div>';
@@ -299,7 +300,7 @@
   }
 
   /* membership checkout from the account area (same flow, no quiz): returns false when no real checkout is configured */
-  window.BF_PAY={start(){const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{});embedCheckout(o);return true;}};
+  window.BF_PAY={start(userClick){if(userClick!==true)return false;const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{});embedCheckout(o,false,true);return true;}};
   const syncSoon=()=>setTimeout(()=>S.syncMembership(),0);
   window.addEventListener('load',syncSoon);
 

@@ -424,7 +424,7 @@
     if(h==='again')return startEx(sess.id);
     if(h==='levelup'){const p=sess.id.split('-');p[2]=+p[2]+1;return startEx(p.join('-'));}
     if(h==='trial')return trialBox();
-    if(h==='startTrial'){box=null;if(window.BF_PAY&&BF_PAY.start()){draw();return;}toast='Checkout is not available right now. Please try again later.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2600);return;}
+    if(h==='startTrial'){box=null;if(window.BF_PAY&&BF_PAY.start(true)){draw();return;}toast='Checkout is not available right now. Please try again later.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},2600);return;}
     if(h==='unsub'||h==='resub'){const out=h==='unsub';S().setOptOut(out).then(ok=>{toast=ok?(out?'You are unsubscribed from emails.':'You are subscribed to emails again.'):'Saved on this device, but we could not reach the server. Please try again.';draw();setTimeout(()=>{toast=null;const el=root.querySelector('.hm-toast');if(el)el.remove();},3000);});return;}
     if(h==='doCancel'){const d=S().local();box=null;
       const cu=window.bfTrack&&(bfTrack.cancelUrl||bfTrack.unsubscribeUrl());if(cu)window.open(cu,'_blank','noopener');
