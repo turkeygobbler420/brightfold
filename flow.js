@@ -303,14 +303,14 @@
       const EU='AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' '),M={};EU.forEach(c=>M[c]='EUR');
       'ZA:ZAR,GB:GBP,AU:AUD,CA:CAD,NZ:NZD,IN:INR,NG:NGN,KE:KES,GH:GHS,AE:AED,SA:SAR,SG:SGD,MY:MYR,PH:PHP,ID:IDR,TH:THB,VN:VND,JP:JPY,KR:KRW,HK:HKD,TW:TWD,CN:CNY,BR:BRL,MX:MXN,AR:ARS,CL:CLP,CO:COP,PE:PEN,CH:CHF,SE:SEK,NO:NOK,DK:DKK,PL:PLN,CZ:CZK,HU:HUF,RO:RON,BG:BGN,TR:TRY,IL:ILS,EG:EGP,PK:PKR,BD:BDT,UA:UAH'.split(',').forEach(x=>{M[x.slice(0,2)]=x.slice(3);});
       let cur=d.currency||'USD',rate=1,approx=false;const want=M[cc];
-      if(want&&want!==cur){try{const fx=await fetch('https://open.er-api.com/v6/latest/'+cur).then(r=>r.json());const x=fx&&fx.rates&&fx.rates[want];if(x>0){rate=x;cur=want;approx=true;}}catch(e){}}
+      if(want&&want!==cur){try{const fx=await fetch('https://open.er-api.com/v6/latest/'+cur).then(r=>r.json());const x=fx&&fx.rates&&fx.rates[want];if(x>0){rate=x*1.02;cur=want;approx=true;}}catch(e){}}
       const f=n=>{try{return (approx?'≈ ':'')+new Intl.NumberFormat(loc,{style:'currency',currency:cur}).format(n*rate);}catch(e){return '$'+n.toFixed(2);}};
       const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
       const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
       const td=d.today>0?t+' today':'Free today';
       set('coP',(d.today>0?t:'Free')+'<small>today</small>');
       set('coN','Then '+f(d.then)+'/'+per+(d.trial?' after '+d.trial+'-day trial':''));
-      set('coS',td);set('coB',td+', then '+f(d.then)+'/'+per);
+      set('coS',td);set('coB',td);
     }).catch(()=>{});
     window.scrollTo(0,0);
   }
