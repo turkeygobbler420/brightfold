@@ -236,7 +236,33 @@
   function embedCheckout(url){
     /* link the click id to the email(s) in use, then send the visitor straight to the hosted checkout */
     const u=S.user();[st&&st.email,u&&u.email].forEach(e=>{if(e&&e!==DEMO.email)S.link(e);});
-    pend.set();location.href=url;
+    const m=/\/checkout\/(plan_\w+)/.exec(url||'');
+    if(!m){pend.set();location.href=url;return;}
+    whopEmbed(m[1],url);
+  }
+  /* Whop embedded checkout (modal on our page). Unlock still comes from the webhook via watchPayment polling. */
+  function whopEmbed(plan,url){
+    if(document.getElementById('bfEmbed'))return;
+    const ov=document.createElement('div');ov.id='bfEmbed';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+    ov.style.cssText='position:fixed;inset:0;z-index:2147482000;background:rgba(0,0,0,.6);overflow:auto;padding:16px;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif';
+    ov.innerHTML='<div style="max-width:480px;margin:0 auto;background:#fff;color:#121212;border-radius:14px;padding:16px;position:relative"><button id="bfCkX" type="button" aria-label="Close" style="position:absolute;right:10px;top:8px;border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button><div id="bfPayMsg" style="margin:0 28px 10px 0;color:#555">Secure checkout</div><div id="bfCk" style="min-height:240px"></div></div>';
+    document.body.appendChild(ov);const ob=document.body.style.overflow;document.body.style.overflow='hidden';
+    let h=null,dead=false;
+    const shut=()=>{dead=true;try{h&&h.destroy();}catch(e){}stopPay();pend.clear();ov.remove();document.body.style.overflow=ob;};
+    document.getElementById('bfCkX').onclick=shut;
+    const fallback=()=>{if(dead)return;shut();pend.set();location.href=url;};
+    const mount=()=>{
+      try{
+        h=window.WhopElements().checkout.create({plan,metadata:{click_id:String(window.bfTrack&&window.bfTrack.clickId||'')},returnUrl:location.origin+location.pathname,
+          onComplete:()=>{payMsg('Payment received. Unlocking your results...');window.BF_EV&&BF_EV('payment_complete_client');pend.set();watchPayment(null);}});
+        h.create('checkout').mount('#bfCk');
+        pend.set();watchPayment(null);
+      }catch(e){console.warn('whop embed failed',e);fallback();}
+    };
+    if(window.WhopElements)return mount();
+    const s=document.createElement('script');s.src='https://cdn.whop.com/elements/amber/elements.js';s.setAttribute('data-whop-elements','');
+    s.onload=()=>{let n=0;const w=setInterval(()=>{if(window.WhopElements){clearInterval(w);mount();}else if(++n>40){clearInterval(w);fallback();}},100);};
+    s.onerror=fallback;document.head.appendChild(s);
   }
   function checkout(){
     window.BF_URL&&BF_URL('/payment');window.BF_EV&&BF_EV('checkout_viewed');
