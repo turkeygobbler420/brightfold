@@ -50,27 +50,6 @@
   // PostHog analytics. Visitor id = our click id, so the server-side purchase event (postback) joins the same person.
   if (CONFIG.POSTHOG_KEY) {
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties reset get_distinct_id get_session_id set_config startSessionRecording stopSessionRecording opt_in_capturing opt_out_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', opt_out_capturing_by_default: safeGet('bf_consent') !== 'yes', bootstrap: { distinctID: clickId }, loaded: function (ph) { ph.identify(clickId); } });
-  }
-  // Cookie / analytics consent. EU/UK (or unknown country): forced banner, nothing captured until accepted. Elsewhere: consent is automatic, no banner.
-  (function () {
-    if (!CONFIG.POSTHOG_KEY || safeGet('bf_consent') === 'yes') return;
-    function show() {
-      var d = document.createElement('div');
-      d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Cookie consent');
-      d.style.cssText = 'position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif';
-      d.innerHTML = '<div style="max-width:440px;width:100%;padding:22px;background:var(--surface,#fff);color:var(--ink,#121212);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.3)"><div style="font-weight:600;font-size:17px;margin-bottom:8px">Cookies required</div><div style="margin-bottom:16px">This quiz uses cookies for anonymous analytics. Please accept to continue.</div><button type="button" data-c="yes" style="width:100%;padding:12px 14px;border-radius:10px;border:0;background:var(--accent,#121212);color:var(--accent-ink,#fff);font:inherit;font-weight:600;cursor:pointer">Accept and continue</button></div>';
-      d.addEventListener('click', function (e) {
-        var c = e.target && e.target.getAttribute && e.target.getAttribute('data-c');
-        if (c !== 'yes') return;
-        safeSet('bf_consent', 'yes');
-        try { if (window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {}
-        document.body.style.overflow = d._o || '';
-        d.remove();
-      });
-      d._o = document.body.style.overflow; document.body.style.overflow = 'hidden';
-      document.body.appendChild(d);
-    }
     function bfGeo(cb){var done=false,EU='AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB IS LI NO CH';
     function fin(c){if(done)return;done=true;cb(c);}
     try{var s=sessionStorage.getItem('bf_geo');if(s)return fin(s);}catch(e){}
@@ -82,10 +61,17 @@
       .then(fin,function(){fin('');});
     bfGeo.eu=function(c){return !c||EU.indexOf(c)>-1;};
   }
-    function auto() { safeSet('bf_consent', 'yes'); try { if (window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {} }
-    function go() { bfGeo(function (c) { if (bfGeo.eu(c)) show(); else auto(); }); }
-    if (document.body) go(); else document.addEventListener('DOMContentLoaded', go);
-  })();
+    function bfInit(full) { posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
+    function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
+    function go() {
+      if (safeGet('bf_consent') === 'yes') { bfInit(true); return; }
+      bfGeo(function (c) {
+        if (!bfGeo.eu(c)) { safeSet('bf_consent', 'yes'); bfInit(true); }
+        else { bfInit(false); if (safeGet('bf_consent') !== 'no') { if (document.body) show(); else document.addEventListener('DOMContentLoaded', show); } }
+      });
+    }
+    go();
+  }
 
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
   window.BF_EV = function (name, props) { try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {} };
