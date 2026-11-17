@@ -33,6 +33,16 @@ Deno.serve(async (req) => {
     headers: { apikey: key, Authorization: "Bearer " + key, "content-type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" },
     body: JSON.stringify({ click_id: clickId, payout }),
   });
+  // Optional: send the purchase to PostHog (distinct_id = click id, same person the browser identified).
+  const phKey = Deno.env.get("POSTHOG_KEY");
+  if (phKey) {
+    try {
+      await fetch((Deno.env.get("POSTHOG_HOST") ?? "https://us.i.posthog.com").replace(/\/$/, "") + "/capture/", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ api_key: phKey, event: "purchase_completed", distinct_id: clickId, properties: { payout, $process_person_profile: true } }),
+      });
+    } catch (_) { /* analytics must never fail the postback */ }
+  }
   console.log(JSON.stringify({ evt: "postback", click_id: clickId, payout, stored: r.status }));
   if (!r.ok) return new Response("Store failed", { status: 500 });
   return new Response("OK", { status: 200 });

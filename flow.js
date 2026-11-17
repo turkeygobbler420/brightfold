@@ -107,7 +107,7 @@
   const STAGES=["Patterns","Logic","Numbers","Language","Memory","Speed"],SIC={"pat":"<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/><circle cx=\"17.5\" cy=\"17.5\" r=\"3.5\"/>","log":"<circle cx=\"6\" cy=\"6\" r=\"2.5\"/><circle cx=\"18\" cy=\"6\" r=\"2.5\"/><circle cx=\"12\" cy=\"18\" r=\"2.5\"/><path d=\"M8 7l3 9M16 7l-3 9\"/>","num":"<path d=\"M4 9h16M4 15h16M10 3L8 21M16 3l-2 18\"/>","lan":"<path d=\"M4 5h16v10H9l-5 4z\"/><path d=\"M8 9h8M8 12h5\"/>","mem":"<path d=\"M12 3a5 5 0 0 0-5 5c0 1.5.6 2.4 1.5 3.4V14h7v-2.6c.9-1 1.5-1.9 1.5-3.4a5 5 0 0 0-5-5z\"/><path d=\"M9.5 18h5M10.5 21h3\"/>","spd":"<path d=\"M13 2L5 14h6l-1 8 8-12h-6z\"/>"},SK=["pat","log","num","lan","mem","spd"],MAT=[0,14,30,48,66,82];
 
   function analyze(){
-    if(st.flow)return;st.flow=1;halt();$('tCount').textContent='Calculating';
+    if(st.flow)return;st.flow=1;window.BF_EV&&BF_EV('analyzing_viewed');halt();$('tCount').textContent='Calculating';
     const R=2*Math.PI*54,Lx=k=>(window.BF_LANG&&BF_LANG.x(k))||'';
     $('tMain').innerHTML=`<div class="an" id="an"><section class="an-card">
       <div class="an-h"><h2>Calculating your <em>IQ score…</em></h2><p>Hang tight while we compare your answers across six skill areas.</p></div>
@@ -149,7 +149,7 @@
 
   /* ---------- 2. email capture ---------- */
   function emailScreen(){
-    close();$('tCount').textContent='Almost done';
+    window.BF_EV&&BF_EV('email_screen_viewed');close();$('tCount').textContent='Almost done';
     const u=S.user();const pre=u&&u.email&&u.email!==DEMO.email?u.email:'';
     $('tMain').innerHTML=`<div class="em"><h2>Where should we send <em>your IQ certificate</em>?</h2>
       <p class="em-sub">Enter your email to unlock your complete analysis and personalised cognitive profile.</p>
@@ -231,7 +231,7 @@
     pend.set();location.href=url;
   }
   function checkout(){
-    window.BF_URL&&BF_URL('/payment');
+    window.BF_URL&&BF_URL('/payment');window.BF_EV&&BF_EV('checkout_viewed');
     close();$('tCount').textContent='Your score';clearInterval(sellT);clearInterval(offerT);
     const peer=(src,nm,iq)=>{const sc=(iq-100)/60;return `<div class="peer"><span class="pl">IQ ${iq}</span><div class="pc" style="aspect-ratio:${(3/(4*sc)).toFixed(3)}"><img src="${src}" alt="" loading="lazy"></div><span class="pn">${nm}</span></div>`;};
     const sold=k=>{const s=SOLD[k%SOLD.length];return `<span class="dotg"></span><b>${s[0]}</b> just bought ${s[1]} IQ score! <img class="where" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${[...s[3]].map(c=>(0x1f1e6+c.charCodeAt(0)-65).toString(16)).join('-')}.svg" alt="" width="20" height="20" draggable="false"> <a>IQ ${s[2]}</a>`;};
@@ -252,6 +252,7 @@
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
+      window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
       if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer);return;}
       b.textContent='Checkout is unavailable right now';b.disabled=true;
     });

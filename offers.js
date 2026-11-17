@@ -1,6 +1,9 @@
 /* Offer redirect + click ID (bf_click_id) + optional Meta pixel. Loaded before flow.js. */
 (function () {
   var CONFIG = {
+    // PostHog project API key (starts with phc_). Empty = analytics disabled. Use host https://eu.i.posthog.com for EU Cloud.
+    POSTHOG_KEY: '',
+    POSTHOG_HOST: 'https://us.i.posthog.com',
     PIXEL_ID: '',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
     ACTIVE_OFFER: '26199', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
@@ -43,6 +46,14 @@
     fbq('init', CONFIG.PIXEL_ID);
     fbq('track', 'PageView');
   }
+
+  // PostHog analytics. Visitor id = our click id, so the server-side purchase event (postback) joins the same person.
+  if (CONFIG.POSTHOG_KEY) {
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties reset get_distinct_id get_session_id set_config startSessionRecording stopSessionRecording opt_in_capturing opt_out_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', bootstrap: { distinctID: clickId }, loaded: function (ph) { ph.identify(clickId); } });
+  }
+  // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
+  window.BF_EV = function (name, props) { try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {} };
 
   // Show the current stage in the address bar (no reload, no extra history entries).
   window.BF_URL = function (p) { try { if (/^https?:$/.test(location.protocol)) history.replaceState(null, '', p); } catch (e) {} };

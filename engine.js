@@ -40,7 +40,7 @@ function geoName(){
   try{return new Intl.DisplayNames([(window.BF_LANG&&BF_LANG.get())||'en'],{type:'region'}).of(geoCC)||'';}catch(e){return '';}
 }
 function startTest(){
-  loadGeo();
+  loadGeo();window.BF_EV&&BF_EV('quiz_started');
   st={i:0,ans:Array(ITEMS.length).fill(null),seen:{},cp:{},sec:0,done:false,hold:true,word:WORDS[Math.floor(Math.random()*WORDS.length)],recall:null};
   $('landing').hidden=true;$('app').hidden=false;window.scrollTo(0,0);
   clearInterval(clockTimer);
@@ -60,6 +60,7 @@ function pips(all){
 }
 function render(){
   window.BF_URL&&BF_URL('/quiz?question');
+  st.qt=Date.now();window.BF_EV&&BF_EV('question_viewed',{question:st.i+1,of:ITEMS.length,type:ITEMS[st.i].type,domain:ITEMS[st.i].d});
   clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   const it=ITEMS[st.i],dom=DOMAINS.find(d=>d.id===it.d);st.view=render;dock();
   $('tCount').textContent=U('nOf',st.i+1,ITEMS.length);
@@ -107,7 +108,7 @@ const optFig=(j,svg,cls)=>`<button class="opt fig ${cls||''}" data-j="${j}" role
 const optText=(opts,mono)=>`<div class="opts text${opts.every(o=>String(o).length<=9)?' short':''}" role="radiogroup">${opts.map((o,j)=>`<button class="opt${mono?' mono':''}" data-j="${j}" role="radio"><span class="k">${j+1}</span><span>${o}</span></button>`).join('')}</div>`;
 function markSel(){$('tMain').querySelectorAll('.opt').forEach(b=>{const on=+b.dataset.j===st.ans[st.i];b.classList.toggle('sel',on);b.setAttribute('aria-checked',on);});}
 let cheerN=0;function cheer(){return;const c=$('cheer');if(!c)return;{const ci=cheerN++%CHEERS.length;c.textContent=(window.BF_LANG&&BF_LANG.cheer(ci))||CHEERS[ci];}c.classList.remove('on');void c.offsetWidth;c.classList.add('on');}
-function pick(j){const it=ITEMS[st.i];if(it.type==='scan'&&st.seen[st.i]==='closed')return;const first=st.ans[st.i]===null;st.ans[st.i]=j;markSel();
+function pick(j){const it=ITEMS[st.i];if(it.type==='scan'&&st.seen[st.i]==='closed')return;const first=st.ans[st.i]===null;st.ans[st.i]=j;window.BF_EV&&BF_EV('question_answered',{question:st.i+1,first_answer:first,seconds:st.qt?Math.round((Date.now()-st.qt)/1000):null});markSel();
   clearTimeout(autoTimer);{const at=st.i;autoTimer=setTimeout(()=>{if(st&&!st.done&&st.i===at)next();},320);}
   pips();}
 function go(i){if(i<0||i>=ITEMS.length)return;st.i=i;render();window.scrollTo({top:0});}
@@ -139,7 +140,7 @@ const WEL_REV=[[5,'Surprisingly insightful','The breakdown by area showed streng
 const WEL_PRESS=[['business-insider','Business Insider'],['buzzfeed','BuzzFeed'],['cnn','CNN']];
 const PLACEHOLDER_AVG_IQ=108; // TODO before launch: placeholder, replace with a real measured average or remove
 function welcomeScreen(){
-  window.BF_URL&&BF_URL('/quiz?step=intro');
+  window.BF_URL&&BF_URL('/quiz?step=intro');window.BF_EV&&BF_EV('intro_viewed');
   st.hold=true;st.view=welcomeScreen;dock();$('tCount').textContent=Xl('beforeStart');pips();
   const star=on=>`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L10 14.2 5 17l1.2-5.6L2 7.6l5.6-.6z" fill="${on?'var(--ink)':'none'}" stroke="var(--ink)" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
   const logos=al=>WEL_PRESS.map(p=>`<li><img src="press/${p[0]}.svg?v=5" alt="${al?'':p[1]}" height="24" loading="lazy"></li>`).join('');
@@ -292,6 +293,7 @@ function correctText(it){
 /* MOCK paywall (proof of concept). No payment is collected; the button simply reveals the results. */
 const PLANS={trial:['IQ score report','$0.00','Then $4.99 per week until you cancel'],month:['1 month','$9.99','Renews monthly at $9.99 until you cancel'],year:['12 months','$29.99','Renews yearly at $29.99 until you cancel']};
 function finish(){
+  if(!(st.done&&st.finished)&&window.BF_EV)BF_EV('quiz_finished',{answered:st.ans.filter(a=>a!==null).length,seconds:st.sec});
   if(st.done&&st.finished)return;st.done=true;st.view=null;dock();clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);clearTimeout(autoTimer);
   ($('finishBtn')||{}).hidden=true;pips(true);$('tCount').textContent='Almost done';
   const answered=ITEMS.filter(it=>st.ans[it.idx]!==null&&st.ans[it.idx]!==undefined).length;
@@ -324,7 +326,7 @@ function finish(){
 window.BF_IQ=function(raw,n){return Math.round(Math.max(62,Math.min(145,100+15*(raw/n-.5)/.2)));};
 
 function showResults(){
-  window.BF_URL&&BF_URL('/quiz?step=results');
+  window.BF_URL&&BF_URL('/quiz?step=results');window.BF_EV&&BF_EV('results_viewed');
   if(st.done&&st.finished)return;st.done=true;st.finished=true;clearInterval(clockTimer);clearTimeout(subTimer);clearInterval(subTimer);
   ($('finishBtn')||{}).hidden=true;pips(true);
   const right=ITEMS.map(it=>isRight(it,st.ans[it.idx]));const raw=right.filter(Boolean).length;const pct=raw/ITEMS.length;
