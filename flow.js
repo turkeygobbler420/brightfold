@@ -283,4 +283,28 @@
   /* take over the end of the test */
   window.guessScreen=analyze;window.reviewScreen=analyze;
   window.finish=function(){analyze();};
+
+  /* dev-only skip button: invisible unless opened with ?dev=1 (remembered for the browser session) */
+  (function(){
+    let on=false;
+    try{if(new URLSearchParams(location.search).get('dev')==='1')sessionStorage.setItem('bf_dev','1');on=sessionStorage.getItem('bf_dev')==='1';}catch(e){}
+    if(!on)return;
+    const b=document.createElement('button');b.type='button';b.hidden=true;
+    b.style.cssText='position:fixed;right:12px;top:12px;z-index:2147483600;padding:8px 12px;border-radius:8px;border:2px dashed #c00;background:#fff;color:#c00;font:600 12px system-ui,sans-serif;cursor:pointer';
+    b.onclick=()=>{
+      if(!st)return;
+      if(document.getElementById('emF')){st.email='dev@example.test';st.result=calc();close();checkout();}
+      else if(st.flow){close();emailScreen();}
+      else{st.ans=st.ans.map(a=>a===null?0:a);close();analyze();}
+    };
+    document.body.appendChild(b);
+    setInterval(()=>{
+      const app=$('app');
+      const quiz=st&&!st.done&&!st.flow&&app&&!app.hidden;
+      const calc=st&&st.flow&&document.getElementById('rf');
+      const em=st&&document.getElementById('emF');
+      b.hidden=!(quiz||calc||em);
+      b.textContent=em?'DEV: skip email':calc?'DEV: skip calculating':'DEV: skip quiz';
+    },300);
+  })();
 })();
