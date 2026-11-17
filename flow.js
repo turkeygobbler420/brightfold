@@ -303,16 +303,21 @@
       try{const nf=new Intl.NumberFormat(navigator.language||'en-US',{style:'currency',currency:String(o.currency).toUpperCase()});
         const t=nf.format(o.amount/Math.pow(10,nf.resolvedOptions().maximumFractionDigits));window.__bfExact=true;
         const set=(i,h)=>{const x=document.getElementById(i);if(x)x.innerHTML=h;};
-        set('coP',t+'<small>today</small>');set('coS',t+' today');set('coB',t+' today');}catch(_){}
+        set('coP',t+'<small>today</small>');set('coS',t+' today');set('coB',t+' today');
+        const cu=String(o.currency).toUpperCase(),am=o.amount/Math.pow(10,nf.resolvedOptions().maximumFractionDigits);
+        window.__bfPlan.then(async p=>{if(!p||!(p.today>0))return;const base=p.currency||'USD';if(cu===base)return;const fx=await window.__bfFx(base);const x=fx&&fx[cu];if(!(x>0))return;const m=am/(p.today*x);
+          if(m>0.95&&m<1.2){try{localStorage.setItem('bf_fxm_'+cu,m.toFixed(4));}catch(_){}window.BF_EV&&BF_EV('whop_price_seen',{currency:cu,amount:am,usd:p.today,mid_rate:x,markup:+m.toFixed(4)});}});}catch(_){}
     });}
-    fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).then(async d=>{
+    window.__bfFx=bs=>{const c=window.__bfFxC=window.__bfFxC||{};return c[bs]||(c[bs]=fetch('https://open.er-api.com/v6/latest/'+bs).then(r=>r.json()).then(j=>j&&j.rates).catch(()=>null));};
+    window.__bfPlan=fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/price').then(r=>r.ok?r.json():null).catch(()=>null);
+    window.__bfPlan.then(async d=>{
       if(!d||!(d.then>0)||!document.getElementById('coP')||window.__bfExact)return;
       let cc='';try{cc=(sessionStorage.getItem('bf_geo')||'').toUpperCase();}catch(e){}
       const loc=navigator.language||'en-US';if(!/^[A-Z]{2}$/.test(cc)){const m=/[-_]([A-Za-z]{2})$/.exec(loc);cc=m?m[1].toUpperCase():'';}
       const EU='AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' '),M={};EU.forEach(c=>M[c]='EUR');
       'ZA:ZAR,GB:GBP,AU:AUD,CA:CAD,NZ:NZD,IN:INR,NG:NGN,KE:KES,GH:GHS,AE:AED,SA:SAR,SG:SGD,MY:MYR,PH:PHP,ID:IDR,TH:THB,VN:VND,JP:JPY,KR:KRW,HK:HKD,TW:TWD,CN:CNY,BR:BRL,MX:MXN,AR:ARS,CL:CLP,CO:COP,PE:PEN,CH:CHF,SE:SEK,NO:NOK,DK:DKK,PL:PLN,CZ:CZK,HU:HUF,RO:RON,BG:BGN,TR:TRY,IL:ILS,EG:EGP,PK:PKR,BD:BDT,UA:UAH'.split(',').forEach(x=>{M[x.slice(0,2)]=x.slice(3);});
       let cur=d.currency||'USD',rate=1,approx=false;const want=M[cc];
-      if(want&&want!==cur){try{const fx=await fetch('https://open.er-api.com/v6/latest/'+cur).then(r=>r.json());const x=fx&&fx.rates&&fx.rates[want];if(x>0){rate=x*1.0206;cur=want;approx=true;}}catch(e){}}
+      if(want&&want!==cur){try{const fx=await window.__bfFx(cur);const x=fx&&fx[want];if(x>0){let mk=1.0206;try{const s=parseFloat(localStorage.getItem('bf_fxm_'+want));if(s>0.95&&s<1.2)mk=s;}catch(e){}rate=x*mk;cur=want;approx=true;}}catch(e){}}
       const f=n=>{try{return (approx?'≈ ':'')+new Intl.NumberFormat(loc,{style:'currency',currency:cur}).format(n*rate);}catch(e){return '$'+n.toFixed(2);}};
       const per=d.period===7?'week':d.period===30||d.period===31?'month':d.period===365?'year':'period',t=f(d.today);
       const set=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
@@ -320,7 +325,7 @@
       set('coP',(d.today>0?t:'Free')+'<small>today</small>');
       
       set('coS',td);set('coB',td);
-    }).catch(()=>{});
+    });
     window.scrollTo(0,0);
   }
 
