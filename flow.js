@@ -313,7 +313,7 @@
     window.__bfPlan.then(async d=>{
       if(!d||!(d.then>0)||!document.getElementById('coP')||window.__bfExact)return;
       let cc='';try{cc=(sessionStorage.getItem('bf_geo')||'').toUpperCase();}catch(e){}
-      const loc=navigator.language||'en-US';if(!/^[A-Z]{2}$/.test(cc)){const m=/[-_]([A-Za-z]{2})$/.exec(loc);cc=m?m[1].toUpperCase():'';}
+      const loc=navigator.language||'en-US';for(let i=0;i<14&&!/^[A-Z]{2}$/.test(cc)&&!window.__bfExact;i++){await new Promise(r=>setTimeout(r,300));try{cc=(sessionStorage.getItem('bf_geo')||'').toUpperCase();}catch(e){}}if(window.__bfExact)return;if(!/^[A-Z]{2}$/.test(cc))cc='';
       const EU='AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' '),M={};EU.forEach(c=>M[c]='EUR');
       'ZA:ZAR,GB:GBP,AU:AUD,CA:CAD,NZ:NZD,IN:INR,NG:NGN,KE:KES,GH:GHS,AE:AED,SA:SAR,SG:SGD,MY:MYR,PH:PHP,ID:IDR,TH:THB,VN:VND,JP:JPY,KR:KRW,HK:HKD,TW:TWD,CN:CNY,BR:BRL,MX:MXN,AR:ARS,CL:CLP,CO:COP,PE:PEN,CH:CHF,SE:SEK,NO:NOK,DK:DKK,PL:PLN,CZ:CZK,HU:HUF,RO:RON,BG:BGN,TR:TRY,IL:ILS,EG:EGP,PK:PKR,BD:BDT,UA:UAH'.split(',').forEach(x=>{M[x.slice(0,2)]=x.slice(3);});
       let cur=d.currency||'USD',rate=1,approx=false;const want=M[cc];
