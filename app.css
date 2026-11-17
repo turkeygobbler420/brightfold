@@ -962,3 +962,11 @@ html[data-motion="off"] .cheer.on{opacity:1;transform:translate(-50%,0)}
 #app .qhead .chip.c-blue{background:#8fb0f0}
 #app .qhead .chip.c-orange{background:#f4a261}
 #app .qhead .chip.c-pink{background:#f08db3}
+
+/* ticket: dashed line runs edge to edge, notches centred on it */
+.co-tix::before,.co-tix::after{display:none}
+.co-tix-t{position:relative;margin:0 -20px;padding:0 20px 16px}
+.co-tix-t::before,.co-tix-t::after{content:"";position:absolute;bottom:-10px;width:18px;height:18px;box-sizing:border-box;border-radius:50%;background:var(--bg,#fff);border:1.5px solid #a9d6a9}
+.co-tix-t::before{left:-10.5px}.co-tix-t::after{right:-10.5px}
+.co-tix-t{border-bottom-color:#9fcf9f}
+.co-tix-b{padding-top:18px}
