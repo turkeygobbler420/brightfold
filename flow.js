@@ -233,23 +233,25 @@
     document.addEventListener('visibilitychange',payChk);window.addEventListener('focus',payChk);window.addEventListener('pageshow',payChk);
     payT=setTimeout(check,1500);
   }
-  function embedCheckout(url){
+  function embedCheckout(url,inline){
     /* link the click id to the email(s) in use, then send the visitor straight to the hosted checkout */
     const u=S.user();[st&&st.email,u&&u.email].forEach(e=>{if(e&&e!==DEMO.email)S.link(e);});
     const m=/\/checkout\/(plan_\w+)/.exec(url||'');
     if(!m){pend.set();location.href=url;return;}
-    whopEmbed(m[1],url);
+    whopEmbed(m[1],url,inline);
   }
   /* Whop embedded checkout (modal on our page). Unlock still comes from the webhook via watchPayment polling. */
-  function whopEmbed(plan,url){
+  function whopEmbed(plan,url,inline){
     if(document.getElementById('bfEmbed'))return;
-    const ov=document.createElement('div');ov.id='bfEmbed';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+    if(inline&&!document.getElementById('bfCk'))inline=false;
+    const ov=inline?null:document.createElement('div');if(ov){ov.id='bfEmbed';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
     ov.style.cssText='position:fixed;inset:0;z-index:2147482000;background:rgba(0,0,0,.6);overflow:auto;padding:16px;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif';
     ov.innerHTML='<div style="max-width:480px;margin:0 auto;background:#fff;color:#121212;border-radius:14px;padding:16px;position:relative"><button id="bfCkX" type="button" aria-label="Close" style="position:absolute;right:10px;top:8px;border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#555">&times;</button><div id="bfPayMsg" style="margin:0 28px 10px 0;color:#555">Secure checkout</div><div id="bfCk" style="min-height:240px"></div></div>';
-    document.body.appendChild(ov);const ob=document.body.style.overflow;document.body.style.overflow='hidden';
+    document.body.appendChild(ov);}
+    const ob=document.body.style.overflow;if(ov)document.body.style.overflow='hidden';
     let h=null,dead=false;
-    const shut=()=>{dead=true;try{h&&h.destroy();}catch(e){}stopPay();pend.clear();ov.remove();document.body.style.overflow=ob;};
-    document.getElementById('bfCkX').onclick=shut;
+    const shut=()=>{dead=true;try{h&&h.destroy();}catch(e){}stopPay();pend.clear();if(ov){ov.remove();document.body.style.overflow=ob;}};
+    if(ov)document.getElementById('bfCkX').onclick=shut;
     const fallback=()=>{if(dead)return;shut();pend.set();location.href=url;};
     const mount=()=>{
       try{
@@ -282,18 +284,16 @@
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.00</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.00</b></div>
-         <button class="btn btn-primary co-b" data-m="card" type="button">Continue to secure checkout</button></div>
+         <div id="bfPayMsg" style="margin:8px 0;color:#555;font-size:13px"></div><div id="bfCk" style="min-height:260px"></div></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
-    document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
-      window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
-      if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer);return;}
-      b.textContent='Checkout is unavailable right now';b.disabled=true;
-    });
+    window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
+    if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer,true);}
+    else payMsg('Checkout is unavailable right now');
     const top=document.querySelector('#app .t-top');
     if(top&&!$('coBar')){const bar=document.createElement('div');bar.id='coBar';bar.className='co-bar';
       bar.innerHTML='<span><b>$0.00 today only</b></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
-      top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.querySelector('.co-b');if(b)b.click();};
+      top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.getElementById('bfCk');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});};
       new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
     window.scrollTo(0,0);
   }
