@@ -54,19 +54,21 @@
   }
   // Cookie / analytics consent banner. Nothing is captured until the visitor accepts.
   (function () {
-    if (!CONFIG.POSTHOG_KEY || safeGet('bf_consent')) return;
+    if (!CONFIG.POSTHOG_KEY || safeGet('bf_consent') === 'yes') return;
     function show() {
       var d = document.createElement('div');
-      d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Cookie consent');
-      d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:520px;margin:0 auto;padding:14px 16px;background:var(--surface,#fff);color:var(--ink,#121212);border:1px solid rgba(0,0,0,.15);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif';
-      d.innerHTML = '<div style="margin-bottom:10px">We use cookies for anonymous analytics to see where people drop off and improve the quiz. You can decline and the site works the same.</div><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:transparent;color:inherit;font:inherit;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:var(--accent,#121212);color:var(--accent-ink,#fff);font:inherit;cursor:pointer">Accept</button></div>';
+      d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Cookie consent');
+      d.style.cssText = 'position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif';
+      d.innerHTML = '<div style="max-width:440px;width:100%;padding:22px;background:var(--surface,#fff);color:var(--ink,#121212);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.3)"><div style="font-weight:600;font-size:17px;margin-bottom:8px">Cookies required</div><div style="margin-bottom:16px">This quiz uses cookies for anonymous analytics. Please accept to continue.</div><button type="button" data-c="yes" style="width:100%;padding:12px 14px;border-radius:10px;border:0;background:var(--accent,#121212);color:var(--accent-ink,#fff);font:inherit;font-weight:600;cursor:pointer">Accept and continue</button></div>';
       d.addEventListener('click', function (e) {
         var c = e.target && e.target.getAttribute && e.target.getAttribute('data-c');
-        if (!c) return;
-        safeSet('bf_consent', c);
-        try { if (c === 'yes' && window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {}
+        if (c !== 'yes') return;
+        safeSet('bf_consent', 'yes');
+        try { if (window.posthog) { posthog.opt_in_capturing(); posthog.identify(clickId); } } catch (x) {}
+        document.body.style.overflow = d._o || '';
         d.remove();
       });
+      d._o = document.body.style.overflow; document.body.style.overflow = 'hidden';
       document.body.appendChild(d);
     }
     if (document.body) show(); else document.addEventListener('DOMContentLoaded', show);
