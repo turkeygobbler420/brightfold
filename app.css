@@ -936,3 +936,8 @@ html[data-motion="off"] .cheer.on{opacity:1;transform:translate(-50%,0)}
 #app .qhead .chip.c-blue{background:#4a6fc4}
 #app .qhead .chip.c-orange{background:#d9731f}
 #app .qhead .chip.c-pink{background:#c9487a}
+
+/* sticky $0 banner under the checkout header */
+.co-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;background:#e6f4e6;border-top:1px solid #b9dcb9;font-size:14px}
+.co-bar b{font-size:16px}.co-bar i{font-style:normal;color:var(--ink-2);font-size:12px;display:block}
+.co-bar .btn{min-height:40px;padding:0 18px;background:#2e9e4f;border-color:#2e9e4f;color:#fff;white-space:nowrap}

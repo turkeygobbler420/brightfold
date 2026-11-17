@@ -6,11 +6,12 @@
   const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
 
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
+  try{localStorage.removeItem('bf_demo');}catch(e){}
   const DEMO={email:'demo@mindmetric.info',name:'Demo user'};
   const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API=FN+'link',STATUS_API=FN+'status';
   const S=window.BF_STORE={
-    demoUser(){return ls.get('bf_demo',null);},
-    startDemo(){ls.set('bf_demo',DEMO);return DEMO;},
+    demoUser(){return null;},
+    
     endDemo(){try{localStorage.removeItem('bf_demo');}catch(e){}},
     user(){const a=window.BF_AUTH;const u=a&&a.user&&a.user();return u||S.demoUser();},
     mode(){const a=window.BF_AUTH;return a&&a.user&&a.user()?'live':S.demoUser()?'demo':'guest';},
@@ -149,7 +150,7 @@
   /* ---------- 2. email capture ---------- */
   function emailScreen(){
     close();$('tCount').textContent='Almost done';
-    const u=S.user();const pre=u&&u.email&&u.email!==DEMO.email?u.email:(u?u.email:'');
+    const u=S.user();const pre=u&&u.email&&u.email!==DEMO.email?u.email:'';
     $('tMain').innerHTML=`<div class="em"><h2>Where should we send <em>your IQ certificate</em>?</h2>
       <p class="em-sub">Enter your email to unlock your complete analysis and personalised cognitive profile.</p>
       <form id="emF" novalidate><div class="em-f"><label for="emIn">Email</label><input id="emIn" type="email" autocomplete="email" inputmode="email" value="${E(pre)}" required></div>
@@ -158,7 +159,7 @@
       <button class="btn btn-primary em-go" type="submit">Continue</button></form></div>`;
     const inp=$('emIn');inp.focus();
     $('emF').onsubmit=async e=>{e.preventDefault();const v=inp.value.trim();
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){$('emErr').textContent='Enter a valid email address.';inp.focus();return;}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)||v.toLowerCase()===DEMO.email){$('emErr').textContent='Enter a valid email address.';inp.focus();return;}
       $('emErr').textContent='';st.email=v;const b=e.target.querySelector('button');b.disabled=true;b.textContent='Please wait…';
       const r=calc();st.result=r;
       await Promise.race([Promise.all([S.saveLead(v),S.saveResult(r),S.link(v)]),new Promise(ok=>setTimeout(ok,1200))]);
@@ -242,21 +243,23 @@
       <div class="gate"><div class="g-grid">
        <div class="g-l"><div class="g-card">
         <div class="peers">${peer('figs/einstein.webp','Albert Einstein',160)}<div class="peer you"><span class="pl">You</span><div class="pc" style="aspect-ratio:${(3/(4*1.25)).toFixed(3)}"><b>???</b><svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="34" r="19"/><path d="M8 110c0-30 14-46 42-46s42 16 42 46z"/></svg></div><span class="pn">Your score</span></div>${peer('figs/newton.webp','Isaac Newton',190)}</div>
-        <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>40</b><span>Questions answered</span></div><div><b>6</b><span>Skill areas measured</span></div></div>
+        <div class="g-stats"><div><b>107</b><span>Average IQ today</span></div><div><b>${ITEMS.length}</b><span>Questions answered</span></div><div><b>${DOMAINS.length}</b><span>Skill areas measured</span></div></div>
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr">$0.00</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay"><div class="total"><span>Total due:</span><b>$0.00</b></div>
-         <button class="btn btn-primary co-b" data-m="card" type="button">Continue to secure checkout</button>
-         <p class="co-demo" id="coDemo">Demo mode: no payment is taken.</p></div>
+         <button class="btn btn-primary co-b" data-m="card" type="button">Continue to secure checkout</button></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
-    if(offer){const dm=$('coDemo');if(dm)dm.style.display='none';}
     document.querySelectorAll('.co-b').forEach(b=>b.onclick=()=>{
       if(offer){window.bfTrack.event('GoToCheckout',{value:0,currency:'USD'});embedCheckout(offer);return;}
-      document.querySelectorAll('.co-b').forEach(x=>x.disabled=true);b.textContent='Processing…';
-      setTimeout(()=>{S.unlock();st.done=false;showResults();},1300);
+      b.textContent='Checkout is unavailable right now';b.disabled=true;
     });
+    const top=document.querySelector('#app .t-top');
+    if(top&&!$('coBar')){const bar=document.createElement('div');bar.id='coBar';bar.className='co-bar';
+      bar.innerHTML='<span><b>$0.00 today only</b> <i>then $4.99/week until you cancel</i></span><button class="btn btn-primary" type="button">Get IQ Report</button>';
+      top.appendChild(bar);bar.querySelector('button').onclick=()=>{const b=document.querySelector('.co-b');if(b)b.click();};
+      new MutationObserver((m,ob)=>{if(!document.querySelector('#tMain .co')){bar.remove();ob.disconnect();}}).observe($('tMain'),{childList:true,subtree:true});}
     window.scrollTo(0,0);
   }
 
@@ -271,21 +274,4 @@
   /* take over the end of the test */
   window.guessScreen=analyze;window.reviewScreen=analyze;
   window.finish=function(){analyze();};
-  /* TEMP DEV: skips the calculating screen and email step, runs the score calculation, lands on checkout. */
-  window.devSkipToCheckout=function(){
-    st.flow=1;halt();close();
-    st.email=st.email||DEMO.email;
-    const r=calc();st.result=r;
-    try{S.saveResult(r);}catch(e){}
-    checkout();
-  };
-})();
-
-/* TEMP DEV: "Skip quiz" button, jumps straight to the calculating screen. REMOVE before launch. */
-(function(){
-  var b=document.createElement('button');b.type='button';b.id='devSkip';b.textContent='Skip quiz (dev)';
-  b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99999;padding:8px 12px;border-radius:8px;border:2px dashed #121212;background:#fff;color:#121212;font:700 13px system-ui;cursor:pointer;display:none';
-  b.onclick=function(){if(window.devSkipToCheckout)window.devSkipToCheckout();};
-  document.body.appendChild(b);
-  setInterval(function(){var t=document.getElementById('tMain');b.style.display=(t&&!t.querySelector('.an,.em,.co,.gate')&&document.getElementById('tCount')&&/of/.test(document.getElementById('tCount').textContent))?'block':'none';},400);
 })();

@@ -53,8 +53,7 @@
       <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
       <p class="auth-msg" role="status"></p><button class="btn btn-primary" type="submit">Log in</button></form>
       <p class="auth-alt"><button type="button" data-v="forgot">Forgot password?</button></p>
-      <p class="auth-alt">New here? <button type="button" data-v="signup">Create an account</button></p>
-      <p class="auth-demo-row"><span>or</span><button class="btn btn-line" type="button" data-a="demo">Try the demo account</button></p>`,
+      <p class="auth-alt">New here? <button type="button" data-v="signup">Create an account</button></p>`,
     signup:()=>`<h2>Create your account</h2><p class="auth-sub">Save your results and certificate.</p>
       <form novalidate><label>Name<input name="name" type="text" autocomplete="name" maxlength="60"></label>
       <label>Email<input name="email" type="email" autocomplete="email" required></label>
@@ -153,7 +152,6 @@
     if(e.target===dlg||e.target.closest('.auth-x'))return closeDlg();
     const v=e.target.closest('[data-v]');if(v)return render(v.dataset.v);
     const a=e.target.closest('[data-a]');if(!a)return;
-    if(a.dataset.a==='demo'){window.BF_STORE.startDemo();setNav();return goHome();}
     if(a.dataset.a==='real'){window.BF_STORE.endDemo();setNav();return render('signup');}
     if(a.dataset.a==='out'&&!session){window.BF_STORE.endDemo();setNav();return closeDlg();}
     if(a.dataset.a==='out')run(a,async()=>{await sb.auth.signOut();closeDlg();});
