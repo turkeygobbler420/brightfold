@@ -23,7 +23,7 @@ export async function sendTikTok(clickId: string, value: number, link: Link | nu
     event_source: "web",
     event_source_id: TT_PIXEL,
     data: [{
-      event: "CompletePayment",
+      event: "Purchase", // TikTok's current name for CompletePayment; the pixel sends the same name
       event_time: Math.floor(Date.now() / 1000),
       event_id: "purchase_" + clickId, // same id as the browser event, so TikTok counts it once
       user,

@@ -81,7 +81,9 @@ Deno.serve(async (req) => {
     }
   }
   // TikTok: one CompletePayment per payment, on the buyer's latest click (its event_id matches the browser's).
-  const tt = r.ok ? await purchaseToTikTok(ids[0], TT_VALUE, new URL(req.url).searchParams.get("tt_test") ?? "") : null;
+  const ttTest = new URL(req.url).searchParams.get("tt_test") ?? "";
+  const tt = r.ok ? await purchaseToTikTok(ids[0], TT_VALUE, ttTest) : null;
   console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, stored: r.status, tiktok: tt }));
-  return r.ok ? new Response("OK", { status: 200 }) : new Response("Store failed", { status: 500 });
+  // Signed test calls (?tt_test=CODE) echo the TikTok result so delivery can be checked end to end.
+  return r.ok ? new Response(ttTest ? "OK " + JSON.stringify(tt) : "OK", { status: 200 }) : new Response("Store failed", { status: 500 });
 });
