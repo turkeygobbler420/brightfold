@@ -92,6 +92,7 @@
       safeSet(k, '1');
       if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }, { event_id: 'purchase_' + clickId });
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
+      bfT('purchase_confirmed', null, tPath);
     } catch (e) {}
   };
   // TikTok match data for the server-side purchase (stored with the click by the link function).
@@ -114,14 +115,41 @@
     checkout_viewed: ['InitiateCheckout', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }],
     checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }]
   };
+  // First-party analytics for the team dashboard (Supabase `track`): visitor = click id, no cookies, no personal data.
+  var T_URL = 'https://llyanlleeynuznywttjg.supabase.co/functions/v1/track';
+  function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } }
+  var tSid = ss('bf_sid'); if (!tSid) { tSid = newId(); ss('bf_sid', tSid); }
+  var tSrc = ss('bf_src');
+  if (!tSrc) {
+    var ref = ''; try { ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, '') : ''; } catch (e) {}
+    var lp = new URLSearchParams(location.search);
+    tSrc = lp.get('utm_source') || (lp.get('ttclid') ? 'tiktok' : lp.get('fbclid') ? 'facebook' : '') || (ref && !/mindmetric\.info$/.test(ref) ? ref : '') || safeGet('bf_utm_source') || 'direct';
+    ss('bf_src', tSrc);
+  }
+  var tDev = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+  function bfT(name, props, path) {
+    try {
+      var b = JSON.stringify({ vid: clickId, sid: tSid, name: name, path: path || location.pathname, props: props || null, source: tSrc, country: ss('bf_geo') || null, device: tDev });
+      if (!/^https?:$/.test(location.protocol)) return;
+      if (name === 'leave' && navigator.sendBeacon) { navigator.sendBeacon(T_URL, new Blob([b], { type: 'text/plain' })); return; }
+      fetch(T_URL, { method: 'POST', keepalive: true, headers: { 'content-type': 'text/plain' }, body: b }).catch(function () {});
+    } catch (e) {}
+  }
+  var tPath = location.pathname + (/[?&]step=|[?&]question/.test(location.search) ? location.search : '');
+  function tView(p) { if (p === tPath && tView.done) return; tView.done = 1; tPath = p; bfT('pageview', null, p); }
+  // Wait briefly for the country lookup (cached per tab) so the first pageview carries it.
+  (function () { var sent = 0; function go() { if (!sent) { sent = 1; tView(tPath); } } if (ss('bf_geo') || typeof bfGeo !== 'function') return go(); try { bfGeo(go); } catch (e) { go(); } setTimeout(go, 4000); })();
+  window.addEventListener('pagehide', function () { bfT('leave', null, tPath); });
+
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
   window.BF_EV = function (name, props) {
+    bfT(name, props, tPath);
     try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {}
     try { var t = TT_EV[name]; if (t && window.ttq) ttq.track(t[0], t[1], { event_id: name + '_' + clickId }); } catch (e) {}
   };
 
   // Show the current stage in the address bar (no reload, no extra history entries).
-  window.BF_URL = function (p) { try { if (/^https?:$/.test(location.protocol)) history.replaceState(null, '', p); } catch (e) {} };
+  window.BF_URL = function (p) { try { if (/^https?:$/.test(location.protocol)) history.replaceState(null, '', p); } catch (e) {} tView(p); };
 
   window.bfTrack = {
     clickId: clickId,
