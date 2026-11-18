@@ -14,6 +14,11 @@ create table if not exists click_links (
 );
 create index if not exists click_links_email_idx on click_links (email);
 alter table click_links enable row level security;
+-- TikTok match data for the server-side purchase event (email is optional: a row can exist before checkout).
+alter table click_links alter column email drop not null;
+alter table click_links add column if not exists ttclid text, add column if not exists ttp text,
+  add column if not exists ua text, add column if not exists ip text, add column if not exists page_url text;
+alter table paid_clicks add column if not exists tt_sent_at timestamptz; -- TikTok purchase sent (dedupe)
 
 -- Email opt-outs. Any mailer must skip addresses listed here.
 create table if not exists unsubscribes (

@@ -37,7 +37,7 @@
   // Remember ad-platform params from the landing URL.
   try {
     var p = new URLSearchParams(location.search);
-    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+    ['fbclid', 'ttclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
       if (p.get(k)) safeSet('bf_' + k, p.get(k));
     });
   } catch (e) {}
@@ -53,6 +53,7 @@
   if (CONFIG.POSTHOG_KEY) {
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties reset get_distinct_id get_session_id set_config startSessionRecording stopSessionRecording opt_in_capturing opt_out_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     function bfGeo(cb){var done=false,EU='AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB IS LI NO CH';
+    bfGeo.eu=function(c){return !c||EU.indexOf(c)>-1;};
     function fin(c){if(done)return;done=true;cb(c);}
     try{var s=sessionStorage.getItem('bf_geo');if(s)return fin(s);}catch(e){}
     function save(c){c=(c||'').toUpperCase();if(!/^[A-Z]{2}$/.test(c))return '';try{sessionStorage.setItem('bf_geo',c);}catch(e){}return c;}
@@ -61,7 +62,6 @@
       .then(function(c){if(c)return c;throw 0;})
       .catch(function(){return get('https://api.country.is/',function(x){return save(JSON.parse(x).country);});})
       .then(fin,function(){fin('');});
-    bfGeo.eu=function(c){return !c||EU.indexOf(c)>-1;};
   }
     function bfInit(full) { posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
     function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
@@ -94,8 +94,31 @@
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
     } catch (e) {}
   };
+  // TikTok match data for the server-side purchase (stored with the click by the link function).
+  window.BF_TT = function () {
+    var m = /(?:^|;\s*)_ttp=([^;]+)/.exec(document.cookie);
+    return { ttclid: safeGet('bf_ttclid') || undefined, ttp: m ? decodeURIComponent(m[1]) : undefined, url: location.href };
+  };
+  window.BF_IDENTIFY = function (email) { try { if (window.ttq) ttq.identify({ email: String(email || '').trim().toLowerCase(), external_id: clickId }); } catch (e) {} };
+  // Landed from a TikTok ad: store the ttclid against this click right away (the email comes later).
+  try {
+    if (new URLSearchParams(location.search).get('ttclid')) {
+      var tt = window.BF_TT(); tt.click_id = clickId;
+      fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/link', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify(tt) }).catch(function () {});
+    }
+  } catch (e) {}
+  // Funnel steps mirrored to TikTok as standard events (shown in Events Manager > Test events).
+  var TT_EV = {
+    quiz_started: ['ViewContent', { content_type: 'product', content_id: 'iq-test', content_name: 'IQ Test' }],
+    email_submitted: ['CompleteRegistration', {}],
+    checkout_viewed: ['InitiateCheckout', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }],
+    checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }]
+  };
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
-  window.BF_EV = function (name, props) { try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {} };
+  window.BF_EV = function (name, props) {
+    try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {}
+    try { var t = TT_EV[name]; if (t && window.ttq) ttq.track(t[0], t[1], { event_id: name + '_' + clickId }); } catch (e) {}
+  };
 
   // Show the current stage in the address bar (no reload, no extra history entries).
   window.BF_URL = function (p) { try { if (/^https?:$/.test(location.protocol)) history.replaceState(null, '', p); } catch (e) {} };

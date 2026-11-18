@@ -49,7 +49,8 @@
     async link(email){
       email=String(email||'').trim().toLowerCase();const id=window.bfTrack&&window.bfTrack.clickId;if(!email||!id)return;
       const d=S.local();d.linked=d.linked||[];if(!d.linked.includes(email)){d.linked.push(email);S.saveLocal(d);}
-      try{await fetch(LINK_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({click_id:id,email})});}catch(e){}
+      try{if(window.BF_IDENTIFY)BF_IDENTIFY(email);}catch(e){}
+      try{await fetch(LINK_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...(window.BF_TT?BF_TT():{}),click_id:id,email})});}catch(e){}
     },
     cancelRequested(){return S.local().cancelAt||null;},
     async requestCancel(){

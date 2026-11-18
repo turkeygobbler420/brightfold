@@ -4,8 +4,10 @@
 // Secrets: WHOP_WEBHOOK_SECRET (the ws_... signing secret), optional WHOP_PLAN_ID, POSTHOG_KEY.
 // Deploy with --no-verify-jwt (see config.toml). Matches the buyer's email to click_links, then marks
 // every linked click as paid so the quiz unlocks (the `status` function reads paid_clicks).
+import { purchaseToTikTok } from "../_shared/tiktok.ts";
 const PLAN_ID = Deno.env.get("WHOP_PLAN_ID") ?? "plan_gZemshu7CN47f"; // our checkout plan
 const PAYOUT = 0; // $0 today (then recurring billing handled by Whop)
+const TT_VALUE = Number(Deno.env.get("TIKTOK_PURCHASE_VALUE") ?? "24"); // value reported to TikTok (matches the browser event)
 const enc = new TextEncoder();
 
 const b64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
@@ -59,7 +61,7 @@ Deno.serve(async (req) => {
   const h = { apikey: key, Authorization: "Bearer " + key, "content-type": "application/json" };
   if (!email) { console.log(JSON.stringify({ evt: "whop", err: "no email", type: ev.type })); return new Response("No email", { status: 200 }); }
 
-  const l = await fetch(url + "/rest/v1/click_links?select=click_id&limit=200&email=eq." + encodeURIComponent(email), { headers: h });
+  const l = await fetch(url + "/rest/v1/click_links?select=click_id&order=created_at.desc&limit=200&email=eq." + encodeURIComponent(email), { headers: h });
   const ids: string[] = l.ok ? (await l.json()).map((x: { click_id: string }) => x.click_id) : [];
   if (!ids.length) { console.log(JSON.stringify({ evt: "whop", err: "no linked click", type: ev.type })); return new Response("No linked click", { status: 200 }); }
 
@@ -78,6 +80,8 @@ Deno.serve(async (req) => {
       } catch (_) { /* analytics must never fail the webhook */ }
     }
   }
-  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, stored: r.status }));
+  // TikTok: one CompletePayment per payment, on the buyer's latest click (its event_id matches the browser's).
+  const tt = r.ok ? await purchaseToTikTok(ids[0], TT_VALUE, new URL(req.url).searchParams.get("tt_test") ?? "") : null;
+  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, stored: r.status, tiktok: tt }));
   return r.ok ? new Response("OK", { status: 200 }) : new Response("Store failed", { status: 500 });
 });

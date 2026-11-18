@@ -5,6 +5,8 @@
 // SUPABASE_SERVICE_ROLE_KEY are injected automatically. Deploy with --no-verify-jwt (see config.toml).
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const DEFAULT_PAYOUT = 24; // every conversion is worth $24
+import { purchaseToTikTok } from "../_shared/tiktok.ts";
+// TikTok: server-side CompletePayment (see _shared/tiktok.ts). Tag one postback for testing with &tt_test=TEST12345.
 
 function safeEq(a: string, b: string) {
   if (a.length !== b.length) return false;
@@ -43,7 +45,9 @@ Deno.serve(async (req) => {
       });
     } catch (_) { /* analytics must never fail the postback */ }
   }
-  console.log(JSON.stringify({ evt: "postback", click_id: clickId, payout, stored: r.status }));
+  // TikTok server-side purchase, sent once per click (a repeated postback does not double count).
+  const tt = r.ok ? await purchaseToTikTok(clickId, payout, q.get("tt_test") ?? "") : null;
+  console.log(JSON.stringify({ evt: "postback", click_id: clickId, payout, stored: r.status, tiktok: tt }));
   if (!r.ok) return new Response("Store failed", { status: 500 });
   return new Response("OK", { status: 200 });
 });
