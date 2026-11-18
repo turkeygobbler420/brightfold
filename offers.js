@@ -64,17 +64,36 @@
     bfGeo.eu=function(c){return !c||EU.indexOf(c)>-1;};
   }
     function bfInit(full) { posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
-    function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
+    function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
     function go() {
       if (safeGet('bf_consent') === 'yes') { bfInit(true); return; }
       bfGeo(function (c) {
-        if (!bfGeo.eu(c)) { safeSet('bf_consent', 'yes'); bfInit(true); }
+        if (!bfGeo.eu(c)) { safeSet('bf_consent', 'yes'); try { window.ttq && ttq.grantConsent(); } catch (x) {} bfInit(true); }
         else { bfInit(false); if (safeGet('bf_consent') !== 'no') { if (document.body) show(); else document.addEventListener('DOMContentLoaded', show); } }
       });
     }
     go();
   }
 
+
+  // TikTok Pixel. Loaded on hold: nothing is sent until the visitor accepts the consent banner.
+  !function (w, d, t) {
+    w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))); }; }; for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) ttq.setAndDefer(e, ttq.methods[n]); return e; }, ttq.load = function (e, n) { var r = "https://analytics.tiktok.com/i18n/pixel/events.js", o = n && n.partner; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = r, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; n = document.createElement("script"); n.type = "text/javascript", n.async = !0, n.src = r + "?sdkid=" + e + "&lib=" + t; e = document.getElementsByTagName("script")[0]; e.parentNode.insertBefore(n, e); };
+    ttq.holdConsent();
+    if (safeGet('bf_consent') === 'yes') ttq.grantConsent();
+    ttq.load('DBUD593C77U4UD9J425G');
+    ttq.page();
+  }(window, document, 'ttq');
+  // Purchase: called once the postback confirms payment. Deduped per click id; event_id lets TikTok dedupe against a server event.
+  window.BF_PURCHASE = function () {
+    try {
+      var k = 'bf_tt_purchase_' + clickId;
+      if (safeGet(k)) return;
+      safeSet(k, '1');
+      if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }, { event_id: 'purchase_' + clickId });
+      if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
+    } catch (e) {}
+  };
   // Funnel event helper: BF_EV('name', {props}). Safe to call when analytics is off.
   window.BF_EV = function (name, props) { try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {} };
 

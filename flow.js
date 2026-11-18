@@ -211,7 +211,7 @@
     const giveUp=()=>{stopPay();
       payMsg('We have not received your payment confirmation yet. <button id="bfRecheck" type="button" style="border:0;background:none;color:#4f46e5;text-decoration:underline;cursor:pointer;font:inherit;padding:0">Check again</button>');
       const r=document.getElementById('bfRecheck');if(r)r.onclick=()=>{pend.set();watchPayment(payWin);};};
-    const unlock=()=>{stopPay();pend.clear();clearInterval(sellT);clearInterval(offerT);
+    const unlock=()=>{stopPay();pend.clear();try{window.BF_PURCHASE&&window.BF_PURCHASE();}catch(e){}clearInterval(sellT);clearInterval(offerT);
       try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
       const em=document.getElementById('bfEmbed');if(em)em.remove();
       S.unlock();if(st&&st.flow){st.done=false;showResults();}};
