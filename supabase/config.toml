@@ -25,3 +25,6 @@ verify_jwt = false
 
 [functions.dashdata]
 verify_jwt = false
+
+[functions.sync]
+verify_jwt = false
