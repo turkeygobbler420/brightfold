@@ -116,7 +116,7 @@
     checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }]
   };
   // First-party analytics for the team dashboard (Supabase `track`): visitor = click id, no cookies, no personal data.
-  var T_URL = 'https://llyanlleeynuznywttjg.supabase.co/functions/v1/sync';
+  var T_URL = 'https://mmedge.vercel.app/api/sync';
   function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } }
   var tSid = ss('bf_sid'); if (!tSid) { tSid = newId(); ss('bf_sid', tSid); }
   var tSrc = ss('bf_src');

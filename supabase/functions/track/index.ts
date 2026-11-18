@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     if (isGet) { raw = raw.replace(/-/g, "+").replace(/_/g, "/"); raw = new TextDecoder().decode(Uint8Array.from(atob(raw + "=".repeat((4 - raw.length % 4) % 4)), (c) => c.charCodeAt(0))); }
     body = JSON.parse(raw);
   } catch { return isGet ? gif() : new Response("Bad JSON", { status: 400, headers: h }); }
-  const geo = (req.headers.get("cf-ipcountry") ?? "").toUpperCase();
+  const geo = (req.headers.get("x-country") || req.headers.get("cf-ipcountry") || "").toUpperCase();
   const list = (Array.isArray(body) ? body : [body]).slice(0, 50);
   const rows = list.map((e) => {
     const o = (e ?? {}) as Record<string, unknown>;
