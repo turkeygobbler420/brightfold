@@ -42,12 +42,14 @@
     });
   } catch (e) {}
 
-  // Meta pixel base code
-  if (CONFIG.PIXEL_ID) {
+  // Meta pixel: loads only once analytics consent exists (auto for non-EU, banner Accept for EU/UK). Needs CONFIG.PIXEL_ID.
+  var pxLoaded = false;
+  window.bfPx = function () {
+    if (pxLoaded || !CONFIG.PIXEL_ID) return; pxLoaded = true;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', CONFIG.PIXEL_ID);
     fbq('track', 'PageView');
-  }
+  };
 
   // PostHog analytics. Visitor id = our click id, so the server-side purchase event (postback) joins the same person.
   if (CONFIG.POSTHOG_KEY) {
@@ -63,8 +65,8 @@
       .catch(function(){return get('https://api.country.is/',function(x){return save(JSON.parse(x).country);});})
       .then(fin,function(){fin('');});
   }
-    function bfInit(full) { posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
-    function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
+    function bfInit(full) { if (full) bfPx(); posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
+    function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");bfPx();try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
     function go() {
       if (safeGet('bf_consent') === 'yes') { bfInit(true); return; }
       bfGeo(function (c) {
@@ -91,6 +93,8 @@
       var k = 'bf_tt_purchase_' + clickId;
       if (safeGet(k)) return;
       safeSet(k, '1');
+      // Facebook: only visitors who arrived from a Facebook ad (fbclid / _fbc), value = amount Whop collected. eventID = click id for CAPI dedupe.
+      try { if (window.fbq && (safeGet('bf_fbclid') || /(?:^|;\s*)_fbc=/.test(document.cookie))) fbq('track', 'Purchase', { value: Math.round(+amount * 100) / 100, currency: String(currency || 'USD').toUpperCase() }, { eventID: clickId }); } catch (x) {}
       if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: +amount, currency: currency || 'USD' }, { event_id: 'purchase_' + clickId });
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
       bfT('purchase_confirmed', null, tPath);
