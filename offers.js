@@ -126,17 +126,6 @@
     checkout_viewed: ['InitiateCheckout', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }],
     checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }]
   };
-  // Funnel steps mirrored to Meta as standard events. eventID matches the server twin where one exists (Lead: link function).
-  // Value is only sent once the real Whop price is known (whop_price_seen), never a guessed price.
-  var FB_EV = { quiz_started: ['ViewContent', { content_name: 'IQ Test' }], email_submitted: ['Lead', { content_name: 'IQ Test' }], checkout_viewed: ['InitiateCheckout', { content_name: 'IQ Report' }], checkout_clicked: ['AddPaymentInfo', { content_name: 'IQ Report' }] };
-  var fbPrice = null;
-  function fbTrack(name, props) {
-    if (name === 'whop_price_seen' && props && +props.amount > 0) fbPrice = { value: Math.round(+props.amount * 100) / 100, currency: String(props.currency || 'USD').toUpperCase() };
-    var f = FB_EV[name]; if (!f || !window.fbq) return;
-    var d = { content_type: 'product', content_ids: [f[1].content_name === 'IQ Test' ? 'iq-test' : 'iq-report'], content_name: f[1].content_name };
-    if (fbPrice && f[1].content_name === 'IQ Report') { d.value = fbPrice.value; d.currency = fbPrice.currency; }
-    fbq('track', f[0], d, { eventID: name + '_' + clickId });
-  }
   // First-party analytics for the team dashboard (Supabase `track`): visitor = click id, no cookies, no personal data.
   var T_URL = 'https://mmedge.vercel.app/api/sync';
   function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } }
@@ -170,7 +159,6 @@
     bfT(name, props, tPath);
     try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {}
     try { var t = TT_EV[name]; if (t && window.ttq) ttq.track(t[0], t[1], { event_id: name + '_' + clickId }); } catch (e) {}
-    try { fbTrack(name, props); } catch (e) {}
   };
 
   // Show the current stage in the address bar (no reload, no extra history entries).

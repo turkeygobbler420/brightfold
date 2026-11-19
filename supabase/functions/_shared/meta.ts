@@ -1,7 +1,6 @@
-// Meta Conversions API: the server half of every Meta event the site sends (browser pixel = offers.js).
-// Each event carries the same event_name + event_id as its browser twin, so Meta counts it once.
-//   Lead      event_id "email_submitted_<click_id>"  (link function, when the quiz email arrives)
-//   Purchase  event_id "<click_id>"                  (whop-webhook, payment.succeeded, amount Whop collected)
+// Meta Conversions API. The only event the site sends to Meta with an event_id is Purchase, on confirmed payment:
+//   Purchase  event_id "<click_id>"  (whop-webhook, payment.succeeded, amount Whop collected)
+// The browser pixel (offers.js) sends the same Purchase with eventID = click_id, so Meta counts it once.
 // Secrets: META_CAPI_TOKEN (required to send), META_PIXEL_ID (defaults to the site pixel),
 // META_TEST_CODE (optional; only while testing in Events Manager > Test events).
 import { sha256 } from "./tiktok.ts";
