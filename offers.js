@@ -4,7 +4,7 @@
     // PostHog project API key (starts with phc_). Empty = analytics disabled. Use host https://eu.i.posthog.com for EU Cloud.
     POSTHOG_KEY: 'phc_nH8eGAJ9eLULrNyGSKs3zKB2q6ctsKQbtg7WTqZNiMPZ',
     POSTHOG_HOST: 'https://us.i.posthog.com',
-    PIXEL_ID: '',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
+    PIXEL_ID: '1164876852547471',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
     ACTIVE_OFFER: 'whop', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
     // or when a tester opens the site with ?checkout=1 (remembered for the browser session).
