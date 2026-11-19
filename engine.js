@@ -33,7 +33,6 @@ const PLACEHOLDER_AHEAD_PCT=(window.BF_PCT||{ahead:91}).ahead; // TODO before la
 let geoCC=null,geoAsked=false;
 function loadGeo(){ // visitor's country from the edge (x-vercel-ip-country); no third-party lookup, nothing stored
   if(geoAsked)return;geoAsked=true;
-  try{fetch('/api/geo',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&/^[A-Z]{2}$/.test(j.country||''))geoCC=j.country;}).catch(()=>{});}catch(e){}
 }
 function geoName(){
   if(!geoCC)return '';

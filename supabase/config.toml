@@ -20,9 +20,6 @@ verify_jwt = false
 [functions.price]
 verify_jwt = false
 
-[functions.track]
-verify_jwt = false
-
 [functions.dashdata]
 verify_jwt = false
 

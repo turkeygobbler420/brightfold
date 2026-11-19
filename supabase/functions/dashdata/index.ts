@@ -38,10 +38,10 @@ Deno.serve(async (req) => {
   const [evs, leads, paid, links, cancels, unsubs] = await Promise.all([
     all(base, hdr, `events?select=ts,vid,sid,name,path,props,source,country,device&ts=gte.${since}&order=ts.asc`) as Promise<Ev[]>,
     all(base, hdr, "leads?select=email,click_id,created_at,last_seen,utm_source,utm_medium,utm_campaign,referrer,device,lang,score,submits&order=created_at.desc"),
-    all(base, hdr, "paid_clicks?select=click_id,payout,paid_at"),
-    all(base, hdr, "click_links?select=click_id,email"),
-    all(base, hdr, "cancel_requests?select=email"),
-    all(base, hdr, "unsubscribes?select=email"),
+    all(base, hdr, "paid_clicks?select=click_id,payout,paid_at&order=click_id.asc"),
+    all(base, hdr, "click_links?select=click_id,email&order=click_id.asc"),
+    all(base, hdr, "cancel_requests?select=email&order=email.asc"),
+    all(base, hdr, "unsubscribes?select=email&order=email.asc"),
   ]);
   const site = "mm";
 
@@ -67,8 +67,10 @@ Deno.serve(async (req) => {
   // ---- funnel (distinct visitors per stage; purchases from the payment records)
   const byName = new Map<string, Set<string>>();
   for (const e of evs) { if (!byName.has(e.name)) byName.set(e.name, new Set()); byName.get(e.name)!.add(e.vid); }
-  const bought = new Set(byName.get("purchase_confirmed") ?? []);
-  for (const p of paid) if (p.paid_at && String(p.paid_at) >= since) bought.add(String(p.click_id));
+  // Buyers come only from the payment records (browser events are forgeable), one per person: clicks sharing an email count once.
+  const clickEmail = new Map(links.map((l) => [String(l.click_id), String(l.email || "").toLowerCase()]));
+  const bought = new Set<string>();
+  for (const p of paid) if (p.paid_at && String(p.paid_at) >= since) bought.add(clickEmail.get(String(p.click_id)) || String(p.click_id));
   const funnel = STAGES.map((stage) => ({ site, stage, count: stage === "purchase_completed" ? bought.size : (byName.get(stage)?.size ?? 0) }));
 
   // ---- questions
@@ -128,7 +130,7 @@ Deno.serve(async (req) => {
     const p = [String(l.click_id || ""), ...(emailClicks.get(em) ?? [])].map((c) => paidBy.get(c)).find(Boolean);
     return {
       site, email: l.email,
-      status: p ? "paid" : cancelled.has(em) ? "cancelled" : unsub.has(em) ? "unsubscribed" : "lead",
+      status: cancelled.has(em) ? "cancelled" : p ? "paid" : unsub.has(em) ? "unsubscribed" : "lead",
       test: TEST.test(String(l.email)),
       source: l.utm_source || (l.click_id ? "ad click" : "direct"),
       device: l.device || "", score: l.score == null ? null : Number(l.score),
