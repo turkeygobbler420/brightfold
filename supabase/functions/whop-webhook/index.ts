@@ -9,7 +9,6 @@ import { purchaseToTikTok } from "../_shared/tiktok.ts";
 import { purchaseToMeta } from "../_shared/meta.ts";
 const PLAN_ID = Deno.env.get("WHOP_PLAN_ID") ?? "plan_gZemshu7CN47f"; // our checkout plan
 const PAYOUT = 0; // $0 today (then recurring billing handled by Whop)
-const TT_VALUE = Number(Deno.env.get("TIKTOK_PURCHASE_VALUE") ?? "24"); // fallback only, used when the payment payload has no amount
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const enc = new TextEncoder();
 
@@ -122,11 +121,13 @@ Deno.serve(async (req) => {
   // TikTok: one purchase per click, from payment.succeeded only, on the click the buyer paid with (its event_id matches the browser's).
   // A $0 payment (free trial) is not a purchase. tt_sent_at in paid_clicks keeps renewals from re-sending.
   const ttTest = new URL(req.url).searchParams.get("tt_test") ?? "";
-  const value = paidAmt?.amount ?? TT_VALUE;
-  const tt = isPayment && value > 0 ? await purchaseToTikTok(ids[0], value, ttTest, paidAmt?.currency ?? "USD") : { skipped: isPayment ? "zero amount" : "membership event" };
+  // No amount in the payload = no purchase event: the value is never guessed.
+  const value = paidAmt?.amount ?? 0;
+  const skip = !isPayment ? "membership event" : !paidAmt ? "no amount" : value > 0 ? "" : "zero amount";
+  const tt = skip ? { skipped: skip } : await purchaseToTikTok(ids[0], value, ttTest, paidAmt!.currency);
   // Meta Conversions API: same rules (payment.succeeded only, amount Whop collected, once per click), for every buyer Meta may receive.
   const fbTest = new URL(req.url).searchParams.get("fb_test") ?? "";
-  const fb = isPayment && value > 0 && paidAmt ? await purchaseToMeta(ids[0], value, fbTest, paidAmt.currency) : { skipped: isPayment ? "no amount" : "membership event" };
+  const fb = skip ? { skipped: skip } : await purchaseToMeta(ids[0], value, fbTest, paidAmt!.currency);
   console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, via: metaId ? "metadata" : "email", amount: paidAmt?.amount ?? null, new: created.length, tiktok: tt, meta: fb }));
   // Signed test calls (?tt_test=CODE) echo the TikTok result so delivery can be checked end to end.
   return new Response(ttTest || fbTest ? "OK " + JSON.stringify({ tt, meta: fb }) : "OK", { status: 200 });
