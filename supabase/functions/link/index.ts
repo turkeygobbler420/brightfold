@@ -26,7 +26,8 @@ Deno.serve(async (req) => {
   if (ttp) row.ttp = ttp;
   if (page) row.page_url = page;
   const ua = cut(req.headers.get("user-agent"), 512);
-  const ip = cut((req.headers.get("x-forwarded-for") ?? "").split(",")[0] || req.headers.get("cf-connecting-ip"), 64);
+  const fwd = (req.headers.get("x-client-ip") ?? "").trim(); // set by the mmedge proxy (the visitor's real IP)
+  const ip = cut(/^[0-9a-fA-F:.]{3,45}$/.test(fwd) ? fwd : (req.headers.get("x-forwarded-for") ?? "").split(",")[0] || req.headers.get("cf-connecting-ip"), 64);
   if (ua) row.ua = ua;
   if (ip) row.ip = ip;
   const url = Deno.env.get("SUPABASE_URL")!.replace(/\/$/, "") + "/rest/v1/click_links", key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

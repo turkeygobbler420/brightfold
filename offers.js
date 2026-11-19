@@ -105,7 +105,7 @@
   try {
     if (new URLSearchParams(location.search).get('ttclid')) {
       var tt = window.BF_TT(); tt.click_id = clickId;
-      fetch('https://llyanlleeynuznywttjg.supabase.co/functions/v1/link', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify(tt) }).catch(function () {});
+      fetch('https://mmedge.vercel.app/api/link', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify(tt) }).catch(function () {});
     }
   } catch (e) {}
   // Funnel steps mirrored to TikTok as standard events (shown in Events Manager > Test events).
