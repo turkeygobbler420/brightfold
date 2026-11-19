@@ -87,10 +87,11 @@
   // Purchase: called once the postback confirms payment. Deduped per click id; event_id lets TikTok dedupe against a server event.
   window.BF_PURCHASE = function (amount, currency) {
     try {
+      if (amount == null || !isFinite(amount) || +amount <= 0) return; // amount Whop collected is unknown: the server event (exact amount) covers it, never guess $24
       var k = 'bf_tt_purchase_' + clickId;
       if (safeGet(k)) return;
       safeSet(k, '1');
-      if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: (amount != null && isFinite(amount)) ? +amount : 24, currency: currency || 'USD' }, { event_id: 'purchase_' + clickId });
+      if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: +amount, currency: currency || 'USD' }, { event_id: 'purchase_' + clickId });
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
       bfT('purchase_confirmed', null, tPath);
     } catch (e) {}
