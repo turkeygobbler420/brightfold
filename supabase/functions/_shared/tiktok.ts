@@ -23,9 +23,9 @@ export async function sendTikTok(clickId: string, value: number, link: Link | nu
     event_source: "web",
     event_source_id: TT_PIXEL,
     data: [{
-      event: "Purchase", // TikTok's current name for CompletePayment; the pixel sends the same name
+      event: "CompletePayment", // same name + event_id as the browser pixel (offers.js), so TikTok dedupes them
       event_time: Math.floor(Date.now() / 1000),
-      event_id: "purchase_" + clickId, // same id as the browser event, so TikTok counts it once
+      event_id: "purchase_" + clickId,
       user,
       page: { url: link?.page_url || "https://mindmetric.info/payment" },
       properties: { currency, value, content_type: "product", contents: [{ content_id: "iq-report", content_name: "IQ Report", quantity: 1, price: value }] },
@@ -39,22 +39,31 @@ export async function sendTikTok(clickId: string, value: number, link: Link | nu
   return { http: r.status, code: (j as { code?: number }).code, message: (j as { message?: string }).message };
 }
 
-// Looks up the click's match data, sends once per click (tt_sent_at), never throws.
+// Sends once per click: atomically claims paid_clicks.tt_sent_at (only one caller can flip it from null),
+// sends, and releases the claim if TikTok rejects so a retry can try again. Never throws.
 export async function purchaseToTikTok(clickId: string, value: number, testCode = "", currency = "USD") {
+  const base = Deno.env.get("SUPABASE_URL")!.replace(/\/$/, "") + "/rest/v1/", key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const hdr = { apikey: key, Authorization: "Bearer " + key };
+  const id = encodeURIComponent(clickId);
+  const patch = (filter: string, tt_sent_at: string | null) => fetch(base + "paid_clicks?click_id=eq." + id + filter, {
+    method: "PATCH", headers: { ...hdr, "content-type": "application/json", Prefer: "return=representation" }, body: JSON.stringify({ tt_sent_at }),
+  });
+  let claimed = false;
   try {
-    const base = Deno.env.get("SUPABASE_URL")!.replace(/\/$/, "") + "/rest/v1/", key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const hdr = { apikey: key, Authorization: "Bearer " + key };
     testCode = (testCode || Deno.env.get("TIKTOK_TEST_CODE") || "").trim();
-    const id = encodeURIComponent(clickId);
-    const pc = await fetch(base + "paid_clicks?select=tt_sent_at&click_id=eq." + id, { headers: hdr }).then((x) => x.json()).catch(() => []);
-    if (!testCode && pc?.[0]?.tt_sent_at) return { skipped: "already sent" };
+    if (!testCode) {
+      const c = await patch("&tt_sent_at=is.null", new Date().toISOString());
+      const rows = c.ok ? await c.json().catch(() => []) : null;
+      if (rows === null) return { error: "claim failed " + c.status };
+      if (!Array.isArray(rows) || !rows.length) return { skipped: "already sent" };
+      claimed = true;
+    }
     const lk = await fetch(base + "click_links?select=email,ttclid,ttp,ua,ip,page_url&click_id=eq." + id, { headers: hdr }).then((x) => x.json()).catch(() => []);
     const tt = await sendTikTok(clickId, value, Array.isArray(lk) ? lk[0] ?? null : null, testCode, currency);
-    if ((tt as { code?: number }).code === 0 && !testCode) {
-      await fetch(base + "paid_clicks?click_id=eq." + id, {
-        method: "PATCH", headers: { ...hdr, "content-type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ tt_sent_at: new Date().toISOString() }),
-      });
-    }
+    if (claimed && (tt as { code?: number }).code !== 0) { await patch("", null).catch(() => {}); claimed = false; }
     return tt;
-  } catch (e) { return { error: String(e) }; }
+  } catch (e) {
+    if (claimed) await patch("", null).catch(() => {});
+    return { error: String(e) };
+  }
 }

@@ -20,7 +20,8 @@ Deno.serve(async (req) => {
   const q = new URL(req.url).searchParams;
 
   const expected = Deno.env.get("POSTBACK_TOKEN");
-  if (expected && !safeEq(q.get("token") ?? "", expected)) return new Response("Unauthorized", { status: 401 });
+  if (!expected) return new Response("Not configured", { status: 500 }); // fail closed: never accept postbacks without a secret
+  if (!safeEq(q.get("token") ?? "", expected)) return new Response("Unauthorized", { status: 401 });
 
   const clickId = q.get("click_id") ?? "";
   if (!CLICK_ID_RE.test(clickId)) return new Response("Bad click_id", { status: 400 });
@@ -33,7 +34,7 @@ Deno.serve(async (req) => {
   const r = await fetch(url.replace(/\/$/, "") + "/rest/v1/paid_clicks", {
     method: "POST",
     headers: { apikey: key, Authorization: "Bearer " + key, "content-type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" },
-    body: JSON.stringify({ click_id: clickId, payout }),
+    body: JSON.stringify({ click_id: clickId, payout }), // payout column only: never touches the amount/currency Whop's webhook stored
   });
   // Optional: send the purchase to PostHog (distinct_id = click id, same person the browser identified).
   const phKey = Deno.env.get("POSTHOG_KEY");
@@ -45,8 +46,14 @@ Deno.serve(async (req) => {
       });
     } catch (_) { /* analytics must never fail the postback */ }
   }
-  // TikTok server-side purchase, sent once per click (a repeated postback does not double count).
-  const tt = r.ok ? await purchaseToTikTok(clickId, payout, q.get("tt_test") ?? "") : null;
+  // TikTok purchase value is what the customer paid (from Whop's webhook), not the affiliate payout. Use the stored
+  // amount when the webhook already recorded one; the $-payout is only a fallback. Sent once per click (tt_sent_at).
+  let ttValue = payout, ttCur = "USD";
+  try {
+    const a = await fetch(url.replace(/\/$/, "") + "/rest/v1/paid_clicks?select=amount,currency&click_id=eq." + encodeURIComponent(clickId), { headers: { apikey: key, Authorization: "Bearer " + key } }).then((x) => x.json());
+    if (a?.[0]?.amount > 0) { ttValue = Number(a[0].amount); ttCur = a[0].currency || "USD"; }
+  } catch (_) { /* keep the payout fallback */ }
+  const tt = r.ok ? await purchaseToTikTok(clickId, ttValue, q.get("tt_test") ?? "", ttCur) : null;
   console.log(JSON.stringify({ evt: "postback", click_id: clickId, payout, stored: r.status, tiktok: tt }));
   if (!r.ok) return new Response("Store failed", { status: 500 });
   return new Response("OK", { status: 200 });
