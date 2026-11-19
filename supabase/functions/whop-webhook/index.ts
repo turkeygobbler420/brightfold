@@ -6,6 +6,7 @@
 // then the buyer's email via click_links) and marks it paid so the quiz unlocks (`status` reads paid_clicks).
 // Only payment.succeeded reports to TikTok (it carries the amount Whop collected); membership.activated just unlocks.
 import { purchaseToTikTok } from "../_shared/tiktok.ts";
+import { purchaseToMeta } from "../_shared/meta.ts";
 const PLAN_ID = Deno.env.get("WHOP_PLAN_ID") ?? "plan_gZemshu7CN47f"; // our checkout plan
 const PAYOUT = 0; // $0 today (then recurring billing handled by Whop)
 const TT_VALUE = Number(Deno.env.get("TIKTOK_PURCHASE_VALUE") ?? "24"); // fallback only, used when the payment payload has no amount
@@ -120,7 +121,10 @@ Deno.serve(async (req) => {
   const ttTest = new URL(req.url).searchParams.get("tt_test") ?? "";
   const value = paidAmt?.amount ?? TT_VALUE;
   const tt = isPayment && value > 0 ? await purchaseToTikTok(ids[0], value, ttTest, paidAmt?.currency ?? "USD") : { skipped: isPayment ? "zero amount" : "membership event" };
-  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, via: metaId ? "metadata" : "email", amount: paidAmt?.amount ?? null, new: created.length, tiktok: tt }));
+  // Meta Conversions API: same rules (payment.succeeded only, amount Whop collected, once per click), Facebook-sourced clicks only.
+  const fbTest = new URL(req.url).searchParams.get("fb_test") ?? "";
+  const fb = isPayment && value > 0 && paidAmt ? await purchaseToMeta(ids[0], value, fbTest, paidAmt.currency) : { skipped: isPayment ? "no amount" : "membership event" };
+  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, via: metaId ? "metadata" : "email", amount: paidAmt?.amount ?? null, new: created.length, tiktok: tt, meta: fb }));
   // Signed test calls (?tt_test=CODE) echo the TikTok result so delivery can be checked end to end.
-  return new Response(ttTest ? "OK " + JSON.stringify(tt) : "OK", { status: 200 });
+  return new Response(ttTest || fbTest ? "OK " + JSON.stringify({ tt, meta: fb }) : "OK", { status: 200 });
 });

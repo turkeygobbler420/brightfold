@@ -103,7 +103,12 @@
   // TikTok match data for the server-side purchase (stored with the click by the link function).
   window.BF_TT = function () {
     var m = /(?:^|;\s*)_ttp=([^;]+)/.exec(document.cookie);
-    return { ttclid: safeGet('bf_ttclid') || undefined, ttp: m ? decodeURIComponent(m[1]) : undefined, url: location.href };
+    var fb = {};
+    if (safeGet('bf_consent') === 'yes') { // Meta match data only after consent (the pixel's _fbp cookie exists only then too)
+      var p = /(?:^|;\s*)_fbp=([^;]+)/.exec(document.cookie), c = /(?:^|;\s*)_fbc=([^;]+)/.exec(document.cookie);
+      fb = { fbclid: safeGet('bf_fbclid') || undefined, fbp: p ? decodeURIComponent(p[1]) : undefined, fbc: c ? decodeURIComponent(c[1]) : undefined };
+    }
+    return { ttclid: safeGet('bf_ttclid') || undefined, ttp: m ? decodeURIComponent(m[1]) : undefined, fbclid: fb.fbclid, fbp: fb.fbp, fbc: fb.fbc, url: location.href };
   };
   window.BF_IDENTIFY = function (email) { try { if (window.ttq) ttq.identify({ email: String(email || '').trim().toLowerCase(), external_id: clickId }); } catch (e) {} };
   // Landed from a TikTok ad: store the ttclid against this click right away (the email comes later).

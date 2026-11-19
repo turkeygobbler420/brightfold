@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
   const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: H });
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: { ...H, "Access-Control-Allow-Methods": "POST", "Access-Control-Allow-Headers": "content-type" } });
   if (req.method !== "POST") return json({ error: "method" }, 405);
-  let b: { click_id?: string; email?: string; ttclid?: string; ttp?: string; url?: string };
+  let b: { click_id?: string; email?: string; ttclid?: string; ttp?: string; fbclid?: string; fbp?: string; fbc?: string; url?: string };
   try { b = (await req.json()) ?? {}; } catch { return json({ error: "bad json" }, 400); }
   if (typeof b !== "object") return json({ error: "bad json" }, 400);
   const id = String(b.click_id ?? ""), email = String(b.email ?? "").trim().toLowerCase();
@@ -24,6 +24,7 @@ Deno.serve(async (req) => {
   const ttclid = cut(b.ttclid, 512), ttp = cut(b.ttp, 256), page = cut(b.url, 1000);
   if (ttclid) row.ttclid = ttclid;
   if (ttp) row.ttp = ttp;
+  for (const [k, n] of [["fbclid", 512], ["fbp", 128], ["fbc", 600]] as const) { const v = cut((b as Record<string, unknown>)[k], n); if (v) row[k] = v; }
   if (page) row.page_url = page;
   const ua = cut(req.headers.get("user-agent"), 512);
   const fwd = (req.headers.get("x-client-ip") ?? "").trim(); // set by the mmedge proxy (the visitor's real IP)

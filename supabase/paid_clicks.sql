@@ -19,6 +19,9 @@ alter table click_links alter column email drop not null;
 alter table click_links add column if not exists ttclid text, add column if not exists ttp text,
   add column if not exists ua text, add column if not exists ip text, add column if not exists page_url text;
 alter table paid_clicks add column if not exists tt_sent_at timestamptz; -- TikTok purchase sent (dedupe)
+-- Meta Conversions API (Facebook visitors): match data on the click, and the sent-once marker on the payment.
+alter table click_links add column if not exists fbclid text, add column if not exists fbp text, add column if not exists fbc text;
+alter table paid_clicks add column if not exists fb_sent_at timestamptz;
 alter table paid_clicks add column if not exists amount numeric, add column if not exists currency text; -- what Whop actually collected
 
 -- Email opt-outs. Any mailer must skip addresses listed here.
