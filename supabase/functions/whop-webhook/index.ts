@@ -61,8 +61,11 @@ function findAmount(o: unknown): { amount: number; currency: string } | null {
   const d = o && typeof o === "object" ? o as Record<string, unknown> : {};
   const cur = String(d.currency ?? "usd").toUpperCase();
   for (const k of ["usd_total", "final_amount", "total", "amount_paid", "amount", "subtotal"]) {
-    const v = d[k], n = typeof v === "number" ? v : typeof v === "string" ? parseFloat(v) : NaN;
-    if (Number.isFinite(n) && n >= 0 && n < 100000) return { amount: Math.round(n * 100) / 100, currency: k === "usd_total" ? "USD" : cur };
+    const v = d[k];
+    // Whop v1 sends money as {currency, amount:"1.00", ...}; older payloads send a plain number or string.
+    const m = v && typeof v === "object" ? v as Record<string, unknown> : null;
+    const raw = m ? m.amount : v, n = typeof raw === "number" ? raw : typeof raw === "string" ? parseFloat(raw) : NaN;
+    if (Number.isFinite(n) && n >= 0 && n < 100000) return { amount: Math.round(n * 100) / 100, currency: k === "usd_total" ? "USD" : String(m?.currency ?? cur).toUpperCase() };
   }
   return null;
 }
