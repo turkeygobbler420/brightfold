@@ -37,6 +37,8 @@ Deno.serve(async (req) => {
       return json({ paid: await anyPaid(rows.map((x: { click_id: string }) => x.click_id)), cancelled, email });
     }
     if (!CLICK_ID_RE.test(id)) return json({ error: "bad click_id" }, 400);
-    return json({ paid: await anyPaid([id]) });
+    const pr = await sb("paid_clicks?select=amount,currency&limit=1&click_id=eq." + id);
+    const row = pr.ok ? (await pr.json())[0] : null;
+    return json(row ? { paid: true, amount: row.amount ?? null, currency: row.currency ?? null } : { paid: false });
   } catch { return json({ paid: false }); }
 });

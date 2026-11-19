@@ -7,7 +7,7 @@
 import { purchaseToTikTok } from "../_shared/tiktok.ts";
 const PLAN_ID = Deno.env.get("WHOP_PLAN_ID") ?? "plan_gZemshu7CN47f"; // our checkout plan
 const PAYOUT = 0; // $0 today (then recurring billing handled by Whop)
-const TT_VALUE = Number(Deno.env.get("TIKTOK_PURCHASE_VALUE") ?? "24"); // value reported to TikTok (matches the browser event)
+const TT_VALUE = Number(Deno.env.get("TIKTOK_PURCHASE_VALUE") ?? "24"); // fallback only, used when the payment payload has no amount
 const enc = new TextEncoder();
 
 const b64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
@@ -44,6 +44,17 @@ function findEmail(o: unknown, depth = 0): string {
   return "";
 }
 
+// Amount Whop actually collected (dollars), from the payment payload. Field names vary by API version, so try the usual ones.
+function findAmount(o: unknown): { amount: number; currency: string } | null {
+  const d = o && typeof o === "object" ? o as Record<string, unknown> : {};
+  const cur = String(d.currency ?? "usd").toUpperCase();
+  for (const k of ["usd_total", "final_amount", "total", "amount_paid", "amount", "subtotal"]) {
+    const v = d[k], n = typeof v === "number" ? v : typeof v === "string" ? parseFloat(v) : NaN;
+    if (Number.isFinite(n) && n >= 0 && n < 100000) return { amount: Math.round(n * 100) / 100, currency: k === "usd_total" ? "USD" : cur };
+  }
+  return null;
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
   const secret = Deno.env.get("WHOP_WEBHOOK_SECRET");
@@ -65,9 +76,10 @@ Deno.serve(async (req) => {
   const ids: string[] = l.ok ? (await l.json()).map((x: { click_id: string }) => x.click_id) : [];
   if (!ids.length) { console.log(JSON.stringify({ evt: "whop", err: "no linked click", type: ev.type })); return new Response("No linked click", { status: 200 }); }
 
+  const paidAmt = findAmount(ev.data);
   const r = await fetch(url + "/rest/v1/paid_clicks", {
     method: "POST", headers: { ...h, Prefer: "resolution=merge-duplicates,return=minimal" },
-    body: JSON.stringify(ids.map((click_id) => ({ click_id, payout: PAYOUT }))),
+    body: JSON.stringify(ids.map((click_id) => ({ click_id, payout: PAYOUT, ...(paidAmt ? { amount: paidAmt.amount, currency: paidAmt.currency } : {}) }))),
   });
   const phKey = Deno.env.get("POSTHOG_KEY");
   if (phKey) {
@@ -82,8 +94,8 @@ Deno.serve(async (req) => {
   }
   // TikTok: one CompletePayment per payment, on the buyer's latest click (its event_id matches the browser's).
   const ttTest = new URL(req.url).searchParams.get("tt_test") ?? "";
-  const tt = r.ok ? await purchaseToTikTok(ids[0], TT_VALUE, ttTest) : null;
-  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, stored: r.status, tiktok: tt }));
+  const tt = r.ok ? await purchaseToTikTok(ids[0], paidAmt?.amount ?? TT_VALUE, ttTest, paidAmt?.currency ?? "USD") : null;
+  console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, amount: paidAmt?.amount ?? null, stored: r.status, tiktok: tt }));
   // Signed test calls (?tt_test=CODE) echo the TikTok result so delivery can be checked end to end.
   return r.ok ? new Response(ttTest ? "OK " + JSON.stringify(tt) : "OK", { status: 200 }) : new Response("Store failed", { status: 500 });
 });

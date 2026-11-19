@@ -212,7 +212,7 @@
     const giveUp=()=>{stopPay();
       payMsg('We have not received your payment confirmation yet. <button id="bfRecheck" type="button" style="border:0;background:none;color:#4f46e5;text-decoration:underline;cursor:pointer;font:inherit;padding:0">Check again</button>');
       const r=document.getElementById('bfRecheck');if(r)r.onclick=()=>{pend.set();watchPayment(payWin);};};
-    const unlock=()=>{stopPay();pend.clear();try{window.BF_PURCHASE&&window.BF_PURCHASE();}catch(e){}clearInterval(sellT);clearInterval(offerT);
+    const unlock=(amt,cur)=>{stopPay();pend.clear();try{window.BF_PURCHASE&&window.BF_PURCHASE(amt,cur);}catch(e){}clearInterval(sellT);clearInterval(offerT);
       try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
       const em=document.getElementById('bfEmbed');if(em)em.remove();
       S.unlock();if(st&&st.flow){st.done=false;showResults();}};
@@ -225,7 +225,7 @@
         if(!r.ok)throw new Error('status '+r.status);
         const j=await r.json();fails=0;
         if(run!==payRun)return;
-        if(j&&j.paid)return unlock();
+        if(j&&j.paid)return unlock(j.amount,j.currency);
       }catch(e){fails++;console.warn('bf status check failed',e&&e.message);}
       finally{busy=false;}
       if(run===payRun){clearTimeout(payT);payT=setTimeout(check,delay());}
