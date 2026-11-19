@@ -47,7 +47,7 @@
   window.bfPx = function () {
     if (pxLoaded || !CONFIG.PIXEL_ID) return; pxLoaded = true;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', CONFIG.PIXEL_ID);
+    fbq('init', CONFIG.PIXEL_ID, { external_id: clickId }); // same external_id the Conversions API sends (hashed), so browser and server events join one person
     fbq('track', 'PageView');
   };
 
@@ -94,8 +94,8 @@
       var k = 'bf_tt_purchase_' + clickId;
       if (safeGet(k)) return;
       safeSet(k, '1');
-      // Facebook: only visitors who arrived from a Facebook ad (fbclid / _fbc), value = amount Whop collected. eventID = click id for CAPI dedupe.
-      try { if (window.fbq && (safeGet('bf_fbclid') || /(?:^|;\s*)_fbc=/.test(document.cookie))) fbq('track', 'Purchase', { value: Math.round(+amount * 100) / 100, currency: String(currency || 'USD').toUpperCase() }, { eventID: clickId }); } catch (x) {}
+      // Meta: every visitor the pixel runs for, value = amount Whop collected. eventID = click id, same as the Conversions API Purchase (whop-webhook).
+      try { if (window.fbq) fbq('track', 'Purchase', { value: Math.round(+amount * 100) / 100, currency: String(currency || 'USD').toUpperCase() }, { eventID: clickId }); } catch (x) {}
       if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: +amount, currency: currency || 'USD' }, { event_id: 'purchase_' + clickId });
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
       bfT('purchase_confirmed', null, tPath);
@@ -126,6 +126,17 @@
     checkout_viewed: ['InitiateCheckout', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }],
     checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: 24, currency: 'USD' }]
   };
+  // Funnel steps mirrored to Meta as standard events. eventID matches the server twin where one exists (Lead: link function).
+  // Value is only sent once the real Whop price is known (whop_price_seen), never a guessed price.
+  var FB_EV = { quiz_started: ['ViewContent', { content_name: 'IQ Test' }], email_submitted: ['Lead', { content_name: 'IQ Test' }], checkout_viewed: ['InitiateCheckout', { content_name: 'IQ Report' }], checkout_clicked: ['AddPaymentInfo', { content_name: 'IQ Report' }] };
+  var fbPrice = null;
+  function fbTrack(name, props) {
+    if (name === 'whop_price_seen' && props && +props.amount > 0) fbPrice = { value: Math.round(+props.amount * 100) / 100, currency: String(props.currency || 'USD').toUpperCase() };
+    var f = FB_EV[name]; if (!f || !window.fbq) return;
+    var d = { content_type: 'product', content_ids: [f[1].content_name === 'IQ Test' ? 'iq-test' : 'iq-report'], content_name: f[1].content_name };
+    if (fbPrice && f[1].content_name === 'IQ Report') { d.value = fbPrice.value; d.currency = fbPrice.currency; }
+    fbq('track', f[0], d, { eventID: name + '_' + clickId });
+  }
   // First-party analytics for the team dashboard (Supabase `track`): visitor = click id, no cookies, no personal data.
   var T_URL = 'https://mmedge.vercel.app/api/sync';
   function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } }
@@ -159,6 +170,7 @@
     bfT(name, props, tPath);
     try { if (window.posthog) posthog.capture(name, props || {}); } catch (e) {}
     try { var t = TT_EV[name]; if (t && window.ttq) ttq.track(t[0], t[1], { event_id: name + '_' + clickId }); } catch (e) {}
+    try { fbTrack(name, props); } catch (e) {}
   };
 
   // Show the current stage in the address bar (no reload, no extra history entries).
@@ -168,9 +180,9 @@
     clickId: clickId,
     pixelId: CONFIG.PIXEL_ID,
     cancelUrl: CONFIG.CANCEL_URL,
+    event: function () {}, // was an id-less Meta custom event (GoToCheckout); AddPaymentInfo now covers that step with an eventID
     // Network-provided unsubscribe page (offer 25388 allows email traffic and requires it). Null when the offer has none.
     unsubscribeUrl: function (offerKey) { var o = CONFIG.OFFERS[offerKey || CONFIG.ACTIVE_OFFER] || CONFIG.OFFERS['25388']; return (o && o.unsubscribe) || CONFIG.OFFERS['25388'].unsubscribe || null; },
-    event: function (name, data) { if (window.fbq) fbq('trackCustom', name, data || {}); },
     // Builds <OFFER_BASE>?sub8=<click_id>&sub15=<pixel_id> (sub1 is overwritten by the tracker; sub2-sub7 are checkout prefill fields). Only the click ID and pixel ID are sent, no personal data.
     offerUrl: function (offerKey) {
       var enabled = CONFIG.ENABLE_REDIRECT;

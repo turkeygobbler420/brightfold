@@ -1,15 +1,22 @@
-// Meta Conversions API: server-side Purchase for Facebook-sourced buyers, called by whop-webhook.
+// Meta Conversions API: the server half of every Meta event the site sends (browser pixel = offers.js).
+// Each event carries the same event_name + event_id as its browser twin, so Meta counts it once.
+//   Lead      event_id "email_submitted_<click_id>"  (link function, when the quiz email arrives)
+//   Purchase  event_id "<click_id>"                  (whop-webhook, payment.succeeded, amount Whop collected)
 // Secrets: META_CAPI_TOKEN (required to send), META_PIXEL_ID (defaults to the site pixel),
 // META_TEST_CODE (optional; only while testing in Events Manager > Test events).
 import { sha256 } from "./tiktok.ts";
 const PIXEL = Deno.env.get("META_PIXEL_ID") ?? "1164876852547471";
 
-type Link = { email?: string | null; fbclid?: string | null; fbp?: string | null; fbc?: string | null; ua?: string | null; ip?: string | null; page_url?: string | null };
+export type Link = { email?: string | null; fbclid?: string | null; fbp?: string | null; fbc?: string | null; ua?: string | null; ip?: string | null; page_url?: string | null };
 
-export async function sendMeta(clickId: string, value: number, link: Link | null, testCode: string, currency = "USD") {
+// Visitors Meta may receive: arrived from a Meta ad (fbclid/_fbc), or the pixel ran for them (_fbp exists only after consent).
+export const metaAllowed = (l: Link | null) => !!(l?.fbclid || l?.fbc || l?.fbp);
+
+export async function sendMetaEvent(eventName: string, eventId: string, clickId: string, link: Link | null, customData: Record<string, unknown>, testCode = "") {
   const token = Deno.env.get("META_CAPI_TOKEN");
   if (!token) return { skipped: "no token" };
-  const user: Record<string, unknown> = { external_id: [await sha256(clickId)] };
+  testCode = (testCode || Deno.env.get("META_TEST_CODE") || "").trim();
+  const user: Record<string, unknown> = { external_id: [await sha256(clickId)] }; // same external_id the pixel sends (offers.js)
   if (link?.email) user.em = [await sha256(link.email.trim().toLowerCase())];
   const fbc = link?.fbc || (link?.fbclid ? "fb.1." + Date.now() + "." + link.fbclid : "");
   if (fbc) user.fbc = fbc;
@@ -18,13 +25,13 @@ export async function sendMeta(clickId: string, value: number, link: Link | null
   if (link?.ip) user.client_ip_address = link.ip;
   const body: Record<string, unknown> = {
     data: [{
-      event_name: "Purchase", // same name + event_id as the browser pixel (offers.js), so Meta dedupes them
+      event_name: eventName,
       event_time: Math.floor(Date.now() / 1000),
-      event_id: clickId,
+      event_id: eventId,
       action_source: "website",
-      event_source_url: link?.page_url || "https://mindmetric.info/payment",
+      event_source_url: link?.page_url || "https://mindmetric.info/",
       user_data: user,
-      custom_data: { currency, value },
+      custom_data: customData,
     }],
   };
   if (testCode) body.test_event_code = testCode;
@@ -32,11 +39,10 @@ export async function sendMeta(clickId: string, value: number, link: Link | null
     method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
   });
   const j = await r.json().catch(() => ({})) as { events_received?: number; error?: { message?: string } };
-  return { http: r.status, received: j.events_received, error: j.error?.message };
+  return { event: eventName, event_id: eventId, http: r.status, received: j.events_received, error: j.error?.message };
 }
 
-// Sends once per click, only for visitors who came from a Facebook ad (fbclid / _fbc saved by the link function).
-// Claims paid_clicks.fb_sent_at atomically, releases it if Meta rejects. Never throws.
+// Purchase, once per click. Claims paid_clicks.fb_sent_at atomically, releases it if Meta rejects. Never throws.
 export async function purchaseToMeta(clickId: string, value: number, testCode = "", currency = "USD") {
   const base = Deno.env.get("SUPABASE_URL")!.replace(/\/$/, "") + "/rest/v1/", key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const hdr = { apikey: key, Authorization: "Bearer " + key };
@@ -49,16 +55,16 @@ export async function purchaseToMeta(clickId: string, value: number, testCode = 
     if (!Deno.env.get("META_CAPI_TOKEN")) return { skipped: "no token" };
     const lk = await fetch(base + "click_links?select=email,fbclid,fbp,fbc,ua,ip,page_url&click_id=eq." + id, { headers: hdr }).then((x) => x.json()).catch(() => []);
     const link: Link | null = Array.isArray(lk) ? lk[0] ?? null : null;
-    if (!link?.fbclid && !link?.fbc) return { skipped: "not from facebook" };
-    testCode = (testCode || Deno.env.get("META_TEST_CODE") || "").trim();
-    if (!testCode) {
+    if (!metaAllowed(link)) return { skipped: "no meta consent" };
+    if (!(testCode || Deno.env.get("META_TEST_CODE"))) {
       const c = await patch("&fb_sent_at=is.null", new Date().toISOString());
       const rows = c.ok ? await c.json().catch(() => []) : null;
       if (rows === null) return { error: "claim failed " + c.status };
       if (!Array.isArray(rows) || !rows.length) return { skipped: "already sent" };
       claimed = true;
     }
-    const m = await sendMeta(clickId, value, link, testCode, currency);
+    const custom = { currency, value, content_type: "product", content_ids: ["iq-report"], content_name: "IQ Report", num_items: 1 };
+    const m = await sendMetaEvent("Purchase", clickId, clickId, link, custom, testCode);
     if (claimed && !(m as { received?: number }).received) { await patch("", null).catch(() => {}); claimed = false; }
     return m;
   } catch (e) {

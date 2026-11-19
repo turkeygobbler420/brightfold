@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
   const ttTest = new URL(req.url).searchParams.get("tt_test") ?? "";
   const value = paidAmt?.amount ?? TT_VALUE;
   const tt = isPayment && value > 0 ? await purchaseToTikTok(ids[0], value, ttTest, paidAmt?.currency ?? "USD") : { skipped: isPayment ? "zero amount" : "membership event" };
-  // Meta Conversions API: same rules (payment.succeeded only, amount Whop collected, once per click), Facebook-sourced clicks only.
+  // Meta Conversions API: same rules (payment.succeeded only, amount Whop collected, once per click), for every buyer Meta may receive.
   const fbTest = new URL(req.url).searchParams.get("fb_test") ?? "";
   const fb = isPayment && value > 0 && paidAmt ? await purchaseToMeta(ids[0], value, fbTest, paidAmt.currency) : { skipped: isPayment ? "no amount" : "membership event" };
   console.log(JSON.stringify({ evt: "whop", type: ev.type, clicks: ids.length, via: metaId ? "metadata" : "email", amount: paidAmt?.amount ?? null, new: created.length, tiktok: tt, meta: fb }));

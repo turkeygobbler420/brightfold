@@ -1,8 +1,10 @@
-// Supabase Edge Function: POST /functions/v1/link  {click_id, email?, ttclid?, ttp?, url?}  ->  {ok:true}
+// Supabase Edge Function: POST /functions/v1/link  {click_id, email?, ttclid?, ttp?, fbclid?, fbp?, fbc?, url?}  ->  {ok:true}
 // Also stores TikTok match data (ttclid, _ttp cookie, user agent, IP) so the postback can send a server-side purchase.
 // Called by the checkout page before the payment window opens, so the network's postback (click_id only)
 // can be matched to an email / account. Table: click_links (see supabase/paid_clicks.sql).
 // An existing click's email is never replaced: otherwise anyone who knows a click_id could re-point it at another address.
+// The first time a click gets its email, a Meta Lead goes out server-side (twin of the pixel's Lead, same event_id).
+import { metaAllowed, sendMetaEvent } from "../_shared/meta.ts";
 const CLICK_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED = (Deno.env.get("STATUS_ORIGIN") ?? "https://turkeygobbler420.github.io,https://mindmetric.info,https://www.mindmetric.info").split(",").map((s) => s.trim());
@@ -26,6 +28,7 @@ Deno.serve(async (req) => {
   if (ttp) row.ttp = ttp;
   for (const [k, n] of [["fbclid", 512], ["fbp", 128], ["fbc", 600]] as const) { const v = cut((b as Record<string, unknown>)[k], n); if (v) row[k] = v; }
   if (page) row.page_url = page;
+  if (email) row.email = email;
   const ua = cut(req.headers.get("user-agent"), 512);
   const fwd = (req.headers.get("x-client-ip") ?? "").trim(); // set by the mmedge proxy (the visitor's real IP)
   const ip = cut(/^[0-9a-fA-F:.]{3,45}$/.test(fwd) ? fwd : (req.headers.get("x-forwarded-for") ?? "").split(",")[0] || req.headers.get("cf-connecting-ip"), 64);
@@ -38,12 +41,23 @@ Deno.serve(async (req) => {
     const ins = await fetch(url, { method: "POST", headers: { ...hdr, Prefer: "resolution=ignore-duplicates,return=representation" }, body: JSON.stringify(row) });
     if (!ins.ok) { console.log(JSON.stringify({ evt: "link_fail", status: ins.status })); return json({ error: "store" }, 500); }
     const created = ((await ins.json().catch(() => [])) as unknown[]).length > 0;
+    let newEmail = created && !!email;
     if (!created) {
       // 2) existing click: refresh match data, and set the email only if it is still empty
       const { click_id: _c, email: _e, ...rest } = row;
       const base = url + "?click_id=eq." + encodeURIComponent(id);
       if (Object.keys(rest).length) await fetch(base, { method: "PATCH", headers: { ...hdr, Prefer: "return=minimal" }, body: JSON.stringify(rest) });
-      if (email) await fetch(base + "&email=is.null", { method: "PATCH", headers: { ...hdr, Prefer: "return=minimal" }, body: JSON.stringify({ email }) });
+      if (email) {
+        const r = await fetch(base + "&email=is.null", { method: "PATCH", headers: { ...hdr, Prefer: "return=representation" }, body: JSON.stringify({ email }) });
+        newEmail = r.ok && ((await r.json().catch(() => [])) as unknown[]).length > 0;
+      }
+    }
+    // Lead to Meta once per click, only for visitors Meta may receive (Meta ad click, or pixel consent).
+    if (newEmail && metaAllowed(row)) {
+      const lead = sendMetaEvent("Lead", "email_submitted_" + id, id, row, { content_name: "IQ Test" }, new URL(req.url).searchParams.get("fb_test") ?? "")
+        .then((m) => console.log(JSON.stringify({ evt: "link_meta", ...m }))).catch(() => {});
+      // deno-lint-ignore no-explicit-any
+      const rt = (globalThis as any).EdgeRuntime; if (rt?.waitUntil) rt.waitUntil(lead); else await lead;
     }
     return json({ ok: true });
   } catch { return json({ error: "store" }, 500); }
