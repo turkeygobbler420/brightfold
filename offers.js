@@ -68,6 +68,7 @@
     function bfInit(full) { if (full) bfPx(); posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
     function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");bfPx();try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
     function go() {
+      if (safeGet('bf_fbclid') || /(?:^|;\s*)_fbc=/.test(document.cookie)) bfPx(); // Meta-sourced visitors: pixel on every page, no banner dependency
       if (safeGet('bf_consent') === 'yes') { bfInit(true); return; }
       bfGeo(function (c) {
         if (!bfGeo.eu(c)) { safeSet('bf_consent', 'yes'); try { window.ttq && ttq.grantConsent(); } catch (x) {} bfInit(true); }
@@ -104,7 +105,7 @@
   window.BF_TT = function () {
     var m = /(?:^|;\s*)_ttp=([^;]+)/.exec(document.cookie);
     var fb = {};
-    if (safeGet('bf_consent') === 'yes') { // Meta match data only after consent (the pixel's _fbp cookie exists only then too)
+    if (safeGet('bf_consent') === 'yes' || safeGet('bf_fbclid')) { // Meta match data for consented visitors and for visitors who arrived from a Meta ad
       var p = /(?:^|;\s*)_fbp=([^;]+)/.exec(document.cookie), c = /(?:^|;\s*)_fbc=([^;]+)/.exec(document.cookie);
       fb = { fbclid: safeGet('bf_fbclid') || undefined, fbp: p ? decodeURIComponent(p[1]) : undefined, fbc: c ? decodeURIComponent(c[1]) : undefined };
     }
