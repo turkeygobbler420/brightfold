@@ -1,6 +1,6 @@
 // Meta Conversions API. The only event the site sends to Meta with an event_id is Purchase, on confirmed payment:
-//   Purchase  event_id "<click_id>"  (whop-webhook, payment.succeeded, amount Whop collected)
-// The browser pixel (offers.js) sends the same Purchase with eventID = click_id, so Meta counts it once.
+//   Purchase  event_id "purchase_<click_id>"  (whop-webhook, payment.succeeded, amount Whop collected)
+// The browser pixel (offers.js) sends the same Purchase with eventID = "purchase_"+click_id, so Meta counts it once.
 // Secrets: META_CAPI_TOKEN (required to send), META_PIXEL_ID (defaults to the site pixel),
 // META_TEST_CODE (optional; only while testing in Events Manager > Test events).
 import { sha256 } from "./tiktok.ts";
@@ -63,7 +63,7 @@ export async function purchaseToMeta(clickId: string, value: number, testCode = 
       claimed = true;
     }
     const custom = { currency, value, content_type: "product", content_ids: ["iq-report"], content_name: "IQ Report", num_items: 1 };
-    const m = await sendMetaEvent("Purchase", clickId, clickId, link, custom, testCode);
+    const m = await sendMetaEvent("Purchase", "purchase_" + clickId, clickId, link, custom, testCode);
     if (claimed && !(m as { received?: number }).received) { await patch("", null).catch(() => {}); claimed = false; }
     return m;
   } catch (e) {

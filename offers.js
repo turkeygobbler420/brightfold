@@ -94,8 +94,8 @@
       var k = 'bf_tt_purchase_' + clickId;
       if (safeGet(k)) return;
       safeSet(k, '1');
-      // Meta: every visitor the pixel runs for, value = amount Whop collected. eventID = click id, same as the Conversions API Purchase (whop-webhook).
-      try { if (window.fbq) fbq('track', 'Purchase', { value: Math.round(+amount * 100) / 100, currency: String(currency || 'USD').toUpperCase() }, { eventID: clickId }); } catch (x) {}
+      // Meta: every visitor the pixel runs for, value = amount Whop collected. eventID = 'purchase_'+click id, same as the Conversions API Purchase (whop-webhook).
+      try { if (window.fbq) fbq('track', 'Purchase', { value: Math.round(+amount * 100) / 100, currency: String(currency || 'USD').toUpperCase() }, { eventID: 'purchase_' + clickId }); } catch (x) {}
       if (window.ttq) ttq.track('CompletePayment', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1, value: +amount, currency: currency || 'USD' }, { event_id: 'purchase_' + clickId });
       if (window.posthog) posthog.capture('purchase_confirmed', { click_id: clickId });
       bfT('purchase_confirmed', null, tPath);
