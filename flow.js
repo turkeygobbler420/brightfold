@@ -8,7 +8,7 @@
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
   try{localStorage.removeItem('bf_demo');}catch(e){}
   const DEMO={email:'demo@mindmetric.info',name:'Demo user'};
-  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API='https://mmedge.vercel.app/api/link',STATUS_API=FN+'status';
+  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API='/api/link',STATUS_API=FN+'status';
   const S=window.BF_STORE={
     demoUser(){return null;},
     
