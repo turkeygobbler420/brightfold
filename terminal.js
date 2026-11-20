@@ -10,9 +10,9 @@ window.BF_TERMINAL=function(o){
   const inp='width:100%;box-sizing:border-box;height:48px;border-radius:13px;border:1px solid #3a3a3a;background:#111;color:#fff;font-size:16px;padding:0 14px;outline:0';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
   root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">CARDHOLDER NAME</label><div style="display:flex;gap:10px"><input id="bfTF" autocomplete="given-name" placeholder="First name" style="'+inp+'"><input id="bfTS" autocomplete="family-name" placeholder="Surname" style="'+inp+'"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
-   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>';
+   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;color:#fff;font-size:20px;font-weight:700"><span>Total:</span><span id="bfTT"></span></div><button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:14px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
-   '<div style="text-align:center;color:#6b6b73;font-size:12.5px;line-height:1.55;padding:2px 6px 0">'+
+   '<div style="text-align:center;color:#6b6b73;font-size:14.5px;line-height:1.6;padding:2px 4px 0">'+
    '<p id="bfTD" style="margin:14px 0 0"></p>'+
    '<p style="margin:12px 0 0">By continuing on this page, you confirm that you have read and agree to the MindMetric <a href="/terms" target="_blank" style="'+lk+'">Terms</a> &amp; <a href="/privacy" target="_blank" style="'+lk+'">Privacy Policy</a> and to the payment terms shown above, including the details presented on this page.</p>'+
    '<p style="margin:12px 0 0">This order is processed securely by Whop. You are purchasing access to the digital IQ score report provided and operated by MindMetric.info. For order questions, cancellations, refunds and returns, visit <a href="/help" target="_blank" style="'+lk+'">mindmetric.info/help</a>.</p>'+
@@ -33,8 +33,9 @@ window.BF_TERMINAL=function(o){
       // other price spots on the paywall use the plan's price too, not the separate /price estimate
       const T=f(pr.initial),H=pr.initial>0?T+' today':'Free today',st=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
       st('coP',(pr.initial>0?T:'Free')+'<small>today</small>');st('coS',H);st('coB',H);window.__bfExact=true;
+      const tt=document.getElementById('bfTT');if(tt)tt.textContent=f(pr.initial);
       const dis=document.getElementById('bfTD');
-      if(dis)dis.textContent=pr.renewal&&pr.days?(pr.trial?'Free trial for '+pr.trial+' days. ':'')+'You will be charged '+f(pr.initial)+' today. Your subscription then renews automatically at '+f(pr.renewal)+' every '+per+' until you cancel. Cancel anytime at mindmetric.info/cancel.':'You will be charged '+f(pr.initial)+' once.';
+      if(dis)dis.textContent=pr.renewal&&pr.days?'You will be charged '+f(pr.initial)+' for '+(pr.trial||pr.days)+' days, then '+f(pr.renewal)+' per '+per+'. Auto renews unless cancelled. Cancel anytime at mindmetric.info/cancel.':'You will be charged '+f(pr.initial)+' once.';
     }
     const whop=window.WhopElements();
     const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
