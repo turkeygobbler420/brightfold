@@ -5,17 +5,19 @@ window.BF_TERMINAL=function(o){
   const say=m=>{const e=document.getElementById('bfPayMsg');if(e)e.textContent=m||'';};
   const ADDR='123 Main Street, Springfield, IL 62701, United States';// PLACEHOLDER for the test branch: replace with the real address before merging
   const DESC='MINDMETRIC.INFO';// PLACEHOLDER: set to the real bank-statement descriptor
-  const lk='color:#8b8bff;text-decoration:none';
+  const lk='color:#4a4ae0;text-decoration:none';
   const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
-  root.innerHTML='<label style="'+lab+'">EMAIL ADDRESS</label><div id="bfTE"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
-   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>'+
-   '<div style="text-align:center;color:#9a9a9a;font-size:12.5px;line-height:1.55">'+
+  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
+   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>';
+  const lg=document.createElement('div');lg.innerHTML=
+   '<div style="text-align:center;color:#6b6b73;font-size:12.5px;line-height:1.55;padding:2px 6px 0">'+
    '<p id="bfTD" style="margin:14px 0 0"></p>'+
    '<p style="margin:12px 0 0">By continuing on this page, you confirm that you have read and agree to the MindMetric <a href="/terms" target="_blank" style="'+lk+'">Terms</a> &amp; <a href="/privacy" target="_blank" style="'+lk+'">Privacy Policy</a> and to the payment terms shown above, including the details presented on this page.</p>'+
    '<p style="margin:12px 0 0">This order is processed securely by Whop. You are purchasing access to the digital IQ score report provided and operated by MindMetric.info. For order questions, cancellations, refunds and returns, visit <a href="/help" target="_blank" style="'+lk+'">mindmetric.info/help</a>.</p>'+
    '<p style="margin:12px 0 0">Charges may appear on your bank statement as '+DESC+'</p>'+
    '<p style="margin:12px 0 0">MindMetric.info'+(ADDR?', '+ADDR:'')+'</p></div>';
+  root.parentNode.insertAdjacentElement('afterend',lg.firstChild);
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
   const set=()=>{btn.disabled=!ready||busy;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
   fetch('/api/pay').then(r=>r.json()).then(c=>{

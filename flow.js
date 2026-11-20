@@ -288,9 +288,9 @@
        </div></div>
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr" id="coS">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
-        <div class="co-pay" style="background:#101010;border-radius:24px;padding:16px">
-         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #f5f5f5;border-radius:22px;padding:18px 20px;background:#252525;color:#fff"><span style="display:flex;align-items:center;gap:14px;font-weight:750;letter-spacing:.01em"><span style="width:28px;height:28px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-weight:800">&#10003;</span>3-DAY ACCESS</span><b id="coPlanP" style="font-size:24px;font-weight:850;white-space:nowrap;color:#fff"></b></div>
-         <div style="margin-top:16px;border:2px solid #f5f5f5;border-radius:22px;background:#1d1d1d;overflow:hidden"><div style="padding:16px 20px;color:#fff;font-size:18px;font-weight:600">Credit / Debit Card</div>
+        <div class="co-pay" style="background:#fff;border:1px solid #e6e6ea;border-radius:22px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.18)">
+         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e3e3e8;border-radius:16px;padding:16px 18px;background:#f6f6f8;color:#111"><span style="display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.01em"><span style="width:26px;height:26px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:800">&#10003;</span>3-DAY ACCESS</span><b id="coPlanP" style="font-size:24px;font-weight:850;white-space:nowrap;color:#111"></b></div>
+         <div style="margin-top:14px;border-radius:16px;background:#1d1d1d;overflow:hidden"><div style="padding:16px 20px 4px;color:#fff;font-size:16px;font-weight:600">&#128274; Secure card payment</div>
          <div id="bfPayMsg" style="margin:0 20px 8px;color:#f88;font-size:13px"></div><div id="bfCk" style="min-height:260px;background:#0b0b0c;padding:8px 8px 16px"></div></div></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
