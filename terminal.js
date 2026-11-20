@@ -7,8 +7,9 @@ window.BF_TERMINAL=function(o){
   const DESC='MINDMETRIC.INFO';// PLACEHOLDER: set to the real bank-statement descriptor
   const lk='color:#4a4ae0;text-decoration:none';
   const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
+  const inp='width:100%;box-sizing:border-box;height:48px;border-radius:13px;border:1px solid #3a3a3a;background:#111;color:#fff;font-size:16px;padding:0 14px;outline:0';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
-  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
+  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">CARDHOLDER NAME</label><div style="display:flex;gap:10px"><input id="bfTF" autocomplete="given-name" placeholder="First name" style="'+inp+'"><input id="bfTS" autocomplete="family-name" placeholder="Surname" style="'+inp+'"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
    '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
    '<div style="text-align:center;color:#6b6b73;font-size:12.5px;line-height:1.55;padding:2px 6px 0">'+
@@ -19,7 +20,9 @@ window.BF_TERMINAL=function(o){
    '<p style="margin:12px 0 0">MindMetric.info'+(ADDR?', '+ADDR:'')+'</p></div>';
   root.parentNode.insertAdjacentElement('afterend',lg.firstChild);
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
-  const set=()=>{btn.disabled=!ready||busy;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
+  const nm=()=>(document.getElementById('bfTF').value.trim()+' '+document.getElementById('bfTS').value.trim()).trim();
+  const set=()=>{btn.disabled=!ready||busy||!document.getElementById('bfTF').value.trim()||!document.getElementById('bfTS').value.trim();btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
+  ['bfTF','bfTS'].forEach(i=>document.getElementById(i).addEventListener('input',set));
   fetch('/api/pay').then(r=>r.json()).then(c=>{
     if(!c.ready||!window.WhopElements)throw 0;
     const pr=c.price;
@@ -42,7 +45,7 @@ window.BF_TERMINAL=function(o){
       if(busy)return;busy=true;say('');set();
       const fail=m=>{busy=false;set();say(m);o.onError&&o.onError(m);};
       try{
-        const {confirmationToken}=await pay.createConfirmationToken({});
+        const {confirmationToken}=await pay.createConfirmationToken({billingDetails:{name:nm()}});
         const r=await fetch('/api/pay',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirmationToken,clickId:o.clickId})});
         const p=await r.json();
         if(!r.ok||!p.id)return fail(p.error&&p.error!=='payment_failed'?'Payment could not be started. Please try again.':'Your card was declined. Please try another card.');
