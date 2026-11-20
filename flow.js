@@ -257,7 +257,7 @@
     const fallback=()=>{if(dead)return;shut();pend.set();location.href=url;};
     const mount=()=>{
       try{
-        h=window.WhopElements().checkout.create({plan,metadata:{click_id:String(window.bfTrack&&window.bfTrack.clickId||'')},returnUrl:location.origin+location.pathname,
+        h=window.WhopElements().checkout.create({plan,appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'14px'}},metadata:{click_id:String(window.bfTrack&&window.bfTrack.clickId||'')},returnUrl:location.origin+location.pathname,
           onComplete:()=>{payMsg('Payment received. Unlocking your results...');window.BF_EV&&BF_EV('payment_complete_client');pend.set();watchPayment(null);}});
         h.create('checkout').mount('#bfCk');
         pend.set();watchPayment(null);
@@ -286,7 +286,7 @@
        <div class="g-r"><p class="g-k">Your summary</p>
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr" id="coS">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay">
-         <div id="bfPayMsg" style="margin:8px 0;color:#555;font-size:13px"></div><div id="bfCk" style="min-height:260px"></div></div>
+         <div id="bfPayMsg" style="margin:8px 0;color:#555;font-size:13px"></div><div id="bfCk" style="min-height:260px;background:#0b0b0c;border-radius:18px;padding:16px"></div></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
