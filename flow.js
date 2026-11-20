@@ -263,9 +263,12 @@
         pend.set();watchPayment(null);
       }catch(e){console.warn('whop embed failed',e);fallback();}
     };
-    if(window.WhopElements)return mount();
+    const term=()=>{if(!inline||!window.BF_TERMINAL)return false;
+      BF_TERMINAL({mount:'#bfCk',plan,clickId:String(window.bfTrack&&window.bfTrack.clickId||''),
+        onPaid:()=>{window.BF_EV&&BF_EV('payment_complete_client');pend.set();watchPayment(null);},fallback:()=>{if(!dead&&document.getElementById('bfCk')){document.getElementById('bfCk').removeAttribute('style');mount();}}});return true;};
+    if(window.WhopElements)return term()||mount();
     const s=document.createElement('script');s.src='https://cdn.whop.com/elements/amber/elements.js';s.setAttribute('data-whop-elements','');
-    s.onload=()=>{let n=0;const w=setInterval(()=>{if(window.WhopElements){clearInterval(w);mount();}else if(++n>40){clearInterval(w);fallback();}},100);};
+    s.onload=()=>{let n=0;const w=setInterval(()=>{if(window.WhopElements){clearInterval(w);term()||mount();}else if(++n>40){clearInterval(w);fallback();}},100);};
     s.onerror=fallback;document.head.appendChild(s);
   }
   function checkout(){
