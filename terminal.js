@@ -3,7 +3,7 @@ window.BF_TERMINAL=function(o){
   /* o: {mount:'#bfCk', plan, clickId, onPaid(), onError(msg), fallback()} */
   const root=document.querySelector(o.mount);if(!root)return;
   const say=m=>{const e=document.getElementById('bfPayMsg');if(e)e.textContent=m||'';};
-  const ADDR='';// business address shown under PAY NOW; set to the real one
+  const ADDR='123 Main Street, Springfield, IL 62701, United States';// PLACEHOLDER for the test branch: replace with the real address before merging
   const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
   root.innerHTML='<label style="'+lab+'">EMAIL ADDRESS</label><div id="bfTE"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
