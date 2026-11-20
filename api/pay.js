@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     if (key && acct) try { // amounts come from the Whop plan, never hardcoded
       const q = await fetch('https://api.whop.com/api/v1/plans/' + PLAN, { headers: { authorization: 'Bearer ' + key } });
       const d = q.ok ? await q.json() : null;
-      if (d) price = { currency: d.currency, initial: d.initial_price, renewal: d.renewal_price, days: d.billing_period, type: d.plan_type };
+      if (d) price = { currency: d.currency, initial: d.initial_price, renewal: d.renewal_price, days: d.billing_period, type: d.plan_type, trial: d.trial_period_days || 0, taxIncluded: d.tax_type || null, product: (d.product && d.product.title) || null };
     } catch (e) {}
     return res.status(200).json({ ready: !!(key && acct), account: acct || null, plan: PLAN, price });
   }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   try {
     const r = await fetch('https://api.whop.com/api/v1/payments', {
       method: 'POST',
-      headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json' },
+      headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json', 'idempotency-key': 'ctok-' + tok }, // same token can never charge twice
       body: JSON.stringify({
         account_id: acct, variant_id: PLAN, confirmation_token: tok,
         return_url: 'https://' + (req.headers.host || 'mindmetric.info') + '/payment',

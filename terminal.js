@@ -17,7 +17,7 @@ window.BF_TERMINAL=function(o){
       const d=pr.days,per=d==7?'week':d==30||d==31?'month':d==365?'year':d==1?'day':d+' days';
       const el=document.getElementById('coPlanP');if(el)el.textContent=f(pr.initial);
       const dis=document.getElementById('bfTD');
-      if(dis)dis.textContent=pr.type==='renewal'&&pr.renewal?'You will be charged '+f(pr.initial)+' today. Your subscription then renews automatically at '+f(pr.renewal)+' every '+per+' until you cancel. Cancel anytime from your account.':'You will be charged '+f(pr.initial)+' once.';
+      if(dis)dis.textContent=pr.renewal&&pr.days?(pr.trial?'Free trial for '+pr.trial+' days. ':'')+'You will be charged '+f(pr.initial)+' today. Your subscription then renews automatically at '+f(pr.renewal)+' every '+per+' until you cancel. Cancel anytime from your account.':'You will be charged '+f(pr.initial)+' once.';
     }
     const whop=window.WhopElements();
     const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
