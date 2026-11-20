@@ -6,11 +6,10 @@ window.BF_TERMINAL=function(o){
   const ADDR='123 Main Street, Springfield, IL 62701, United States';// PLACEHOLDER for the test branch: replace with the real address before merging
   const DESC='MINDMETRIC.INFO';// PLACEHOLDER: set to the real bank-statement descriptor
   const lk='color:#4a4ae0;text-decoration:none';
-  const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
-  const inp='width:100%;box-sizing:border-box;height:48px;border-radius:13px;border:1px solid #3a3a3a;background:#111;color:#fff;font-size:16px;padding:0 14px;outline:0';
-  root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
-  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">BILLING ADDRESS</label><div id="bfTA"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
-   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;color:#fff;font-size:20px;font-weight:700"><span>Total:</span><span id="bfTT"></span></div><button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:14px;cursor:pointer;opacity:.55">PAY NOW</button>';
+  const lab='display:block;color:#3a3a40;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
+  root.style.cssText='background:#fff;padding:4px 20px 20px';
+  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#6b6b73;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">BILLING ADDRESS</label><div id="bfTA"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
+   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;color:#121212;font-size:20px;font-weight:700"><span>Total:</span><span id="bfTT"></span></div><button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#121212;color:#fff;font-size:21px;font-weight:750;margin-top:14px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
    '<div style="text-align:center;color:#6b6b73;font-size:14.5px;line-height:1.6;padding:2px 4px 0">'+
    '<p id="bfTD" style="margin:14px 0 0"></p>'+
@@ -37,7 +36,7 @@ window.BF_TERMINAL=function(o){
       if(dis)dis.textContent=pr.renewal&&pr.days?'You will be charged '+f(pr.initial)+' for '+(pr.trial||pr.days)+' days, then '+f(pr.renewal)+' per '+per+'. Auto renews unless cancelled. Cancel anytime at mindmetric.info/cancel.':'You will be charged '+f(pr.initial)+' once.';
     }
     const whop=window.WhopElements();
-    const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
+    const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'light',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
     pay.create('email').mount('#bfTE');
     pay.create('address',{mode:'billing',name:'split',scope:'full',line2:'toggle',onChange:e=>{addrOk=!!e.complete;set();}}).mount('#bfTA');
     pay.create('payment',{fields:{billingDetails:'never'},excludedPaymentMethodTypes:['us_bank_account'],wallets:{},order:['card'],onChange:e=>{ready=!!e.complete;set();}}).mount('#bfTP');

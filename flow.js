@@ -215,7 +215,7 @@
     const unlock=(amt,cur)=>{stopPay();pend.clear();try{window.BF_PURCHASE&&window.BF_PURCHASE(amt,cur);}catch(e){}clearInterval(sellT);clearInterval(offerT);
       try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
       const em=document.getElementById('bfEmbed');if(em)em.remove();
-      S.unlock();if(st&&st.flow){st.done=false;showResults();}else location.href='/account';}; /* outside the quiz (3DS return, reload): account page opens results or login */
+      S.unlock();location.href='/';}; /* Whop-confirmed (webhook): paid state is saved, homepage shows the member view */
     const check=async()=>{
       if(run!==payRun||busy)return;
       if(Date.now()-t0>PEND_MAX){pend.clear();return giveUp();}
@@ -257,7 +257,7 @@
     const fallback=()=>{if(dead)return;shut();pend.set();location.href=url;};
     const mount=()=>{
       try{
-        h=window.WhopElements().checkout.create({plan,appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'14px'}},metadata:{click_id:String(window.bfTrack&&window.bfTrack.clickId||'')},returnUrl:location.origin+location.pathname,
+        h=window.WhopElements().checkout.create({plan,appearance:{theme:{appearance:'light',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'14px'}},metadata:{click_id:String(window.bfTrack&&window.bfTrack.clickId||'')},returnUrl:location.origin+location.pathname,
           onComplete:()=>{payMsg('Payment received. Unlocking your results...');window.BF_EV&&BF_EV('payment_complete_client');pend.set();watchPayment(null);}});
         h.create('checkout').mount('#bfCk');
         pend.set();watchPayment(null);
@@ -291,8 +291,8 @@
         <ul class="sum"><li><span>Your IQ score &amp; certificate</span><i class="pr" id="coS">See price below</i></li><li><span>Detailed cognitive report</span><i>Included</i></li><li><span>Global &amp; country ranking</span><i>Included</i></li><li><span>150+ brain training exercises</span><i>Included</i></li></ul>
         <div class="co-pay" style="background:#fff;border:1px solid #e6e6ea;border-radius:22px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.18)">
          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e3e3e8;border-radius:16px;padding:16px 18px;background:#f6f6f8;color:#111"><span style="display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.01em"><span style="width:26px;height:26px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:800">&#10003;</span>3-DAY ACCESS</span><b id="coPlanP" style="font-size:24px;font-weight:850;white-space:nowrap;color:#111"></b></div>
-         <div style="margin-top:14px;border-radius:16px;background:#1d1d1d;overflow:hidden"><div style="padding:16px 20px 4px;color:#fff;font-size:16px;font-weight:600">&#128274; Secure card payment</div>
-         <div id="bfPayMsg" style="margin:0 20px 8px;color:#f88;font-size:13px"></div><div id="bfCk" style="min-height:260px;background:#0b0b0c;padding:8px 8px 16px"></div></div></div>
+         <div style="margin-top:14px;border-radius:16px;background:#fff;border:1px solid #e6e6ea;overflow:hidden"><div style="padding:16px 20px 4px;color:#121212;font-size:16px;font-weight:600">&#128274; Secure card payment</div>
+         <div id="bfPayMsg" style="margin:0 20px 8px;color:#c62828;font-size:13px"></div><div id="bfCk" style="min-height:260px;background:#fff;padding:8px 8px 16px"></div></div></div>
        </div></div></div></div>`;
     const offer=window.bfTrack&&window.bfTrack.offerUrl();
     window.BF_EV&&BF_EV('checkout_clicked',{has_offer:!!offer});
