@@ -22,7 +22,7 @@ window.BF_TERMINAL=function(o){
     const whop=window.WhopElements();
     const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
     pay.create('email').mount('#bfTE');
-    pay.create('payment',{onChange:e=>{ready=!!e.complete;set();}}).mount('#bfTP');
+    pay.create('payment',{fields:{billingDetails:'never'},excludedPaymentMethodTypes:['us_bank_account'],wallets:{},onChange:e=>{ready=!!e.complete;set();}}).mount('#bfTP');
     pay.create('branding').mount('#bfTB');
     btn.onclick=async()=>{
       if(busy)return;busy=true;say('');set();
