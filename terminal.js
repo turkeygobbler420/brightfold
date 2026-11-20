@@ -25,6 +25,9 @@ window.BF_TERMINAL=function(o){
       const f=n=>new Intl.NumberFormat(undefined,{style:'currency',currency:pr.currency.toUpperCase()}).format(n);
       const d=pr.days,per=d==7?'week':d==30||d==31?'month':d==365?'year':d==1?'day':d+' days';
       const el=document.getElementById('coPlanP');if(el)el.textContent=f(pr.initial);
+      // other price spots on the paywall use the plan's price too, not the separate /price estimate
+      const T=f(pr.initial),H=pr.initial>0?T+' today':'Free today',st=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
+      st('coP',(pr.initial>0?T:'Free')+'<small>today</small>');st('coS',H);st('coB',H);window.__bfExact=true;
       const dis=document.getElementById('bfTD');
       if(dis)dis.textContent=pr.renewal&&pr.days?(pr.trial?'Free trial for '+pr.trial+' days. ':'')+'You will be charged '+f(pr.initial)+' today. Your subscription then renews automatically at '+f(pr.renewal)+' every '+per+' until you cancel. Cancel anytime at mindmetric.info/cancel.':'You will be charged '+f(pr.initial)+' once.';
     }
