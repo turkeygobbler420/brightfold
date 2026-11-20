@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     } catch (e) {}
     return res.status(200).json({ ready: !!(key && acct), account: acct || null, plan: PLAN, price });
   }
+  if (req.method === 'OPTIONS') return res.status(204).end(); // CORS preflight from mindmetric.info (GitHub Pages)
   if (req.method !== 'POST') return res.status(405).end();
   if (!key || !acct) return res.status(503).json({ error: 'not_configured' });
   const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
@@ -24,7 +25,7 @@ export default async function handler(req, res) {
       headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json', 'idempotency-key': 'ctok-' + tok }, // same token can never charge twice
       body: JSON.stringify({
         account_id: acct, variant_id: PLAN, confirmation_token: tok,
-        return_url: 'https://' + (req.headers.host || 'mindmetric.info') + '/payment',
+        return_url: (req.headers.origin === 'https://mindmetric.info' ? req.headers.origin : 'https://' + (req.headers.host || 'mindmetric.info')) + '/payment', // 3DS returns to the site the buyer is on
         metadata: /^[\w-]{1,64}$/.test(click) ? { click_id: click } : {},
       }),
     });

@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   res.setHeader('cache-control', 'no-store');
   const h = { 'x-country': String(req.headers['x-vercel-ip-country'] || '') };
   try {
+    if (req.method === 'OPTIONS') return res.status(204).end();
     if (req.method !== 'POST') return res.status(405).end();
     const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body ?? {});
     const r = await fetch(UP, { method: 'POST', headers: { ...h, 'content-type': 'text/plain' }, body });

@@ -8,7 +8,7 @@
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
   try{localStorage.removeItem('bf_demo');}catch(e){}
   const DEMO={email:'demo@mindmetric.info',name:'Demo user'};
-  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API='/api/link',STATUS_API='/api/status'; /* same-origin proxy to FN+'status' (vercel.json), so CORS never blocks it */
+  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',API=/(^|\.)vercel\.app$|^localhost$|^127\./.test(location.hostname)?'':'https://brightfold-nine.vercel.app',LINK_API=API+'/api/link',STATUS_API=API?FN+'status':'/api/status'; /* GitHub Pages: server code on Vercel production, status straight from Supabase (allows mindmetric.info) */
   const S=window.BF_STORE={
     demoUser(){return null;},
     

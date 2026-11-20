@@ -1,6 +1,7 @@
 /* Own payment terminal: Whop PCI-isolated elements (email/card) + our PAY NOW button. Unlock still comes from the webhook. */
 window.BF_TERMINAL=function(o){
   /* o: {mount:'#bfCk', plan, clickId, onPaid(), onError(msg), fallback()} */
+  const API=/(^|\.)vercel\.app$|^localhost$|^127\./.test(location.hostname)?'':'https://brightfold-nine.vercel.app'; /* GitHub Pages has no server code: use Vercel production */
   const root=document.querySelector(o.mount);if(!root)return;
   const say=m=>{const e=document.getElementById('bfPayMsg');if(e)e.textContent=m||'';};
   const ADDR='123 Main Street, Springfield, IL 62701, United States';// PLACEHOLDER for the test branch: replace with the real address before merging
@@ -21,7 +22,7 @@ window.BF_TERMINAL=function(o){
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
   let addrOk=false;
   const set=()=>{btn.disabled=!ready||!addrOk||busy;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
-  fetch('/api/pay').then(r=>r.json()).then(c=>{
+  fetch(API+'/api/pay').then(r=>r.json()).then(c=>{
     if(!c.ready||!window.WhopElements)throw 0;
     const pr=c.price;
     if(pr&&pr.currency){
@@ -45,7 +46,7 @@ window.BF_TERMINAL=function(o){
       const fail=m=>{busy=false;set();say(m);o.onError&&o.onError(m);};
       try{
         const {confirmationToken}=await pay.createConfirmationToken({});
-        const r=await fetch('/api/pay',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirmationToken,clickId:o.clickId})});
+        const r=await fetch(API+'/api/pay',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirmationToken,clickId:o.clickId})});
         const p=await r.json();
         if(!r.ok||!p.id)return fail(p.error&&p.error!=='payment_failed'?'Payment could not be started. Please try again.':'Your card was declined. Please try another card.');
         if(p.status!=='paid'){

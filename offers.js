@@ -1,9 +1,11 @@
 /* Offer redirect + click ID (bf_click_id) + optional Meta pixel. Loaded before flow.js. */
 (function () {
+  // GitHub Pages has no server code or proxies: there, /api calls go to Vercel production and PostHog is called directly.
+  var API = /(^|\.)vercel\.app$|^localhost$|^127\./.test(location.hostname) ? '' : 'https://brightfold-nine.vercel.app';
   var CONFIG = {
     // PostHog project API key (starts with phc_). Empty = analytics disabled. Host is the /ingest proxy in vercel.json (US Cloud).
     POSTHOG_KEY: 'phc_nH8eGAJ9eLULrNyGSKs3zKB2q6ctsKQbtg7WTqZNiMPZ',
-    POSTHOG_HOST: '/ingest',
+    POSTHOG_HOST: API ? 'https://us.i.posthog.com' : '/ingest',
     PIXEL_ID: '1164876852547471',          // Meta pixel ID, e.g. '123456789012345'. Empty = pixel disabled and no sub15 sent.
     ACTIVE_OFFER: 'whop', // key into OFFERS
     // In-house testing: the results button only redirects to the offer when this is true,
@@ -63,7 +65,7 @@
     try{var s=sessionStorage.getItem('bf_geo');if(s)return fin(s);}catch(e){}
     function save(c){c=(c||'').toUpperCase();if(!/^[A-Z]{2}$/.test(c))return '';try{sessionStorage.setItem('bf_geo',c);}catch(e){}return c;}
     function get(u,p){var ac=window.AbortController?new AbortController():null;var t=setTimeout(function(){ac&&ac.abort();},3500);return fetch(u,{cache:'no-store',signal:ac&&ac.signal}).then(function(r){return r.text();}).then(function(x){clearTimeout(t);return p(x);});}
-    get('/api/geo',save).then(fin,function(){fin('');});
+    get(API+'/api/geo',save).then(fin,function(){fin('');});
   }
     function bfInit(full) { if (full) bfPx(); posthog.init(CONFIG.POSTHOG_KEY, { api_host: CONFIG.POSTHOG_HOST, ui_host: 'https://us.posthog.com', person_profiles: 'identified_only', capture_pageview: 'history_change', persistence: full ? 'localStorage+cookie' : 'memory', disable_session_recording: !full, ip: !!full, bootstrap: full ? { distinctID: clickId } : undefined, loaded: function (ph) { if (full) ph.identify(clickId); } }); }
     function show(){var d=document.createElement("div");d.setAttribute("role","region");d.setAttribute("aria-label","Cookie notice");d.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:#fff;color:#121212;border:1px solid rgba(0,0,0,.12);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.45 system-ui,-apple-system,Segoe UI,sans-serif";d.innerHTML='<span style="flex:1 1 240px">We use cookies for analytics to improve this quiz. Without them we only collect anonymous, cookie-free statistics.</span><span style="display:flex;gap:8px"><button type="button" data-c="no" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.25);background:#fff;color:#121212;font:inherit;font-weight:600;cursor:pointer">Decline</button><button type="button" data-c="yes" style="padding:8px 14px;border-radius:8px;border:0;background:#121212;color:#fff;font:inherit;font-weight:600;cursor:pointer">Accept</button></span>';d.addEventListener("click",function(ev){var c=ev.target&&ev.target.getAttribute&&ev.target.getAttribute("data-c");if(!c)return;if(c==="yes"){safeSet("bf_consent","yes");bfPx();try{window.ttq&&ttq.grantConsent()}catch(x){}try{posthog.set_config({persistence:'localStorage+cookie',ip:true});posthog.identify(clickId)}catch(x){}}else safeSet("bf_consent","no");d.remove()});document.body.appendChild(d)}
@@ -116,7 +118,7 @@
   try {
     if (new URLSearchParams(location.search).get('ttclid')) {
       var tt = window.BF_TT(); tt.click_id = clickId;
-      fetch('/api/link', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify(tt) }).catch(function () {});
+      fetch(API + '/api/link', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' }, body: JSON.stringify(tt) }).catch(function () {});
     }
   } catch (e) {}
   // Funnel steps mirrored to TikTok as standard events (shown in Events Manager > Test events).
@@ -127,7 +129,7 @@
     checkout_clicked: ['AddPaymentInfo', { content_type: 'product', content_id: 'iq-report', content_name: 'IQ Report', quantity: 1 }]
   };
   // First-party analytics for the team dashboard (Supabase `track`): visitor = click id, no cookies, no personal data.
-  var T_URL = '/api/sync';
+  var T_URL = API + '/api/sync';
   function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } }
   var tSid = ss('bf_sid'); if (!tSid) { tSid = newId(); ss('bf_sid', tSid); }
   var tSrc = ss('bf_src');
