@@ -4,7 +4,15 @@ const PLAN = process.env.WHOP_PLAN_ID || 'plan_gZemshu7CN47f';
 export default async function handler(req, res) {
   res.setHeader('cache-control', 'no-store');
   const key = process.env.WHOP_API_KEY, acct = process.env.WHOP_ACCOUNT_ID;
-  if (req.method === 'GET') return res.status(200).json({ ready: !!(key && acct), account: acct || null, plan: PLAN });
+  if (req.method === 'GET') {
+    let price = null;
+    if (key && acct) try { // amounts come from the Whop plan, never hardcoded
+      const q = await fetch('https://api.whop.com/api/v1/plans/' + PLAN, { headers: { authorization: 'Bearer ' + key } });
+      const d = q.ok ? await q.json() : null;
+      if (d) price = { currency: d.currency, initial: d.initial_price, renewal: d.renewal_price, days: d.billing_period, type: d.plan_type };
+    } catch (e) {}
+    return res.status(200).json({ ready: !!(key && acct), account: acct || null, plan: PLAN, price });
+  }
   if (req.method !== 'POST') return res.status(405).end();
   if (!key || !acct) return res.status(503).json({ error: 'not_configured' });
   const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
