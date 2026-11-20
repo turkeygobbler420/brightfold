@@ -9,7 +9,7 @@ window.BF_TERMINAL=function(o){
   const lab='display:block;color:#3a3a40;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
   root.style.cssText='background:#fff;padding:4px 20px 20px';
   root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#6b6b73;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">BILLING ADDRESS</label><div id="bfTA"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
-   '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;color:#121212;font-size:20px;font-weight:700"><span>Total:</span><span id="bfTT"></span></div><button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#121212;color:#fff;font-size:21px;font-weight:750;margin-top:14px;cursor:pointer;opacity:.55">PAY NOW</button>';
+   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#121212;color:#fff;font-size:21px;font-weight:750;margin-top:22px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
    '<div style="text-align:center;color:#6b6b73;font-size:14.5px;line-height:1.6;padding:2px 4px 0">'+
    '<p id="bfTD" style="margin:14px 0 0"></p>'+
@@ -31,7 +31,6 @@ window.BF_TERMINAL=function(o){
       // other price spots on the paywall use the plan's price too, not the separate /price estimate
       const T=f(pr.initial),H=pr.initial>0?T+' today':'Free today',st=(i,h)=>{const e=document.getElementById(i);if(e)e.innerHTML=h;};
       st('coP',(pr.initial>0?T:'Free')+'<small>today</small>');st('coS',H);st('coB',H);window.__bfExact=true;
-      const tt=document.getElementById('bfTT');if(tt)tt.textContent=f(pr.initial);
       const dis=document.getElementById('bfTD');
       if(dis)dis.textContent=pr.renewal&&pr.days?'You will be charged '+f(pr.initial)+' for '+(pr.trial||pr.days)+' days, then '+f(pr.renewal)+' per '+per+'. Auto renews unless cancelled. Cancel anytime at mindmetric.info/cancel.':'You will be charged '+f(pr.initial)+' once.';
     }
