@@ -338,6 +338,11 @@
 
   /* membership checkout from the account area (same flow, no quiz): returns false when no real checkout is configured */
   window.BF_PAY={start(userClick){if(userClick!==true)return false;const o=window.bfTrack&&window.bfTrack.offerUrl();if(!o)return false;window.bfTrack.event('GoToCheckout',{});embedCheckout(o,false,true);return true;}};
+  /* dev only (vercel.app / localhost, never mindmetric.info): skip the quiz straight to the results/checkout screen */
+  if(!API&&typeof startTest==='function'){const d=document.createElement('button');d.type='button';d.textContent='DEV: skip to results';
+    d.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147483000;padding:8px 12px;border:0;border-radius:8px;background:#c62828;color:#fff;font:600 12px system-ui,sans-serif;cursor:pointer';
+    d.onclick=()=>{d.remove();startTest();halt();st.flow=1;st.result=calc();checkout();}; /* no calculating screen, no email screen */
+    document.body.appendChild(d);}
   const syncSoon=()=>setTimeout(()=>S.syncMembership(),0);
   window.addEventListener('load',syncSoon);
 
