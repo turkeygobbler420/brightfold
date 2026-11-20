@@ -9,7 +9,7 @@ window.BF_TERMINAL=function(o){
   const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
   const inp='width:100%;box-sizing:border-box;height:48px;border-radius:13px;border:1px solid #3a3a3a;background:#111;color:#fff;font-size:16px;padding:0 14px;outline:0';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
-  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">CARDHOLDER NAME</label><div style="display:flex;gap:10px"><input id="bfTF" autocomplete="given-name" placeholder="First name" style="'+inp+'"><input id="bfTS" autocomplete="family-name" placeholder="Surname" style="'+inp+'"></div><label style="'+lab+'">COUNTRY</label><select id="bfTC" autocomplete="country" style="'+inp+'"></select><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
+  root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#9a9a9a;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">BILLING ADDRESS</label><div id="bfTA"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
    '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;color:#fff;font-size:20px;font-weight:700"><span>Total:</span><span id="bfTT"></span></div><button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:14px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
    '<div style="text-align:center;color:#6b6b73;font-size:14.5px;line-height:1.6;padding:2px 4px 0">'+
@@ -19,13 +19,9 @@ window.BF_TERMINAL=function(o){
    '<p style="margin:12px 0 0">Charges may appear on your bank statement as '+DESC+'</p>'+
    '<p style="margin:12px 0 0">MindMetric.info'+(ADDR?', '+ADDR:'')+'</p></div>';
   root.parentNode.insertAdjacentElement('afterend',lg.firstChild);
-  const cs=document.getElementById('bfTC'),dn=new Intl.DisplayNames(['en'],{type:'region'});
-  cs.innerHTML='<option value="">Select country</option>'+(()=>{const a=[];for(let i=65;i<91;i++)for(let j=65;j<91;j++){const c=String.fromCharCode(i,j);try{const n=dn.of(c);if(n&&n!==c&&n!=='Unknown Region')a.push([n,c]);}catch(e){}}return a.sort((x,y)=>x[0].localeCompare(y[0])).map(x=>'<option value="'+x[1]+'">'+x[0]+'</option>').join('');})();
-  fetch('/api/geo').then(r=>r.text()).then(c=>{c=c.trim().toUpperCase();if(/^[A-Z]{2}$/.test(c)&&!cs.value)cs.value=c;set();}).catch(()=>{});
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
-  const nm=()=>(document.getElementById('bfTF').value.trim()+' '+document.getElementById('bfTS').value.trim()).trim();
-  const set=()=>{btn.disabled=!ready||busy||!document.getElementById('bfTF').value.trim()||!document.getElementById('bfTS').value.trim()||!cs.value;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
-  ['bfTF','bfTS','bfTC'].forEach(i=>document.getElementById(i).addEventListener('input',set));
+  let addrOk=false;
+  const set=()=>{btn.disabled=!ready||!addrOk||busy;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
   fetch('/api/pay').then(r=>r.json()).then(c=>{
     if(!c.ready||!window.WhopElements)throw 0;
     const pr=c.price;
@@ -43,13 +39,14 @@ window.BF_TERMINAL=function(o){
     const whop=window.WhopElements();
     const pay=whop.payments.create({accountId:c.account,plan:o.plan||c.plan,returnUrl:location.origin+'/payment',appearance:{theme:{appearance:'dark',accentColor:'gray',grayColor:'slate'},variables:{'--radius':'13px'}}});
     pay.create('email').mount('#bfTE');
+    pay.create('address',{mode:'billing',name:'split',scope:'full',line2:'toggle',onChange:e=>{addrOk=!!e.complete;set();}}).mount('#bfTA');
     pay.create('payment',{fields:{billingDetails:'never'},excludedPaymentMethodTypes:['us_bank_account'],wallets:{},order:['card'],onChange:e=>{ready=!!e.complete;set();}}).mount('#bfTP');
     pay.create('branding').mount('#bfTB');
     btn.onclick=async()=>{
       if(busy)return;busy=true;say('');set();
       const fail=m=>{busy=false;set();say(m);o.onError&&o.onError(m);};
       try{
-        const {confirmationToken}=await pay.createConfirmationToken({billingDetails:{name:nm(),address:{country:cs.value}}});
+        const {confirmationToken}=await pay.createConfirmationToken({});
         const r=await fetch('/api/pay',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirmationToken,clickId:o.clickId})});
         const p=await r.json();
         if(!r.ok||!p.id)return fail(p.error&&p.error!=='payment_failed'?'Payment could not be started. Please try again.':'Your card was declined. Please try another card.');
