@@ -11,12 +11,12 @@ window.BF_TERMINAL=function(o){
   root.innerHTML='<label style="'+lab+'">BILLING EMAIL</label><div id="bfTE"></div><div style="color:#6b6b73;font-size:12px;margin-top:6px">You can edit this. Your receipt is sent here.</div><label style="'+lab+'">BILLING ADDRESS</label><div id="bfTA"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
    '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#121212;color:#fff;font-size:21px;font-weight:750;margin-top:22px;cursor:pointer;opacity:.55">PAY NOW</button>';
   const lg=document.createElement('div');lg.innerHTML=
-   '<div style="text-align:center;color:#6b6b73;font-size:14.5px;line-height:1.6;padding:2px 4px 0">'+
-   '<p id="bfTD" style="margin:14px 0 0"></p>'+
-   '<p style="margin:12px 0 0">By continuing on this page, you confirm that you have read and agree to the MindMetric <a href="/terms" target="_blank" style="'+lk+'">Terms</a> &amp; <a href="/privacy" target="_blank" style="'+lk+'">Privacy Policy</a> and to the payment terms shown above, including the details presented on this page.</p>'+
-   '<p style="margin:12px 0 0">This order is processed securely by Whop. You are purchasing access to the digital IQ score report provided and operated by MindMetric.info. For order questions, cancellations, refunds and returns, visit <a href="/help" target="_blank" style="'+lk+'">mindmetric.info/help</a>.</p>'+
-   '<p style="margin:12px 0 0">Charges may appear on your bank statement as '+DESC+'</p>'+
-   '<p style="margin:12px 0 0">MindMetric.info'+(ADDR?', '+ADDR:'')+'</p></div>';
+   '<div style="text-align:center;color:#8a8a92;font-size:11px;line-height:1.45;padding:2px 4px 0">'+
+   '<p id="bfTD" style="margin:10px 0 0"></p>'+
+   '<p style="margin:7px 0 0">By continuing on this page, you confirm that you have read and agree to the MindMetric <a href="/terms" target="_blank" style="'+lk+'">Terms</a> &amp; <a href="/privacy" target="_blank" style="'+lk+'">Privacy Policy</a> and to the payment terms shown above, including the details presented on this page.</p>'+
+   '<p style="margin:7px 0 0">This order is processed securely by Whop. You are purchasing access to the digital IQ score report provided and operated by MindMetric.info. For order questions, cancellations, refunds and returns, visit <a href="/help" target="_blank" style="'+lk+'">mindmetric.info/help</a>.</p>'+
+   '<p style="margin:7px 0 0">Charges may appear on your bank statement as '+DESC+'</p>'+
+   '<p style="margin:7px 0 0">MindMetric.info'+(ADDR?', '+ADDR:'')+'</p></div>';
   root.parentNode.insertAdjacentElement('afterend',lg.firstChild);
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
   let addrOk=false;
