@@ -51,6 +51,7 @@ window.BF_TERMINAL=function(o){
         const p=await r.json();
         if(!r.ok||!p.id)return fail(p.error&&p.error!=='payment_failed'?'Payment could not be started. Please try again.':'Your card was declined. Please try another card.');
         if(p.status!=='paid'){
+          o.onAction&&o.onAction();
           const x=await whop.payments.handleNextAction({clientSecret:p.client_secret});
           if(x.redirected)return;
           if(x.status!=='succeeded'&&x.status!=='processing')return fail((x.lastPaymentError&&x.lastPaymentError.message)||'The payment step was not completed. Please try again.');

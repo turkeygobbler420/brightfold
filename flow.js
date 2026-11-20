@@ -8,7 +8,7 @@
   /* ---------- storage: signed-in account, demo account, or this browser only ---------- */
   try{localStorage.removeItem('bf_demo');}catch(e){}
   const DEMO={email:'demo@mindmetric.info',name:'Demo user'};
-  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API='/api/link',STATUS_API=FN+'status';
+  const FN='https://llyanlleeynuznywttjg.supabase.co/functions/v1/',LINK_API='/api/link',STATUS_API='/api/status'; /* same-origin proxy to FN+'status' (vercel.json), so CORS never blocks it */
   const S=window.BF_STORE={
     demoUser(){return null;},
     
@@ -215,7 +215,7 @@
     const unlock=(amt,cur)=>{stopPay();pend.clear();try{window.BF_PURCHASE&&window.BF_PURCHASE(amt,cur);}catch(e){}clearInterval(sellT);clearInterval(offerT);
       try{payWin&&!payWin.closed&&payWin.close();}catch(e){}
       const em=document.getElementById('bfEmbed');if(em)em.remove();
-      S.unlock();if(st&&st.flow){st.done=false;showResults();}};
+      S.unlock();if(st&&st.flow){st.done=false;showResults();}else location.href='/account';}; /* outside the quiz (3DS return, reload): account page opens results or login */
     const check=async()=>{
       if(run!==payRun||busy)return;
       if(Date.now()-t0>PEND_MAX){pend.clear();return giveUp();}
@@ -265,6 +265,7 @@
     };
     const term=()=>{if(!inline||!window.BF_TERMINAL)return false;
       BF_TERMINAL({mount:'#bfCk',plan,clickId:String(window.bfTrack&&window.bfTrack.clickId||''),
+        onAction:()=>pend.set(), /* a 3DS redirect resumes polling on /payment */
         onPaid:()=>{window.BF_EV&&BF_EV('payment_complete_client');pend.set();watchPayment(null);},fallback:()=>{if(!dead&&document.getElementById('bfCk')){document.getElementById('bfCk').removeAttribute('style');mount();}}});return true;};
     if(window.WhopElements)return term()||mount();
     const s=document.createElement('script');s.src='https://cdn.whop.com/elements/amber/elements.js';s.setAttribute('data-whop-elements','');
