@@ -3,10 +3,13 @@ window.BF_TERMINAL=function(o){
   /* o: {mount:'#bfCk', plan, clickId, onPaid(), onError(msg), fallback()} */
   const root=document.querySelector(o.mount);if(!root)return;
   const say=m=>{const e=document.getElementById('bfPayMsg');if(e)e.textContent=m||'';};
+  const ADDR='';// business address shown under PAY NOW; set to the real one
   const lab='display:block;color:#c8c8c8;font-size:13px;font-weight:650;letter-spacing:.04em;margin:14px 0 8px';
   root.style.cssText='background:#1d1d1d;padding:4px 20px 20px';
-  root.innerHTML='<label style="'+lab+'">EMAIL ADDRESS</label><div id="bfTE"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div><p id="bfTD" style="margin:16px 0 0;color:#9a9a9a;font-size:12.5px;line-height:1.5"></p>'+
-   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>';
+  root.innerHTML='<label style="'+lab+'">EMAIL ADDRESS</label><div id="bfTE"></div><label style="'+lab+'">CARD DETAILS</label><div id="bfTP"></div><div id="bfTB" style="margin-top:12px"></div>'+
+   '<button id="bfTPay" type="button" disabled style="width:100%;height:66px;border:0;border-radius:19px;background:#fff;color:#050505;font-size:21px;font-weight:750;margin-top:20px;cursor:pointer;opacity:.55">PAY NOW</button>'+
+   '<div style="display:flex;align-items:center;gap:10px;margin-top:20px;color:#d8d8d8;font-size:13px;line-height:1.4"><img src="/favicon.svg" alt="" width="28" height="28" style="flex:none;border-radius:7px"><span>We are MindMetric.info'+(ADDR?' from '+ADDR:'')+'</span></div>'+
+   '<p id="bfTD" style="margin:10px 0 0;color:#9a9a9a;font-size:12.5px;line-height:1.5"></p>';
   const btn=document.getElementById('bfTPay');let ready=false,busy=false;
   const set=()=>{btn.disabled=!ready||busy;btn.style.opacity=btn.disabled?'.55':'1';btn.textContent=busy?'Processing…':'PAY NOW';};
   fetch('/api/pay').then(r=>r.json()).then(c=>{
