@@ -29,6 +29,7 @@ export default async function handler(req, res) {
       }),
     });
     const p = await r.json().catch(() => ({}));
+    if (!r.ok) console.error('whop payment', r.status, (p.error && p.error.message) || p.message);
     if (!r.ok) return res.status(r.status === 401 ? 502 : 400).json({ error: (p.error && p.error.message) || p.message || 'payment_failed' });
     res.status(200).json({ id: p.id, status: p.status, client_secret: p.client_secret });
   } catch (e) { res.status(502).json({ error: 'upstream' }); }
